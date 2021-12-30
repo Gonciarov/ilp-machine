@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+</head>
+
+<body>
+    <a href="/users/logout">Logout</a>
+    <h1>Hello
+        <%= user %>
+    </h1>
+    <p>Your prison number is
+        <%= prisonNumber %>
+    </p>
+
+    <form action="/users/dashboard" method="POST">
+        <div>
+            <textarea id="prisonNumber" name="text" rows="8" cols="50" placeholder="Write something about your last week work" required></textarea>
+        </div>
+        <div>
+
+        </div>
+        <div>
+            <input type="submit" value="Login">
+        </div>
+    </form>
+
+    <h2>Your reflections: </h2>
+    <table>
+        <% for (var i = 0; i<posts.length; i++) { %>
+            <tr>
+                <td>
+                    <b><%= posts[i].date %>: </b>
+                    <%= posts[i].text %>
+                        <br/>
+                        <% if (posts[i].comment) { %>
+                            <i> <%= posts[i].comment %></i>
+                            <% } %>
+                                <br/>
+                </td>
+            </tr>
+            <% } %>
+
+    </table>
+</body>
+
+</html>
