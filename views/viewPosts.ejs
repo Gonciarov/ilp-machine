@@ -1,0 +1,67 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+</head>
+
+<style>
+    textarea,
+    p {
+        white-space: pre;
+    }
+</style>
+
+<body>
+
+
+    <a href="/dashboard">Back to all users</a>
+
+    <h1>Hello Admin
+    </h1>
+    <h2>Student:
+        <%= user %>,
+            <%= prisonNumber %>
+    </h2>
+
+    <h2>
+        <%= user %>'s reflections: </h2>
+
+
+    <table>
+        <% for (var i = posts.length - 1; i>=0; i--) { %>
+            <tr>
+                <td>
+                    <b><%= posts[i].date %>: </b>
+                    <%- posts[i].text %>
+                        <br/>
+                        <% if (posts[i].comment) { %>
+                            <i> <%- posts[i].comment %></i>
+                            <% } else { %>
+                                <form action="/dashboard/<%= prisonNumber %>" method="POST">
+                                    <div>
+                                        <input type="hidden" name="postId" value="<%= posts[i].id %>">
+                                        <textarea id="comment" name="comment" postId="<%= posts[i].id %>" rows="4" cols="25" placeholder="Write a comment"></textarea>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                    <div>
+                                        <input type="submit" value="Comment">
+                                    </div>
+                                </form>
+                                <br/>
+                                <% } %>
+                </td>
+            </tr>
+            <% } %>
+
+    </table>
+</body>
+
+</html>

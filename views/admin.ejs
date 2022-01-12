@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+</head>
+
+
+
+<body>
+    <a href="/users/logout">Logout</a>
+    <h1>Hello admin
+    </h1>
+
+
+
+
+    <h2>Your students: </h2>
+
+    <table>
+        <% for (var i = 0; i<students.length; i++) { %>
+            <tr>
+                <td>
+                    <div>
+                        <b><%= students[i].name %> </b>
+                        <p>
+                            <%= students[i].prison_number %>
+                        </p>
+                        <form action="/dashboard/<%= students[i].prison_number %>" method="POST">
+                            <div>
+                                <input type="submit" name="<%= students[i].prison_number %>" value="View">
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <% } %>
+                        <br/>
+                </td>
+            </tr>
+
+
+    </table>
+</body>
+
+</html>

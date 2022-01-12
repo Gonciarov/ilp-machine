@@ -5,6 +5,12 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
 const passport = require("passport");
+const alert = require('alert');
+var path = require('path');
+
+
+
+
 
 const initializePassport = require("./passportConfig");
 
@@ -14,6 +20,7 @@ const PORT = process.env.PORT || 4000;
 
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }));
+
 
 app.use(session({
     secret: 'secret',
@@ -38,23 +45,91 @@ app.get("/users/login", checkAuthenticated, (req, res) => {
     res.render("login");
 });
 
-app.get("/users/dashboard", checkNotAuthenticated, (req, res) => {
-
+app.get("/dashboard", checkNotAuthenticated, (req, res) => {
         Promise.all([
             pool.query(`SELECT * FROM users WHERE prison_number = $1`, [req.user.prison_number]),
-            pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [req.user.prison_number])
-        ]).then(function([user, posts]) {
-            res.render("dashboard", { user: user.rows[0].name, prisonNumber: user.rows[0].prison_number, posts: posts.rows });
-            var date = new Date().toDateString();
-            console.log(date)
+            pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [req.user.prison_number]),
+            pool.query(`SELECT * FROM users`)
+        ]).then(function([user, posts, students]) {
+            if (req.user.prison_number == process.env.ADMIN_PRISON_NUMBER) {
+
+                res.render("admin", { posts: posts.rows, students: students.rows });
+            } else {
+                posts = sortPosts(posts.rows)
+                res.render("dashboard", { user: user.rows[0].name, prisonNumber: user.rows[0].prison_number, posts: posts });
+            }
         })
     }),
 
 
+    app.post("/dashboard", async(req, res) => {
+        let { text } = req.body;
+        let id = req.body.postId;
+        console.log(id);
+        text = `<p>${text}</p>`
+        console.log(text);
+        let date = new Date().toDateString();
+        let prisonNumber = req.user.prison_number;
+        if (id) {
+            pool.query(`UPDATE posts SET text = '${text}' WHERE id = ${id}`, (err, results) =>{
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.redirect('/dashboard');
+                }
+            });
+        } else {
+            pool.query(`INSERT INTO posts (text, prison_number, date)
+            VALUES ($1, $2, $3)`, [text, prisonNumber, date], (err, results) =>{
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.redirect('/dashboard');
+                }
+            });
+        }
+            
+        
+            }),
+
+
+    app.get("/dashboard/:student", async(req, res) => {
+        res.redirect('/dashboard')
+    }),
 
 
 
+    app.post("/dashboard/:student", async(req, res) => {
+        let student = req.params.student;
+        let comment = req.body.comment;
+        if (true) {
+            Promise.all([
+                pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [student]),
+                pool.query(`SELECT * FROM users WHERE prison_number = $1`, [student])
+            ]).then(function([posts, user]) {
+                posts = sortPosts(posts.rows)
+                let prisonNumber = user.rows[0].prison_number;
+                let name = user.rows[0].name;
+                if (comment) {
+                    let comment = req.body.comment;
+                    let postId = req.body.postId;
+                    pool.query(`UPDATE posts SET comment='${comment}' WHERE ID = ${postId}`)
+                    res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts })
+                    alert("Comment posted")
+                } else {
+                    res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts })
+                }
+            })
+        }
 
+    }),
+
+    app.post("/edit", async(req, res) => {
+        let id = req.body.postId
+        let text = await pool.query(`SELECT * FROM posts WHERE id = ${id}`)
+        text = text.rows[0].text.slice(3, -4)
+        res.render("editPost", {id: id, text: text})
+    })
 
 
 
@@ -122,14 +197,17 @@ app.post("/users/register", async(req, res) => {
 });
 
 app.post('/users/login', passport.authenticate('local', {
-    successRedirect: "/users/dashboard",
+    successRedirect: "/dashboard",
     failureRedirect: "/users/login",
     failureFlash: true
 }));
 
+
+
+
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        return res.redirect("/users/dashboard");
+        return res.redirect("/dashboard");
     }
     next();
 }
@@ -139,6 +217,12 @@ function checkNotAuthenticated(req, res, next) {
         return next();
     }
     res.redirect("/users/login");
+}
+
+function sortPosts(...posts) {
+    return posts[0].sort(function(a, b) {
+        return a.id - b.id
+    })
 }
 
 app.listen(PORT, () => {
