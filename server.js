@@ -6,8 +6,8 @@ const session = require("express-session");
 const flash = require("express-flash");
 const passport = require("passport");
 const alert = require('alert');
-var path = require('path');
-
+const prompt = require('prompt-sync')();
+const Swal = require('sweetalert2');
 
 
 
@@ -19,8 +19,8 @@ initializePassport(passport);
 const PORT = process.env.PORT || 4000;
 
 app.set('view engine', 'ejs')
+let ejsOptions = { async: true }
 app.use(express.urlencoded({ extended: false }));
-
 
 app.use(session({
     secret: 'secret',
@@ -97,30 +97,44 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
         res.redirect('/dashboard')
     }),
 
+    app.get("/comment/view", async(req, res) => {
+        res.redirect('/dashboard')
+    }),
 
+    app.get("/comment/edit", async(req, res) => {
+        res.redirect('/dashboard')
+    }),
 
     app.post("/dashboard/:student", async(req, res) => {
+        
         let student = req.params.student;
+        console.log(student)
         let comment = req.body.comment;
-        if (true) {
+       
+        Promise.all([
+            pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [student]),
+            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [student])
+        ]).then(function([posts, user]) {
+            posts = sortPosts(posts.rows)
+            let prisonNumber = user.rows[0].prison_number;
+            let name = user.rows[0].name;
+            if (comment) {
+        
+                let postId = req.body.postId;
+                
             Promise.all([
-                pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [student]),
-                pool.query(`SELECT * FROM users WHERE prison_number = $1`, [student])
-            ]).then(function([posts, user]) {
-                posts = sortPosts(posts.rows)
-                let prisonNumber = user.rows[0].prison_number;
-                let name = user.rows[0].name;
-                if (comment) {
-                    let comment = req.body.comment;
-                    let postId = req.body.postId;
-                    pool.query(`UPDATE posts SET comment='${comment}' WHERE ID = ${postId}`)
-                    res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts })
-                    alert("Comment posted")
-                } else {
-                    res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts })
-                }
+                pool.query(`UPDATE posts SET comment='${comment}' WHERE ID = ${postId} RETURNING *`, 
+            )]).then(function([result]) {
+                alert("Comment posted")
+                res.render("viewComment", { user: name, prisonNumber: prisonNumber, post: result.rows[0] })
             })
-        }
+
+            
+            } else {
+                res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts })
+            }
+        })
+        
 
     }),
 
@@ -128,11 +142,62 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
         let id = req.body.postId
         let text = await pool.query(`SELECT * FROM posts WHERE id = ${id}`)
         text = text.rows[0].text.slice(3, -4)
-        res.render("editPost", {id: id, text: text})
+        res.render("editPost", {id: id, text: text, alert: alert })
     })
 
+    app.post("/comment/edit", (req, res) => {
+        let id = req.body.postId
+        let prisonNumber = req.body.prisonNumber
+        let comment = req.body.comment
+       
+      
+        Promise.all([
+            pool.query(`UPDATE posts SET comment='${comment}' WHERE ID = ${id} RETURNING *`),
+            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]) 
+        ]).then(function([result, user]) {
+            let name = user.rows[0].name;
+            if (req.body.edited === 'edited') {
+                res.render("viewComment", { user: name, prisonNumber: prisonNumber, post: result.rows[0] })
+            } else { 
+                res.render("editComment", { user: name, prisonNumber: prisonNumber, post: result.rows[0] })
+            }
+        })
+    })
+        
+    app.post("/comment/view", (req, res) => {
+        let id = req.body.postId
+        let prisonNumber = req.body.prisonNumber
+        Promise.all([
+            pool.query(`SELECT * FROM posts WHERE id = ${id}`),
+            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]) 
+        ]).then(function([result, user]) {
+            let name = user.rows[0].name;
+            res.render("viewComment", { user: name, prisonNumber: prisonNumber, post: result.rows[0] })
+            
+        })
+    })
+            
+   
+    app.post("/delete", async(req, res) => {
+        
+        let id = req.body.postId
+        let requested = req.body.requested
+        console.log(req)
+        if(requested === 'yes') {
+            
+                pool.query(`DELETE FROM posts WHERE id = ${id}`)
+                console.log('deleted')
+             
 
-
+            }
+            res.redirect('/')
+        })
+         
+        app.get("/deleted", async(req, res) => {
+        
+                            res.redirect('/dashboard')
+            })   
+ 
     app.get("/users/logout", (req, res) => {
         req.logOut();
         req.flash('success_msg', "You have logged out");
@@ -224,6 +289,8 @@ function sortPosts(...posts) {
         return a.id - b.id
     })
 }
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

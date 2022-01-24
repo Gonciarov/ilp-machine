@@ -1,7 +1,6 @@
 <!doctype html>
 
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <title>Document</title>
@@ -11,21 +10,45 @@
 </head>
 
 
+<script>
+    
+    function confirmDelete(id) {
+       
+        let confirm = prompt("Type yes if you want to delete the post. This cannot be restored")
+        if (confirm === 'yes') {
+        let postId = document.getElementById('id').value
+        console.log(postId)
+            var xml = new XMLHttpRequest()
+            xml.open("POST", '/delete', true)
+            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+            xml.send(`requested=${confirm}&postId=${postId}`)
+            location.replace('/deleted/')
+        } 
+        } 
+        
+    
+</script>
 
 <body>
     <form action="/dashboard" method="POST">
         <div>
-            <input type="hidden" name="postId" value="<%= id %>">
+            <input type="hidden" id="id" name="postId" value="<%= id %>">
             <textarea id="text" name="text" rows="8" cols="50" required><%- text %></textarea>
         </div>
+       
         <div>
-
-        </div>
-        <div>
-            <input type="submit" value="Post">
+            <input type="submit" value="Update">
+            
         </div>
     </form>
-   
+    <form action='/dashboard' method="GET">
+    <input type="submit"  value="Cancel">
+    <input type="hidden" name="postId" value="<%= id %>">
+    </form>
+    <button onclick="confirmDelete()">Delete</button>
+    
 </body>
+
+
 
 </html>

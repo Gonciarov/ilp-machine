@@ -42,6 +42,13 @@
                         <br/>
                         <% if (posts[i].comment) { %>
                             <i> <%- posts[i].comment %></i>
+                            <form action="/comment/view %>" method="POST">
+                                <div>
+                                    <input type="hidden" name="postId" value="<%= posts[i].id %>">
+                                    <input type="hidden" name="prisonNumber" value="<%= prisonNumber %>">
+                                    <input type="submit" value="View">
+                                </div>
+                            </form>
                             <% } else { %>
                                 <form action="/dashboard/<%= prisonNumber %>" method="POST">
                                     <div>

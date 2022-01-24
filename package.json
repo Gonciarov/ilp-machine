@@ -20,8 +20,10 @@
         "express-session": "^1.17.1",
         "passport": "^0.4.1",
         "passport-local": "^1.0.0",
-        "pg": "^8.5.1"
-
+        "pg": "^8.5.1",
+        "prompt-confirm": "^2.0.4",
+        "prompt-sync": "^4.2.0",
+        "sweetalert2": "^11.3.4"
     },
     "devDependencies": {
         "nodemon": "^2.0.7"
