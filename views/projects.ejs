@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
+</head>
+
+<body>
+
+
+    <a href="/dashboard">Back to dashboard</a>
+    <h1>My project reviews</h1>
+    <table>
+    <% if (!reviews[0]) { %>
+        <p><i>No reviews yet</i></p>
+    <% } else { %> 
+    <% for (var i = 0; i < reviews.length; i++) { %>
+        <tr>
+        <td class="post">
+       <b><%= reviews[i].title %></b>
+        
+        <i class="right"><%= reviews[i].date %></i>
+    </td>
+</tr>
+<tr>
+        <td class="comment">
+        <p class="break">
+       <%= reviews[i].review %></p>
+    </td>
+</tr>
+  <% } %>
+  <%}%>
+</table>
+
+</body>
+
+</html>

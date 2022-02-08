@@ -7,7 +7,7 @@
     <title>Document</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
 <style>
@@ -16,12 +16,33 @@
         white-space: pre;
     }
 </style>
-<script>
 
-    function editable() {
-        return
+<script>
+    function showTextarea() {
+        document.getElementById("EditingComment").style.display = "block"
+        document.getElementById("editButton").style.display = "none"
+        document.getElementById("cancelButton").style.display = "block"
+        document.getElementById("saveButton").style.display = "block"
+        document.getElementById("comment").style.display = "block"
+    }
+
+    function hideTextarea() {
+        document.getElementById("editingComment").style.display = "none"
+        document.getElementById("saveButton").style.display = "none"
+        document.getElementById("cancel-button").style.display = "none"
+        document.getElementById("comment").value = ""
+      
+        document.getElementById("editButton").style.display = "block"
+    }
+
+    function saveAndHideTextarea() {
+        document.getElementById("editingComment").style.display = "none"
+        document.getElementById("saveButton").style.display = "none"
+        document.getElementById("cancel-button").style.display = "none"
+        document.getElementById("editButton").style.display = "block"
     }
 </script>
+
 <body>
 
 
@@ -41,26 +62,36 @@
     <table>
        
             <tr>
-                <td>
-                    <p><%= post.date %>: </p>
+                
+                <td class="post">
+                    <p><b><%= date %>: </b></p>
+                    
+                    <p class="break"><%= text %></p>
                     <br/>
-                    <p><%- post.text %></p>
-                    <br/>
-                    <p><%- post.comment %></p>
-                </td>   
-                        
+                </td>
+            </tr> 
+            <tr>
+                <td class="comment">
+                    <% if (comment) { %>
+                    <p class="break"><%= comment %></p>
+                    <%} else {%>
+                        <p>Not commented yet</p>
+                        <%}%>   
+                    <form action="/comment/edit %>" method="POST">
+                        <div>
+                            <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
+                            <input type="hidden" id="text" name="text" value="<%= text %>">
+                            <input type="hidden" id="comment" name="comment" value="<%= comment %>">
+                            <input type="hidden" id="id" name="postId" value="<%= id %>">
+                            <input type="hidden" id="date" name="date" value="<%= date %>">
+                            <button class="right" style="display:block">Edit</button>   
+                        </div>
+                    </form>  
+                </td>  
             </tr>      
     </table>
 
-    <form action="/comment/edit %>" method="POST">
-        <div>
-            <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
-            <input type="hidden" id="text" name="text" value="<%= post.text %>">
-            <input type="hidden" id="comment" name="comment" value="<%= post.comment %>">
-            <input type="hidden" id="id" name="postId" value="<%= post.id %>">
-            <input type="submit" value="Edit comment">   
-        </div>
-    </form>
+    
 
     <form action="/dashboard/<%= prisonNumber %>" method="POST">
         <div>

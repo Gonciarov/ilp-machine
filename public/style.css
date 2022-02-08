@@ -1,0 +1,72 @@
+td {  
+    border: 1px solid rgb(0, 0, 0);
+    text-align: left;
+    padding: 15px;
+    width: 500px;
+    margin-right: 10px;
+    display: inline-block;
+    
+  }
+
+  h2.student {
+    padding: 10px;
+  }
+
+  p.break {
+    white-space: pre-wrap;
+    
+  }
+
+
+  .post {
+    background-color: #C0D8C0;
+    
+  }
+
+
+
+  .comment {
+    background-color: #F5EEDC;
+    margin-bottom: 10px;
+    margin-top: 3px;
+   
+  }
+
+  div.grid-container {
+    display: grid;
+    grid-template-columns: 550px 550px;
+    gap: 50px;
+  }
+
+  div.grid-container > div {
+    padding: 10px;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .review {
+    background-color: #ECB390;
+  }
+
+
+  a {
+    margin-right: 3px;
+  }
+
+  #review {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  #title {
+    margin-top: 20px;
+  }
+
+  div.formButtons {
+    display: inline-block;
+  }
+
+  /* DD4A48
+  ECB390 */
