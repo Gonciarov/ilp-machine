@@ -91,9 +91,7 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
             }),
 
 
-    app.get("/dashboard/:student", checkNotAuthenticated, async(req, res) => {
-        if (req.user.prison_number === process.env.ADMIN_PRISON_NUMBER) {
-            
+    app.get("/dashboard/:student", checkNotAuthenticated, checkAdminRole, async(req, res) => {        
             let student = req.params.student;
             let comment = req.body.comment
 
@@ -101,17 +99,13 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                 pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [student]),
                 pool.query(`SELECT * FROM users WHERE prison_number = $1`, [student]),
                 pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [student])
-            ]).then(function([posts, user, projects]) {
+            ]).then(function([posts, user, reviews]) {
                 posts = sortPosts(posts.rows)
                 let prisonNumber = user.rows[0].prison_number;
                 let name = user.rows[0].name;
-                projects = projects.rows
-                res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts, projects: projects })
-                
+                reviews = reviews.rows
+                res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews })     
             })
-        } else {
-        res.redirect('/dashboard')
-        }
     }),
 
     app.get("/comment/view", async(req, res) => {
@@ -134,11 +128,11 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [student]),
             pool.query(`SELECT * FROM users WHERE prison_number = $1`, [student]),
             pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [student])
-        ]).then(function([posts, user, projects]) {
+        ]).then(function([posts, user, reviews]) {
             posts = sortPosts(posts.rows)
             let prisonNumber = user.rows[0].prison_number;
             let name = user.rows[0].name;
-            projects = projects.rows
+            reviews = reviews.rows
             if (comment) {
         
                 let postId = req.body.postId;
@@ -157,20 +151,20 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                 ]).then(function() {
                     Promise.all([
                     pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
-                ]).then(function([projects]) {
-                    projects = sortPosts(projects.rows)
+                ]).then(function([reviews]) {
+                    reviews = sortPosts(reviews.rows)
                     
-                    res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts, projects: projects })
+                    res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews })
                 })
                 
             })
          } else {
             Promise.all([
                 pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
-            ]).then(function([projects]) {
-                projects = sortPosts(projects.rows)
+            ]).then(function([reviews]) {
+                reviews = sortPosts(reviews.rows)
                
-                res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts, projects: projects })
+                res.render("viewPosts", { user: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews })
             })
             }
         })
@@ -178,7 +172,7 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
 
     }),
 
-    app.get("/projects", async(req,res) => {
+    app.get("/reviews", async(req,res) => {
         let prisonNumber = req.user.prison_number
         pool.query(
             `SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber],
@@ -187,15 +181,14 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                     throw err;
                 } else {
                     let reviews = results.rows
-                    res.render("projects", {reviews: reviews})
+                    res.render("reviews", {reviews: reviews})
                 }
             }
         )
         
     })
 
-    app.post("/reviews/:review", (req, res) => {
-        if (req.user.prison_number === process.env.ADMIN_PRISON_NUMBER) {
+    app.post("/reviews/:review", checkAdminRole, (req, res) => {
             
         let id = req.params.review
         let prisonNumber = req.body.editPrisonNumber
@@ -207,11 +200,8 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
             let review = result.rows[0].review
             let title = result.rows[0].title
             let date = result.rows[0].date
-            res.render("viewReview", { user: name, id: id, prisonNumber: prisonNumber, title: title, date: date, review: review })
-            
+            res.render("viewReview", { user: name, id: id, prisonNumber: prisonNumber, title: title, date: date, review: review })   
         })
-    
-        }
     })
 
     app.post("/review/edit", (req, res) => {
@@ -385,6 +375,13 @@ function checkAuthenticated(req, res, next) {
 
 function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/users/login");
+}
+
+function checkAdminRole(req, res, next) {
+    if (req.user.prison_number === process.env.ADMIN_PRISON_NUMBER) {
         return next();
     }
     res.redirect("/users/login");

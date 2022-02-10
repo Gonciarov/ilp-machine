@@ -132,23 +132,23 @@
             
         
         <table>
-            <% if (!projects[0]) { %>
+            <% if (!reviews[0]) { %>
                 <p><i>No reviews yet</i></p>
             <% } else { %> 
-        <% for (var i = projects.length - 1; i>=0; i--) { %>
+        <% for (var i = reviews.length - 1; i>=0; i--) { %>
             <tr>
                 <td class="review">
-                    <b><%= projects[i].title %></b>
-                    <i class="right"><%= projects[i].date %></i>
+                    <b><%= reviews[i].title %></b>
+                    <i class="right"><%= reviews[i].date %></i>
                 </td>
                 <td>
-                    <p class="break"><%= projects[i].review %></p>
+                    <p class="break"><%= reviews[i].review %></p>
                 
-                <form action="/reviews/<%= projects[i].id %>" method="POST">
+                <form action="/reviews/<%= reviews[i].id %>" method="POST">
                     <input type="hidden" id="editPrisonNumber" name="editPrisonNumber" value="<%= prisonNumber %>">
-                    <input type="hidden" id="review" name="review" value="<%= projects[i].review %>">
-                    <input type="hidden" id="title" name="title" value="<%= projects[i].title %>">
-                    <input type="hidden" id="date" name="date" value="<%= projects[i].date %>">
+                    <input type="hidden" id="review" name="review" value="<%= reviews[i].review %>">
+                    <input type="hidden" id="title" name="title" value="<%= reviews[i].title %>">
+                    <input type="hidden" id="date" name="date" value="<%= reviews[i].date %>">
                     <input type="submit" class="right" value="Edit">
                 </form> 
             </td>
