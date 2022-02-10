@@ -46,6 +46,12 @@ td {
     float: right;
   }
 
+  .deleteButton {
+    background-color: #DD4A48;
+    color: white;
+    display: inline;
+  }
+
   .review {
     background-color: #ECB390;
   }

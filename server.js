@@ -245,6 +245,7 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
     })
 
     app.post("/comment/edit", (req, res) => {
+        console.log(req.body)
         let id = req.body.postId
         let prisonNumber = req.body.prisonNumber
         let comment = req.body.comment
@@ -290,10 +291,18 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
             }
             res.redirect('/')
         })
-         
-        app.get("/deleted", async(req, res) => {
-            res.redirect('/dashboard')
-            })   
+
+    app.post("/review/delete", async(req, res) => {
+    
+        let id = req.body.reviewId
+        pool.query(`DELETE FROM projects WHERE id = ${id}`)
+        })
+
+    app.post("/comment/delete", async(req, res) => {
+
+        let id = req.body.postId
+        pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
+        })
  
     app.get("/users/logout", (req, res) => {
         req.logOut();

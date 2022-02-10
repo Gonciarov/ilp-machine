@@ -26,9 +26,21 @@
         document.getElementById("toBeHidden2").style.display = "none"
         document.getElementById("cancelButton").style.display = "inline-block"
         document.getElementById("formButtons").style.display = "inline-block"
+        document.getElementById("deleteButton").style.display = "inline-block"
     }
 
     function hideTextarea() {
+        document.getElementById("review").style.display = "none"
+        document.getElementById("review").value =  document.getElementById("cached").value
+        document.getElementById("title").style.display = "none"
+        document.getElementById("saveButton").style.display = "none"
+        document.getElementById("cancelButton").style.display = "none"
+        document.getElementById("toBeHidden1").style.display = "block"
+        document.getElementById("toBeHidden2").style.display = "block"
+        document.getElementById("deleteButton").style.display = "none"
+    }
+
+    function saveAndHideTextarea() {
         document.getElementById("review").style.display = "none"
         document.getElementById("title").style.display = "none"
         document.getElementById("saveButton").style.display = "none"
@@ -36,7 +48,26 @@
         document.getElementById("toBeHidden1").style.display = "block"
         document.getElementById("toBeHidden2").style.display = "block"
     }
+    
+    function confirmDelete() {
+       
+        let confirm = prompt("Type yes if you want to delete this review. This cannot be restored")
+        if (confirm === 'yes') {
+            console.log(confirm)
+        let reviewId = document.getElementById('reviewId').value
+        let prisonNumber = document.getElementById('prisonNumber').value
+            var xml = new XMLHttpRequest()
+            xml.open("POST", '/review/delete', true)
+            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+            xml.send(`prisonNumber=${prisonNumber}&reviewId=${reviewId}`)
+            location.replace(`/dashboard/${prisonNumber}`)
+            alert('Review deleted')
+        }
+        }
+        
+    
 </script>
+
 
 <body>
 
@@ -56,7 +87,7 @@
                 <td id="toBeHidden1" class="review">
                     <b><%= title %></b>
                     <i class="right"><%= date %></i>
-               </td>
+        </td>   
             </tr>
             <tr>
                <td id="toBeHidden2">
@@ -72,13 +103,19 @@
                         <input type="hidden" id="reviewId" name="reviewId" value="<%= id %>">
                         <input type="hidden" id="date" name="date" value="<%= date %>">
                         <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
+                        <input type="hidden" id="cached" name="cached" value="<%= review %>">
                         <input type="text" id="title" name="title" size="32" style="display:none" value="<%= title %>" required>
                         <textarea id="review" name="review" style="display:none" rows="20" cols="64" required><%= review %></textarea>
                         <div id="formButtons">
                         <button id="cancelButton" onclick="hideTextarea()"  style="display:none">Cancel</button>
-                        <button id="saveButton" onclick="hideTextarea()"  style="display:none">Save</button>
+                        <button id="saveButton" onclick="saveAndHideTextarea()"  style="display:none">Save</button>
                         </div>
-                    </form> 
+                    </form>
+                    
+                        <button class="deleteButton" id="deleteButton" onclick="confirmDelete()" style="display:none">Delete</button>
+                    
+                    
+                 
                  
                 
             

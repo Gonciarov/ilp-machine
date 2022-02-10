@@ -12,7 +12,7 @@
 
 <script>
     
-    function confirmDelete(id) {
+    function confirmDelete() {
        
         let confirm = prompt("Type yes if you want to delete the post. This cannot be restored")
         if (confirm === 'yes') {
@@ -21,7 +21,8 @@
             xml.open("POST", '/delete', true)
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
             xml.send(`requested=${confirm}&postId=${postId}`)
-            location.replace('/deleted/')
+            alert("Post deleted")
+            location.replace('/dashboard')
         } 
         } 
         
@@ -37,7 +38,7 @@
                 <input type="hidden" id="id" name="postId" value="<%= id %>">
                 <textarea id="text" name="text" rows="20" cols="60" required><%- text %></textarea>
                 <input class="right" type="submit" value="Update">
-                <button onclick="confirmDelete()">Delete</button>
+                <button class="deleteButton" onclick="confirmDelete()">Delete</button>
         
             </form>
             </td>
