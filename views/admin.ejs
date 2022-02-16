@@ -13,7 +13,7 @@
 
 
 <body>
-    <a href="/users/logout">Logout</a>
+    <a href="/logout">Logout</a>
     <h1>Hello admin
     </h1>
 
@@ -32,8 +32,9 @@
                             <%= students[i].prison_number %>
                         </p>
                         <form action="/dashboard/<%= students[i].prison_number %>" method="POST">
+                          <input type="hidden" name="name" value="<%= students[i].name %>">
                             <div>
-                                <input type="submit" name="<%= students[i].prison_number %>" value="View">
+                                <input type="submit" value="View">
                             </div>
                         </form>
                     </div>

@@ -10,13 +10,6 @@
     <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
-<style>
-    textarea,
-    p {
-        white-space: pre;
-    }
-</style>
-
 <script>
     function showTextarea() {
         document.getElementById("comment").style.display = "block"
@@ -50,7 +43,7 @@
        let postId = document.getElementById('postId').value
        let prisonNumber = document.getElementById('prisonNumber').value
            var xml = new XMLHttpRequest()
-           xml.open("POST", '/comment/delete', true)
+           xml.open("POST", '/delete/comment', true)
            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
            xml.send(`prisonNumber=${prisonNumber}&postId=${postId}`)
            location.replace(`/dashboard/${prisonNumber}`)
@@ -68,7 +61,7 @@
     <h1>Hello Admin
     </h1>
     <h2>Student:
-        <%= user %>,
+        <%= name %>,
             <%= prisonNumber %>
     </h2>
     
@@ -94,10 +87,10 @@
             </tr>       
     </table>
      
-    <form action="/comment/edit" method="POST">
-        <input type="hidden" id="edited" name="edited" value="edited">
-        <input type="hidden" id="postId" name="postId" value="<%= id %>">
+    <form action="/view/comment" method="POST">
+        <input type="hidden" id="postId" name="postId" value="<%= postId %>">
         <input type="hidden" id="date" name="date" value="<%= date %>">
+        <input type="hidden" id="name" name="name" value="<%= name %>">
         <input type="hidden" id="text" name="text" value="<%= text %>">
         <input type="hidden" id="cached" name="cached" value="<%= comment %>">
         <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
@@ -116,7 +109,8 @@
     <form action="/dashboard/<%= prisonNumber %>" method="POST">
         <div>
             <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
-            <input type="submit" style="margin:5px" value="Back to <%= user %>">  
+            <input type="hidden" id="name" name="name" value="<%= name %>">
+            <input type="submit" style="margin:5px" value="Back to <%= name %>">  
         </div>
     </form>
     

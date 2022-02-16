@@ -10,27 +10,18 @@
     <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
-
-<style>
-    
-    textarea,
-    p {
-        white-space: pre;
-    }
-</style>
-
 <body>
 
     
 
-        <a href="/users/logout">Logout</a>
+        <a href="/logout">Logout</a>
         <a href="/reviews">Project reviews</a>
         <h1>Hello
-            <%= user %>
+            <%= name %>
         </h1>
         <form action="/dashboard" method="POST">
             <div>
-                <textarea id="text" name="text" rows="8" cols="50" wrap="hard" placeholder="Write something about your last week work" required></textarea>
+                <textarea id="text" name="text" rows="20" cols="64" wrap="hard" placeholder="Write something about your last week work" required></textarea>
             </div>
             <div>
 
@@ -51,8 +42,13 @@
                                 <p class="break"><%= posts[i].text %></p>
                                     <br/>
                                     <% if (prisonNumber !== process.env.ADMIN_PRISON_NUMBER) { %>
-                                        <form action="/edit" method="POST">
+                                        <form action="/view/post" method="POST">
                                                 <input type="hidden" name="postId" value="<%= posts[i].id %>">
+                                                <input type="hidden" id="date" name="date" value="<%= posts[i].date %>">
+                                                <input type="hidden" id="name" name="name" value="<%= name %>">
+                                                <input type="hidden" id="text" name="text" value="<%= posts[i].text %>">
+                                                <input type="hidden" id="comment" name="comment" value="<%= posts[i].comment %>">
+                                                <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
                                                 <input class="right" type="submit" value="Edit">
                                         </form>
                                         <% } %>

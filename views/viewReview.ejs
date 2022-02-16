@@ -10,13 +10,6 @@
     <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
-<style>
-    textarea,
-    p {
-        white-space: pre;
-    }
-</style>
-
 <script>
     function showTextarea() {
         document.getElementById("review").style.display = "block"
@@ -57,7 +50,7 @@
         let reviewId = document.getElementById('reviewId').value
         let prisonNumber = document.getElementById('prisonNumber').value
             var xml = new XMLHttpRequest()
-            xml.open("POST", '/review/delete', true)
+            xml.open("POST", '/delete/review', true)
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
             xml.send(`prisonNumber=${prisonNumber}&reviewId=${reviewId}`)
             location.replace(`/dashboard/${prisonNumber}`)
@@ -77,7 +70,7 @@
     <h1>Hello Admin
     </h1>
     <h2>Student:
-        <%= user %>,
+        <%= name %>,
             <%= prisonNumber %>
     </h2>
   
@@ -98,12 +91,13 @@
                 
                     
                     
-                    <form action="/review/edit" method="POST">
-                        <input type="hidden" id="edited" name="edited" value="edited">
-                        <input type="hidden" id="reviewId" name="reviewId" value="<%= id %>">
+                    <form action="/view/review" method="POST">
+                        <input type="hidden" id="name" name="name" value="<%= name %>">
+                        <input type="hidden" id="reviewId" name="reviewId" value="<%= reviewId %>">
                         <input type="hidden" id="date" name="date" value="<%= date %>">
                         <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
                         <input type="hidden" id="cached" name="cached" value="<%= review %>">
+                        <input type="hidden" id="editing" name="editing" value="editing">
                         <input type="text" id="title" name="title" size="32" style="display:none" value="<%= title %>" required>
                         <textarea id="review" name="review" style="display:none" rows="20" cols="64" required><%= review %></textarea>
                         <div id="formButtons">
@@ -127,7 +121,8 @@
     <form action="/dashboard/<%= prisonNumber %>" method="POST">
         <div>
             <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
-            <input type="submit" value="Back to <%= user %>">  
+            <input type="hidden" id="name" name="name" value="<%= name %>">
+            <input type="submit" style="margin-top:5px" value="Back to <%= name %>">  
         </div>
     </form>
     

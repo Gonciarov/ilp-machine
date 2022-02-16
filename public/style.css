@@ -12,11 +12,15 @@ td {
     padding: 10px;
   }
 
+  textarea,
+  p {
+      white-space: pre-wrap;
+  }
+
   p.break {
     white-space: pre-wrap;
     
   }
-
 
   .post {
     background-color: #C0D8C0;

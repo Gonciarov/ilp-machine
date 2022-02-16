@@ -10,16 +10,9 @@
     <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
-<style>
-    textarea,
-    p {
-        white-space: pre;
-    }
-</style>
-
 <script>
     function showTextarea() {
-        document.getElementById("review").style.display = "block"
+        document.getElementById('review').style.display = "block"
         document.getElementById("title").style.display = "block"
         document.getElementById("post-button").style.display = "inline-block"
         document.getElementById("add-review-button").style.display = "none"
@@ -51,7 +44,7 @@
 <div><a href="/dashboard">Back to all users</a></div>
 <h2 class="student">
     Student:
-    <%= user %>,
+    <%= name %>,
     <%= prisonNumber %>
 </h2>
 
@@ -59,7 +52,7 @@
     <div class="column-2">
         
         
-            <h2><%= user %>'s reflections: </h2>
+            <h2><%= name %>'s reflections: </h2>
         
         
             <table>
@@ -75,10 +68,14 @@
                         <td class="comment">
                             <p><b>You commented: </b></p>
                             <p class="break"> <%= posts[i].comment %></p>
-                            <form action="/comment/view %>" method="POST">
+                            <form action="/view/comment %>" method="POST">
                                 <div>
                                     <input type="hidden" name="postId" value="<%= posts[i].id %>">
                                     <input type="hidden" name="prisonNumber" value="<%= prisonNumber %>">
+                                    <input type="hidden" id="name" name="name" value="<%= name %>">
+                                    <input type="hidden" id="postText" name="text" value="<%= posts[i].text %>">
+                                    <input type="hidden" id="postComment" name="comment" value="<%= posts[i].comment %>">
+                                    <input type="hidden" id="postDate" name="date" value="<%= posts[i].date %>">
                                     <input class="right" type="submit" value="Edit">
                                 </div>
                             </form>
@@ -96,9 +93,13 @@
                                             
                                                 <p style="display:inline-block;"><i>Not commented yet</i></p>
                                             
-                                            <form action="/comment/view %>" method="POST">
+                                            <form action="/view/comment %>" method="POST">
                                                 <input type="hidden" name="postId" value="<%= posts[i].id %>">
                                                 <input type="hidden" name="prisonNumber" value="<%= prisonNumber %>">
+                                                <input type="hidden" id="name" name="name" value="<%= name %>">
+                                                <input type="hidden" id="text" name="text" value="<%= posts[i].text %>">
+                                                <input type="hidden" id="comment" name="comment" value="<%= posts[i].comment %>">
+                                                <input type="hidden" id="date" name="date" value="<%= posts[i].date %>">
                                                 <input type="submit" class="right" style="color: white; background-color:#DD4A48; display:inline-block" value="Comment">
                                             
                                         </form>
@@ -113,13 +114,13 @@
         </div>
         
     <div class="column-1">
-        <h2><%= user %>'s project reviews: 
+        <h2><%= name %>'s project reviews: 
             
             <button id="add-review-button" class="right" onclick="showTextarea()" style="display:block">Add a review</button>
             
             <form action="/dashboard/<%= prisonNumber %>" method="POST">
-                <input type="hidden" id="id" name="postId" value="<%= prisonNumber %>">
-                <input type="text" id="title" name="title" size="32" style="display:none" placeholder="Project title" required>
+                <input type="hidden" id="name" name="name" value="<%= name %>">
+                <input type="text" id="title" name="title" size="32" style="display:none" placeholder="Project title" maxlength="30" required>
                 <textarea id="review" name="review" style="display:none" rows="20" cols="64" placeholder="Write a new review..." required></textarea>
                 <input type="submit" onclick="saveAndhideTextarea()" id="post-button" style="display:none" value="Post">
                 <button id="cancel-button" onclick="hideTextarea()"  style="display:none">Cancel</button>
@@ -144,9 +145,11 @@
                 <td>
                     <p class="break"><%= reviews[i].review %></p>
                 
-                <form action="/reviews/<%= reviews[i].id %>" method="POST">
-                    <input type="hidden" id="editPrisonNumber" name="editPrisonNumber" value="<%= prisonNumber %>">
+                <form action="/view/review" method="POST">
+                    <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
                     <input type="hidden" id="review" name="review" value="<%= reviews[i].review %>">
+                    <input type="hidden" id="reviewId" name="reviewId" value="<%= reviews[i].id %>">
+                    <input type="hidden" id="name" name="name" value="<%= name %>">
                     <input type="hidden" id="title" name="title" value="<%= reviews[i].title %>">
                     <input type="hidden" id="date" name="date" value="<%= reviews[i].date %>">
                     <input type="submit" class="right" value="Edit">
