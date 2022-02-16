@@ -15,7 +15,7 @@ This is a browser application aimed to store Code4000 learners' weekly reflectio
 - Postgres
 - Express
 
-###To install###
+<b>To install:</b>
 
 - Upload the app to the server;
 
