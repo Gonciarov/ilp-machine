@@ -1,15 +1,15 @@
-###What is it about###
+<b>What is it about</b>
 
 This is a browser application aimed to store Code4000 learners' weekly reflections, progression path, tutors' notes and project reviews. To be placed on internal Code4000 server and be accessible from all classroom computers.
 
-###Functionalities available for 16.02.2022:###
+<b>Functionalities available:</b>
 
 - all users ('students', 'admin') can login and logout into the system;
 - students can create, edit, and delete reflections ('posts');
 - admin can create, edit, and delete comments on each post ('comments');
 - admin can create, edit, and delete project reviews ('reviews');
 
-####Tech####
+<b>Tech</b>
 
 - NodeJS
 - Postgres
