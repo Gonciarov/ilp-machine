@@ -24,14 +24,8 @@ app.use(passport.session());
 app.use(flash());
 app.use(express.static(__dirname + '/public'))
 
-/* all GET and POST requests */
-
 app.get("/", (req, res) => {
     res.render("index");
-});
-
-app.get("/register", checkAuthenticated, (req, res) => {
-    res.render("register");
 });
 
 app.get("/login", checkAuthenticated, (req, res) => {
@@ -137,7 +131,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
 
 }),
 
-app.get("/reviews", async(req,res) => {
+app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     let prisonNumber = req.user.prison_number
     pool.query(
         `SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber],
@@ -181,9 +175,8 @@ app.post("/view/comment", checkAdminRole, (req, res) => {
             res.render("viewComment", { name: name, prisonNumber: prisonNumber, text: text, date: date, postId: postId, comment: comment })
         })
 })
-
-        
-app.post("/delete/post", checkAdminRole, async(req, res) => {
+      
+app.post("/delete/post", async(req, res) => {
     let postId = req.body.postId
     pool.query(`DELETE FROM posts WHERE id = ${postId}`)   
     })
@@ -198,6 +191,17 @@ app.post("/delete/comment", checkAdminRole, async(req, res) => {
     pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
     })
 
+
+app.post("/create/user", checkAdminRole, (req, res) => {
+    let { name, postId, comment, prisonNumber, date, text } = req.body
+    
+        Promise.all([
+            pool.query(`UPDATE posts SET comment='${comment}' WHERE ID = ${postId} RETURNING *`)
+        ]).then(function([result, user]) {
+            res.render("viewComment", { name: name, prisonNumber: prisonNumber, text: text, date: date, postId: postId, comment: comment })
+        })
+})
+
 app.get("/logout", (req, res) => {
     req.logOut();
     req.flash('success_msg', "You have logged out");
@@ -205,6 +209,10 @@ app.get("/logout", (req, res) => {
 });
 
 
+
+app.get("/register", checkAuthenticated, (req, res) => {
+    res.render("register");
+});
 
 app.post("/register", async(req, res) => {
     let { name, prisonNumber, password, password2 } = req.body;
@@ -261,14 +269,15 @@ app.post("/register", async(req, res) => {
     }
 });
 
+
+
 app.post('/login', passport.authenticate('local', {
     successRedirect: "/dashboard",
     failureRedirect: "/login",
     failureFlash: true
 }));
 
-
-
+/* functions */
 
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {

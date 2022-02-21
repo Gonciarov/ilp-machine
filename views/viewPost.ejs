@@ -37,14 +37,13 @@
 
         let confirm = prompt("Type yes if you want to delete the post. This cannot be restored")
         if (confirm === 'yes') {
-            let prisonNumber = '0'
         let postId = document.getElementById('postId').value
             var xml = new XMLHttpRequest()
             xml.open("POST", '/delete/post', true)
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-            xml.send(`prisonNumber=${prisonNumber}&postId=${postId}`)
-            alert("Post deleted")
+            xml.send(`postId=${postId}`)
             location.replace('/dashboard')
+            alert("Post deleted")
         } 
         } 
         
@@ -63,52 +62,44 @@
         </tr>
         <tr>
            <td style="display:inline-block" class="comment">
-            <% if (comment) { %>
-                <p  class="break"><%= comment %></p>
-                
-           <% } else { %>
-                <p class="break"><i>Not commented yet</i></p>
-                
-           <% } %>
-            
-       </td>
+                <% if (comment) { %>
+                    <p  class="break"><%= comment %></p>
+                    
+                <% } else { %>
+                    <p class="break"><i>Not commented yet</i></p>      
+                <% } %>  
+            </td>
         </tr>       
 
- <tr>
-<form action="/view/post" method="POST">
-    <input type="hidden" id="postId" name="postId" value="<%= postId %>">
-    <input type="hidden" id="date" name="date" value="<%= date %>">
-    <input type="hidden" id="name" name="name" value="<%= name %>">
-    <input type="hidden" id="comment" name="comment" value="<%= comment %>">
-    <input type="hidden" id="cached" name="cached" value="<%= text %>">
-    <input type="hidden" id="editing" name="editing" value="editing">
-    <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
-    <textarea id="text" name="text" style="display:none" rows="20" cols="64" required><%= text %></textarea>
-<div style="margin: 5px">
-    <button id="cancelButton" onclick="hideTextarea()"  style="display:none">Cancel</button>
-    <button id="saveButton" onclick="saveAndHideTextarea()"  style="display:none">Save</button>
-</div>
-</form>
+        <tr>
+            <form action="/view/post" method="POST">
+                <input type="hidden" id="postId" name="postId" value="<%= postId %>">
+                <input type="hidden" id="date" name="date" value="<%= date %>">
+                <input type="hidden" id="name" name="name" value="<%= name %>">
+                <input type="hidden" id="comment" name="comment" value="<%= comment %>">
+                <input type="hidden" id="cached" name="cached" value="<%= text %>">
+                <input type="hidden" id="editing" name="editing" value="editing">
+                <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
+                <textarea id="text" name="text" style="display:none" rows="20" cols="64" required><%= text %></textarea>
+                <div style="margin: 5px">
+                    <button id="cancelButton" onclick="hideTextarea()"  style="display:none">Cancel</button>
+                    <button id="saveButton" onclick="saveAndHideTextarea()"  style="display:none">Save</button>
+                </div>
+            </form>
+            <div style="display:inline-block">
+                <% if (text) {%>
+                    <button class="deleteButton" id="deleteButton" onclick="confirmDelete()" style="display:none; margin:5px">Delete</button>
+                <% } %>
+            </div>
+        </tr>
+    </table>  
 
-
-<div style="display:inline-block">
-<% if (comment) {%>
-<button class="deleteButton" id="deleteButton" onclick="confirmDelete()" style="display:none; margin:5px">Delete</button>
-<% } %>
-
-</div>
-</tr>
-</table>  
-
-<form action="/dashboard" method="GET">
-    <div>
-        <input type="submit" style="margin:5px" value="Back to dashboard">
-    </div>
-</form>
-    
-    
+    <form action="/dashboard" method="GET">
+        <div>
+            <input type="submit" style="margin:5px" value="Back to dashboard">
+        </div>
+    </form>
+        
 </body>
-
-
 
 </html>
