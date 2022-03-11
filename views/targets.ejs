@@ -1,0 +1,245 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
+</head>
+
+
+ 
+<script>
+
+    let targetsUpdated = {};
+    let column;
+    let saved = false;
+    let counter = 0;
+    let totalTargetsCount = 0;
+    let number = 0;
+    
+
+    window.onload = (event) => {
+        totalTargetsCount = getTotalTargetsCount();
+        counter = getCounter();
+        calculate();
+        document.getElementById("bigNum").innerText = number;
+    }
+
+    function stashBigNum() {
+        if (!saved) {
+            totalTargetsCount = getTotalTargetsCount();
+            counter = getCounter();
+            calculate();
+            document.getElementById("bigNum").innerText = number;
+        }
+    }
+
+
+    function sendRequest(column, targetsUpdated) {
+        let xml = new XMLHttpRequest();
+        xml.open("POST", "/targets", true);
+        xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        xml.send(`column=${column}&data=${JSON.stringify(targetsUpdated)}`);
+        targetsUpdated = {}
+    }
+
+    function change() {
+        document.getElementById("notSaved").style.display = "inline";
+        document.getElementById("saved").style.display = "none";
+        saved = false;
+       if (window.event.target.className === "true") {
+            window.event.target.className = "false";
+            window.event.target.parentElement.className = "false";
+            counter -= 1;
+            targetsUpdated[window.event.target.id] = "false";
+       } else {
+            window.event.target.className = "true";
+            window.event.target.parentElement.className = "true";
+            counter += 1;
+            targetsUpdated[window.event.target.id] = "true"
+
+       }
+        calculate();
+        
+    }
+
+    function save() {
+        sendRequest(column, targetsUpdated);
+        let buttons = document.getElementsByClassName("showButtons");
+        for (var i = 0; i < buttons.length; i++ ) {
+            buttons[i].style = "none"
+        }
+        document.getElementById("notSaved").style.display = "none";
+        document.getElementById("saved").style.display = "inline";
+        saved = true;
+        column = null;
+        targetsUpdated = {}
+        calculate();
+        }
+        
+    function cancel() {
+        restoreState();
+        document.getElementById("saveButton").style.display = "none";
+        document.getElementById("cancelButton").style.display = "none";
+        let tables = document.getElementsByClassName("tables");
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].style.display = "none";
+        }
+        let buttons = document.getElementsByClassName("showButtons");
+        for (var i = 0; i < buttons.length; i++ ) {
+            buttons[i].style = "none"
+        }
+        document.getElementById("notSaved").style = "display:none";
+        document.getElementById("saved").style = "display:none";
+        saved = false;
+    }
+
+    function showStuff() {
+        restoreState();
+        column = window.event.target.name
+        document.getElementById("notSaved").style = "display:none";
+        document.getElementById("saved").style.display = "none";
+        let tables = document.getElementsByClassName("tables");
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].style.display = "none";
+        } 
+            document.getElementById(column).style.display = "inline";
+            document.getElementById("cancelButton").style.display = "inline-block";
+            document.getElementById("saveButton").style.display = "inline-block";
+        let buttons = document.getElementsByClassName("showButtons");
+        for (var i = 0; i < buttons.length; i++ ) {
+            if (buttons[i].name === column) {
+            buttons[i].style = "background-color: #DD4A48";
+        } else {
+            buttons[i].style = "none"
+        }
+        }
+    }
+    
+
+    function getTotalTargetsCount() {
+        return parseInt(document.getElementById("totalTargetsCount").value)
+    }
+
+    function getCounter() {
+       return parseInt(document.getElementById("counter").value)
+    }
+
+    function calculate() {
+        number = Math.round((counter / totalTargetsCount * 100)).toString() + "%";
+        document.getElementById("bigNum").innerText = number;
+    }
+
+    function restoreState() {
+        stashBigNum();
+        let arr = Object.entries(targetsUpdated)
+        for ( let i = 0; i < arr.length; i++ ) {
+            let element = document.getElementById(arr[i][0])
+            if (arr[i][1] === "true") {
+                if (element.className) {
+                    element.className = "false";
+                }
+                 else { element.parentElement.className = "false"}
+                
+            } else {
+                if (element.className) {
+                    element.className = "true";
+                }
+                 else { element.parentElement.className = "false"}
+            }
+        }
+        column = null;
+        targetsUpdated = {}
+        
+    }
+
+</script>
+
+<body>
+    
+   
+    
+    
+    
+    <div class="targetsTable">
+        <div>
+            <div id="fixed">
+                <a href="/dashboard">Back to dashboard</a>
+                <h1>My targets</h1>
+                <br/>
+                <button name="htmlcss" class="showButtons" onclick="showStuff()">HTML+CSS</button>
+                <button name="jsbasics" class="showButtons" onclick="showStuff()">Javascript</button>
+                <button name="reactjs" class="showButtons" onclick="showStuff()">ReactJS</button> 
+                <div class="bigNum">
+                    <h1 type="text" id="bigNum"></h1>
+                    <p>of curriculum completed</p>
+                
+                <div>
+                    <button id="cancelButton" style="display:none" onclick="cancel()">Cancel</button>
+                    <button id="saveButton" style="display:none" onclick="save()">Save</button>
+                </div>
+                <div id="savedNotSaved">
+                    <i id="saved" style="display:none">saved</i>
+                    <i id="notSaved" style="display:none">not saved</i>
+                </div>
+            </div>
+        <br/>
+        
+    </div>
+    </div>
+
+    
+    <% let counter = 0; %>
+    
+    <% let totalTargetsCount = 0; %>
+    <% for (t in targets) { %>
+        <% let targs = targets[t] %>
+        
+        <% let index = Object.keys(targets).indexOf(t) %>
+        <% let tableName = Object.keys(targets)[index] %>
+        <div>
+        <div style="vertical-align: top">
+        <table id="<%= tableName %>" class="tables" style="display:none">
+        
+        <% for (i in targs) { %>
+            <tr>
+                <%  totalTargetsCount += 1; %>
+                <%    if (targs[i] == "true") { %>
+                    <%     counter += 1; %>
+                    <% } %>
+                   
+              
+                <td id="<%= i %>" class="<%= targs[i] %>" onclick="change()">
+                    <b><%= i %></b>
+                </td>
+            
+    </tr>
+  <%}%>
+
+  
+
+</table>
+<%}%>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<input type="hidden" id='totalTargetsCount' value="<%= totalTargetsCount %>">
+<input type="hidden" id='counter' name="counter" value="<%= counter %>">
+
+
+       
+
+</body>
+
+</html>

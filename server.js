@@ -7,6 +7,7 @@ const flash = require("express-flash");
 const passport = require("passport");
 const alert = require('alert');
 const initializePassport = require("./passportConfig");
+const { jsPDF } = require("jspdf");
 
 initializePassport(passport);
 
@@ -42,7 +43,11 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                 res.render("admin", { posts: posts.rows, students: students.rows });
             } else {
                 posts = sortPosts(posts.rows)
-                res.render("dashboard", { name: user.rows[0].name, prisonNumber: user.rows[0].prison_number, posts: posts });
+                res.render("dashboard", { 
+                    name: user.rows[0].name, 
+                    prisonNumber: user.rows[0].prison_number, 
+                    posts: posts   
+             });
             }
         })
     });
@@ -77,10 +82,23 @@ app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
         Promise.all([
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
-            pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
-        ]).then(function([posts, user, reviews]) {
+            pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+            pool.query(`SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber]),
+            pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
+        ]).then(function([posts, user, reviews, techSkills, softSkills]) {
             let name = user.rows[0].name;
-            res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: sortPosts(posts.rows), reviews: reviews.rows })     
+            let htmlcss = techSkills.rows[0].htmlcss;
+            let jsbasics = techSkills.rows[0].jsbasics;
+            let reactjs = techSkills.rows[0].reactjs;
+            softSkills = softSkills.rows[0].softskills;
+            res.render("viewPostsAndReviews", { 
+                name: name, 
+                prisonNumber: prisonNumber, 
+                posts: sortPosts(posts.rows), 
+                reviews: reviews.rows,
+                techSkills: [htmlcss, jsbasics, reactjs],
+                softSkills: softSkills
+            })     
         })
 }),
 
@@ -94,8 +112,14 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
     let date = req.body.date || new Date().toDateString();
     Promise.all([
         pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
-    ]).then(function([posts, reviews]) {
+        pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
+    ]).then(function([posts, reviews, techSkills, softSkills]) {
+        let htmlcss = techSkills.rows[0].htmlcss;
+        let jsbasics = techSkills.rows[0].jsbasics;
+        let reactjs = techSkills.rows[0].reactjs;
+        softSkills = softSkills.rows[0].softskills;
         posts = sortPosts(posts.rows)
         reviews = reviews.rows
         if (comment) {
@@ -103,7 +127,16 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
                 pool.query(`UPDATE posts SET comment='${comment}' WHERE ID = ${postId} RETURNING *`, 
             )]).then(function([result]) {
                 alert("Comment posted")
-                res.render("viewComment", { name: name, comment: comment, text: text, prisonNumber: prisonNumber, date: date })
+                res.render("viewComment", { 
+                    name: name, 
+                    comment: comment, 
+                    text: text, 
+                    prisonNumber: 
+                    prisonNumber, 
+                    date: date, 
+                    techSkills: [htmlcss, jsbasics, reactjs],
+                    softSkills: softSkills
+                 })
             })
         } else if (review) {
             Promise.all([
@@ -114,7 +147,14 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
                 pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
             ]).then(function([reviews]) {
                 reviews = sortPosts(reviews.rows)
-                res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews })
+                res.render("viewPostsAndReviews", { 
+                    name: name, 
+                    prisonNumber: prisonNumber, 
+                    posts: posts, 
+                    reviews: reviews,
+                    techSkills: [htmlcss, jsbasics, reactjs],
+                    softSkills: softSkills 
+                })
             })
             
         })
@@ -123,7 +163,8 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
             pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
         ]).then(function([reviews]) {
             reviews = sortPosts(reviews.rows)     
-            res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews })
+            res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews, techSkills: [htmlcss, jsbasics, reactjs],
+                softSkills: softSkills  })
         })
         }
     })
@@ -155,6 +196,78 @@ app.post("/view/review", checkAdminRole, (req, res) => {
     } 
     res.render("viewReview", { name: name, date: date, reviewId: reviewId, prisonNumber: prisonNumber, review: review, title: title })
 
+})
+
+app.get("/targets", checkNotAuthenticated, (req, res) => {
+    let prisonNumber = req.user.prison_number
+    pool.query(
+        `SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber], (err, results) => {
+            if (err) {
+                console.log(err);
+            } else {
+               
+              
+                res.render('targets', {
+                    targets: {
+                        htmlcss: results.rows[0].htmlcss, 
+                        jsbasics: results.rows[0].jsbasics, 
+                        reactjs: results.rows[0].reactjs} })
+            }
+    })
+})
+
+app.post("/targets", checkNotAuthenticated, (req, res) => {
+    let prisonNumber = req.user.prison_number
+    let data = JSON.parse(req.body.data)
+    let {column} = req.body
+    console.log(data)
+    Promise.all([
+        pool.query(`SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber])
+    ]).then(function([results]) {  
+        for (i in data) {
+            if (i) {  
+                results.rows[0][column][i] = data[i]     
+            }
+        } 
+        pool.query(`UPDATE targets SET ${column} = '${JSON.stringify(results.rows[0][column])}' WHERE prison_number = 'a@a'`)    
+        res.render('targets', {targets: [results.htmlcss, results.jsbasics, results.reactjs]})
+    })
+})
+
+
+
+app.get("/softskills", checkNotAuthenticated, (req, res) => {
+    let prisonNumber = req.user.prison_number
+    pool.query(
+        `SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber], (err, results) => {
+            if (err) {
+                console.log(err);
+            } else {  
+                res.render('softSkills', {
+                    softskills: 
+                        results.rows[0].softskills 
+                             })
+            }
+    })
+})
+
+app.post("/softskills", checkNotAuthenticated, (req, res) => {
+    let prisonNumber = req.user.prison_number
+    let data = JSON.parse(req.body.data)
+    console.log(data)
+    Promise.all([
+        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
+    ]).then(function([results]) {
+        let softskills = results.rows[0].softskills
+        for (i in data) {
+            if (i) { 
+                softskills[i] = data[i]     
+            }
+        } 
+        pool.query(`UPDATE softskills SET softskills = '${JSON.stringify(softskills)}' WHERE prison_number = $1`, [prisonNumber])    
+        res.render('softSkills', {softskills: softskills})
+
+    })
 })
 
 
@@ -191,8 +304,21 @@ app.post("/delete/comment", checkAdminRole, async(req, res) => {
     pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
     })
 
+app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
+ let prisonNumber = req.params.prisonNumber;
+ let name = req.body.name
+ let doc = new jsPDF();
+ doc.text(
+     `name: ${name}\nprison number: ${prisonNumber}`, 
+     
+     10, 10);
+ doc.save("test.pdf");
+ res.redirect(`/dashboard/${prisonNumber}`)
+ alert("Report saved")
+})
 
-app.post("/create/user", checkAdminRole, (req, res) => {
+
+app.post("/create/user", (req, res) => {
     let { name, postId, comment, prisonNumber, date, text } = req.body
     
         Promise.all([
@@ -207,8 +333,6 @@ app.get("/logout", (req, res) => {
     req.flash('success_msg', "You have logged out");
     res.redirect('/login');
 });
-
-
 
 app.get("/register", checkAuthenticated, (req, res) => {
     res.render("register");
@@ -244,7 +368,6 @@ app.post("/register", async(req, res) => {
                 if (err) {
                     console.log(err);
                 }
-
 
                 if (results.rows.length > 0) {
                     errors.push({ message: "User already registered" });

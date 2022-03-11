@@ -11,6 +11,7 @@
 </head>
 
 <script>
+
     function showTextarea() {
         document.getElementById('review').style.display = "block"
         document.getElementById("title").style.display = "block"
@@ -36,17 +37,70 @@
         document.getElementById("cancel-button").style.display = "none"
         document.getElementById("add-review-button").style.display = "block"
     }
+
+    function getTechSkillsNums() {
+        let completed = parseInt(document.getElementById("techSkillsCompleted").value);
+        let total = parseInt(document.getElementById("techSkillsTotal").value);
+        calculateAndDisplay(total, completed, "bigNumTech")
+    }
+
+    function getSoftSkillsNums() {
+       let completed = parseInt(document.getElementById("softSkillsCompleted").value);
+       let total = parseInt(document.getElementById("softSkillsTotal").value);
+        calculateAndDisplay(total, completed, "bigNumSoft")
+    }
+
+    function calculateAndDisplay(total, completed, string) {
+        let number = Math.round((completed / total * 100)).toString() + "%";
+        document.getElementById(string).innerText = number;
+        
+    }
+
+    window.onload = (event) => {
+       getSoftSkillsNums();
+       getTechSkillsNums();
+    }
+
 </script>
 
 <body>
 
 
 <div><a href="/dashboard">Back to all users</a></div>
-<h2 class="student">
-    Student:
-    <%= name %>,
-    <%= prisonNumber %>
-</h2>
+<div id="studentBar">
+    <div id="studentNameDate">
+        <h2>
+            Student:
+            <%= name %>,
+            <%= prisonNumber %>
+        </h2>
+        <p>Started Code4000 course on <%= posts[0].date %></p>
+    </div>
+    <form action="/report/<%= prisonNumber %>" method="POST">
+        <input type="hidden" id="name" name="name" value="<%= name %>">
+        <button type="submit" id="report">Report</button>
+    </form> 
+    <div id="studentBarBottomRow">
+    <div class="bigNumTech">
+        <h1 id="bigNumTech"></h1>
+        <p>curriculum completed</p>
+    </div>
+    <div class="bigNumSoft">
+        <h1 id="bigNumSoft"></h1>
+        <p>soft skills learnt</p>
+    </div>
+    <div class="bigNumPosts">
+        <h1><%= posts.length %></h1>
+        <p>reflections</p>
+    </div>
+    <div class="bigNumReviews">
+        <h1><%= reviews.length %></h1>
+        <p>project reviews</p>
+    </div>
+    </div>
+
+    
+</div>
 
 <div class="grid-container">
     <div class="column-2">
@@ -126,11 +180,7 @@
                 <button id="cancel-button" onclick="hideTextarea()"  style="display:none">Cancel</button>
             </form> 
         </h2>
-        
-        
-       
-       
-            
+ 
         
         <table>
             <% if (!reviews[0]) { %>
@@ -165,6 +215,34 @@
 
 
 </div>
+<% let softSkillsTotal = 0 %>
+<% let softSkillsCompleted = 0; %>
+<% for (skill in softSkills) { %>
+    <% softSkillsTotal += 1 %>
+    <% if (softSkills[skill] == "true") { %>
+       <% softSkillsCompleted += 1 %>
+       <%}%>
+<%}%>
+
+
+
+
+<input type="hidden" id='softSkillsTotal' value="<%= softSkillsTotal %>">
+<input type="hidden" id='softSkillsCompleted' value="<%= softSkillsCompleted %>">
+
+<% let techSkillsTotal = 0 %>
+<% let techSkillsCompleted = 0; %>
+<% for (let i = 0; i < techSkills.length; i++) { %>
+    <% for (skill in techSkills[i]) {%>
+        <% techSkillsTotal += 1 %>
+        <% if (techSkills[i][skill] == "true") { %>
+            <% techSkillsCompleted += 1 %>
+            <%}%>
+            <%}%>
+    <%}%>
+
+<input type="hidden" id='techSkillsTotal' value="<%= techSkillsTotal %>">
+<input type="hidden" id='techSkillsCompleted' value="<%= techSkillsCompleted %>">
 </body>
 
 </html>

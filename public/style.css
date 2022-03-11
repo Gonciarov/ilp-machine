@@ -10,11 +10,18 @@ td {
 
   h2.student {
     padding: 10px;
+    display: inline-block;
   }
+
+
 
   textarea,
   p {
       white-space: pre-wrap;
+  }
+
+  textarea {
+    margin-top: 2px;
   }
 
   p.break {
@@ -46,6 +53,18 @@ td {
     padding: 10px;
   }
 
+  div.targetsTable {
+    display: grid;
+    grid-template-columns: 120px 550px;
+    gap: 50px;
+  }
+
+  div.targetsTable > div {
+    padding: 10px;
+  }
+
+  
+
   .right {
     float: right;
   }
@@ -76,6 +95,120 @@ td {
 
   div.formButtons {
     display: inline-block;
+  }
+
+  td.true {
+    background-color: #C0D8C0;
+  }
+
+  td.false {
+    background-color: white;
+  }
+
+  #notSaved {
+    color: #DD4A48;
+  }
+
+  #saved {
+    color: rgb(72, 129, 72);
+  }
+
+  #savedNotSaved {
+    margin-top: 20px;
+  }
+
+  .bigNum {
+    
+    color: #DD4A48;
+    display: inline-block; 
+    
+  }
+
+  .bigNumTech {
+    
+    color: #DD4A48;
+    margin-right: 20px;
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+    vertical-align: top;
+  }
+
+  .bigNumSoft {
+    
+    color: grey;
+    display: inline-block; 
+    text-align: center;
+    margin-right: 20px;
+    width: 100px;
+    vertical-align: top;
+  }
+
+  .bigNumPosts {
+    
+    color: rgb(98, 155, 98);
+    display: inline-block; 
+    margin-right: 20px;
+    text-align: center;
+    width: 100px;
+    vertical-align: top;
+  }
+
+  .bigNumReviews {
+    
+    color: rgb(233, 147, 94);
+    display: inline-block; 
+    text-align: center;
+    width: 100px;
+    vertical-align: top;
+  }
+
+  .bigNum h1, 
+  .bigNumTech h1, 
+  .bigNumSoft h1, 
+  .bigNumPosts h1,
+  .bigNumReviews h1 {
+    font-size: 48px;
+    margin-bottom: -7px;
+  }
+
+
+  #fixed {
+    position: fixed;
+    width: 140px;
+    height: 500px;
+    background-color: #ECB390;
+    padding: 10px;
+    text-align: center;
+    border: brown solid 1px;
+    margin-top: 2px;
+  }
+
+  #studentBar {
+    background-color: #F5EEDC;
+    border: grey solid 1px;
+    margin: 10px;
+    padding: 15px;
+    width: 500px;
+    text-align: center;
+  }
+
+  #studentNameDate {
+    float: left;
+  }
+
+  #studentBarBottomRow {
+    display: inline-block;
+  }
+
+  #report {
+    float: right;
+  }
+
+  .showButtons {
+    width: 90px;
+    margin-bottom: 5px;
+    text-align: center;
   }
 
   /* DD4A48

@@ -1,0 +1,221 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
+</head>
+
+
+ 
+<script>
+
+    let softSkillsUpdated = {};
+    let column;
+    let saved = false;
+    let counter = 0;
+    let totalSoftSkillsCount = 0;
+    let number = 0;
+    
+
+    window.onload = (event) => {
+        totalSoftSkillsCount = getTotalSoftSkillsCount();
+        counter = getCounter();
+        calculate();
+        document.getElementById("bigNum").innerText = number;
+    }
+
+    function stashBigNum() {
+        if (!saved) {
+            totalSoftSkillsCount = getTotalSoftSkillsCount();
+            counter = getCounter();
+            calculate();
+            document.getElementById("bigNum").innerText = number;
+        }
+    }
+
+
+    function sendRequest(column, softSkillsUpdated) {
+       
+        let xml = new XMLHttpRequest();
+        xml.open("POST", "/softskills", true);
+        xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        xml.send(`column=${column}&data=${JSON.stringify(softSkillsUpdated)}`);
+        softSkillsUpdated = {}
+    }
+
+    function change() {
+        
+        document.getElementById("notSaved").style.display = "inline";
+        document.getElementById("saved").style.display = "none";
+        saved = false;
+       if (window.event.target.className === "true") {
+            window.event.target.className = "false";
+            window.event.target.parentElement.className = "false";
+            counter -= 1;
+            softSkillsUpdated[window.event.target.id] = "false";
+       } else {
+            window.event.target.className = "true";
+            window.event.target.parentElement.className = "true";
+            counter += 1;
+            softSkillsUpdated[window.event.target.id] = "true"
+
+       }
+        calculate();
+    
+        
+    }
+
+    function save() {
+        sendRequest(column, softSkillsUpdated);
+        let buttons = document.getElementsByClassName("showButtons");
+        document.getElementById("notSaved").style.display = "none";
+        document.getElementById("saved").style.display = "inline";
+        saved = true;
+        column = null;
+        softSkillsUpdated = {}
+        calculate();
+        }
+        
+    function cancel() {
+        restoreState();
+        document.getElementById("saveButton").style.display = "none";
+        document.getElementById("cancelButton").style.display = "none";
+        let tables = document.getElementsByClassName("tables");
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].style.display = "none";
+        }
+        let buttons = document.getElementsByClassName("showButtons");
+        for (var i = 0; i < buttons.length; i++ ) {
+            buttons[i].style = "none"
+        }
+        document.getElementById("notSaved").style = "display:none";
+        document.getElementById("saved").style = "display:none";
+        saved = false;
+    }
+
+    function showStuff() {
+        restoreState();
+        column = window.event.target.name
+        document.getElementById("notSaved").style = "display:none";
+        document.getElementById("saved").style.display = "none";
+        let tables = document.getElementsByClassName("tables");
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].style.display = "none";
+        } 
+            document.getElementById(column).style.display = "inline";
+            document.getElementById("cancelButton").style.display = "inline-block";
+            document.getElementById("saveButton").style.display = "inline-block";
+        let buttons = document.getElementsByClassName("showButtons");
+    }
+    
+
+    function getTotalSoftSkillsCount() {
+        return parseInt(document.getElementById("totalSoftSkillsCount").value)
+    }
+
+    function getCounter() {
+       return parseInt(document.getElementById("counter").value)
+    }
+
+    function calculate() {
+        number = Math.round((counter / totalSoftSkillsCount * 100)).toString() + "%";
+        document.getElementById("bigNum").innerText = number;
+    }
+
+    function restoreState() {
+        stashBigNum();
+        let arr = Object.entries(softSkillsUpdated)
+        for ( let i = 0; i < arr.length; i++ ) {
+            let element = document.getElementById(arr[i][0])
+            if (arr[i][1] === "true") {
+                if (element.className) {
+                    element.className = "false";
+                }
+                 else { element.parentElement.className = "false"}
+                
+            } else {
+                if (element.className) {
+                    element.className = "true";
+                }
+                 else { element.parentElement.className = "false"}
+            }
+        }
+        column = null;
+        softSkillsUpdated = {}
+        
+    }
+
+</script>
+
+<body>
+
+    <div class="targetsTable">
+        <div>
+            <div id="fixed">
+                <a href="/dashboard">Back to dashboard</a>
+                <h1>My soft skills</h1>
+                <br/>
+                <button name="softskills" class="showButtons" onclick="showStuff()">Show list</button>
+                <div class="bigNum">
+                    <h1 type="text" id="bigNum"></h1>
+                    <p>of soft skills developed</p>
+                
+                <div>
+                    <button id="cancelButton" style="display:none" onclick="cancel()">Cancel</button>
+                    <button id="saveButton" style="display:none" onclick="save()">Save</button>
+                </div>
+                <div id="savedNotSaved">
+                    <i id="saved" style="display:none">saved</i>
+                    <i id="notSaved" style="display:none">not saved</i>
+                </div>
+            </div>
+        <br/>
+        
+    </div>
+    </div>
+
+    
+    <% let counter = 0; %>
+    
+    <% let totalSoftSkillsCount = 0; %>
+    
+        <div>
+        <div style="vertical-align: top">
+        <table id="softskills" class="tables" style="display:none">
+        
+        <% for (i in softskills) { %>
+            
+            <tr>
+                <%  totalSoftSkillsCount += 1; %>
+                <%    if (softskills[i] == "true") { %>
+                    <%     counter += 1; %>
+                    <% } %>
+                   
+              
+                <td id="<%= i %>" class="<%= softskills[i] %>" onclick="change()">
+                    <b><%= i %></b>
+                </td>
+            
+    </tr>
+  <%}%>
+
+  
+
+</table>
+
+
+</div>
+</div>
+</div>
+
+<input type="hidden" id='totalSoftSkillsCount' value="<%= totalSoftSkillsCount %>">
+<input type="hidden" id='counter' name="counter" value="<%= counter %>">
+
+</body>
+
+</html>

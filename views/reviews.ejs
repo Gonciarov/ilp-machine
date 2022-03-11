@@ -12,9 +12,23 @@
 
 <body>
 
+    <div class="targetsTable">
+        <div id="fixed">
+            <a href="/dashboard">Back to dashboard</a>
+            <br/>
+            <h1>My project reviews
+            </h1>
+            
+            <br/>
+            <a href="/targets">Tech skills</a>
+            <br/>
+            <a href="/softskills">Soft skills</a>
+            <br/>
+            <p><i>Please do your best to update your reflections every Friday and refresh your tech and soft skills records monthly</i></p>
+        </div>
+    <br/>
 
-    <a href="/dashboard">Back to dashboard</a>
-    <h1>My project reviews</h1>
+
     <table>
     <% if (!reviews[0]) { %>
         <p><i>No reviews yet</i></p>
@@ -36,7 +50,7 @@
   <% } %>
   <%}%>
 </table>
-
+</div>
 </body>
 
 </html>
