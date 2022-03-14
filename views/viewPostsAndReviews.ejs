@@ -45,7 +45,7 @@
     }
 
     function getSoftSkillsNums() {
-       let completed = parseInt(document.getElementById("softSkillsCompleted").value);
+       let completed = parseInt(document.getElementById("softSkillsCompleted1").value);
        let total = parseInt(document.getElementById("softSkillsTotal").value);
         calculateAndDisplay(total, completed, "bigNumSoft")
     }
@@ -53,18 +53,24 @@
     function calculateAndDisplay(total, completed, string) {
         let number = Math.round((completed / total * 100)).toString() + "%";
         document.getElementById(string).innerText = number;
+        for (let i = 0; i < document.getElementsByClassName(string).length; i++) {  
+            document.getElementsByClassName(string)[i].value = number
+        }
         
     }
+
+
 
     window.onload = (event) => {
        getSoftSkillsNums();
        getTechSkillsNums();
     }
 
+
+
 </script>
 
 <body>
-
 
 <div><a href="/dashboard">Back to all users</a></div>
 <div id="studentBar">
@@ -78,6 +84,10 @@
     </div>
     <form action="/report/<%= prisonNumber %>" method="POST">
         <input type="hidden" id="name" name="name" value="<%= name %>">
+        <input type="hidden" id="curriculumCompleted" class="bigNumTech" name="curriculumCompleted" value="0">
+        <input type="hidden" id="softSkillsCompleted" class="bigNumSoft" name="softSkillsCompleted" value="0">
+        <input type="hidden" id="postsTotal" name="postsTotal" value="<%= posts.length %>">
+        <input type="hidden" id="reviewsTotal" name="reviewsTotal" value="<%= reviews.length %>">
         <button type="submit" id="report">Report</button>
     </form> 
     <div id="studentBarBottomRow">
@@ -103,7 +113,7 @@
 </div>
 
 <div class="grid-container">
-    <div class="column-2">
+    <div id="reflections" class="column-2">
         
         
             <h2><%= name %>'s reflections: </h2>
@@ -228,7 +238,7 @@
 
 
 <input type="hidden" id='softSkillsTotal' value="<%= softSkillsTotal %>">
-<input type="hidden" id='softSkillsCompleted' value="<%= softSkillsCompleted %>">
+<input type="hidden" id='softSkillsCompleted1' value="<%= softSkillsCompleted %>">
 
 <% let techSkillsTotal = 0 %>
 <% let techSkillsCompleted = 0; %>

@@ -61,4 +61,38 @@ UPDATE targets SET htmlcss = '{"I know what a browser is":"false",
     "I know how to use code editor (Sublime, VSCode, etc)":"false",
     "I know how to use developer tools (Console) in browser":"false",
     "I know how to style any static web page with CSS":"false"}' WHERE prison_number = 'a@a';
+
+    UPDATE targets SET reactjs = '{"I have a fantastic soft skill 1":"false",
+        "I can do something":"false",
+        "I have a fantastic soft skill 3":"false",
+        "I have a fantastic soft skill 4":"false",
+        "I have a fantastic soft skill 5":"false",
+        "I have a fantastic soft skill 6":"false",
+        "I have a fantastic soft skill 7":"false",
+        "I have a fantastic soft skill 8":"false",
+        "I have a fantastic soft skill 9":"false",
+        "I have a fantastic soft skill 10":"false",
+        "I have a fantastic soft skill 11":"false",
+        "I have a fantastic soft skill 12":"false",
+        "I have a fantastic soft skill 13":"false",
+        "I have a fantastic soft skill 14":"false"}' WHERE prison_number = 'nnnnnn';
+
+       
+
+
+        UPDATE softskills SET softskills = '{"I have a fantastic soft skill 1":"false",
+            "I have a fantastic soft skill 1":"false",
+            "I have a fantastic soft skill 3":"false",
+            "I have a fantastic soft skill 4":"false",
+            "I have a fantastic soft skill 5":"false",
+            "I have a fantastic soft skill 6":"false",
+            "I have a fantastic soft skill 7":"false",
+            "I have a fantastic soft skill 8":"false",
+            "I have a fantastic soft skill 9":"false",
+            "I have a fantastic soft skill 10":"false",
+            "I have a fantastic soft skill 11":"false",
+            "I have a fantastic soft skill 12":"false",
+            "I have a fantastic soft skill 13":"false",
+            "I have a fantastic soft skill 14":"false"}' WHERE prison_number = 'nnnnnn';
     
+   
