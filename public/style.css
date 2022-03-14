@@ -4,8 +4,12 @@ td {
     padding: 15px;
     width: 500px;
     margin-right: 10px;
-    display: inline-block;
     
+    
+  }
+
+  td.message {  
+    width: 300px;
   }
 
   h2.student {
@@ -55,12 +59,12 @@ td {
 
   div.targetsTable {
     display: grid;
-    grid-template-columns: 120px 550px;
+    grid-template-columns: 120px 550px 350px;
     gap: 50px;
   }
 
   div.targetsTable > div {
-    padding: 10px;
+    
   }
 
   

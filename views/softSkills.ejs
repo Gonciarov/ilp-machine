@@ -53,22 +53,17 @@
         document.getElementById("notSaved").style.display = "inline";
         document.getElementById("saved").style.display = "none";
         saved = false;
-       if (window.event.target.className === "true") {
+        if (window.event.target.className === "true") {
             window.event.target.className = "false";
-            window.event.target.parentElement.className = "false";
-            counter -= 1;
             softSkillsUpdated[window.event.target.id] = "false";
-       } else {
+            counter -= 1;
+        } else {
             window.event.target.className = "true";
-            window.event.target.parentElement.className = "true";
+            softSkillsUpdated[window.event.target.id] = "true";
             counter += 1;
-            softSkillsUpdated[window.event.target.id] = "true"
-
+            }
+            calculate();
        }
-        calculate();
-    
-        
-    }
 
     function save() {
         sendRequest(column, softSkillsUpdated);
@@ -198,7 +193,7 @@
                    
               
                 <td id="<%= i %>" class="<%= softskills[i] %>" onclick="change()">
-                    <b><%= i %></b>
+                    <%= i %>
                 </td>
             
     </tr>

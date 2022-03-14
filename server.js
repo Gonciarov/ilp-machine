@@ -46,7 +46,9 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                 res.render("dashboard", { 
                     name: user.rows[0].name, 
                     prisonNumber: user.rows[0].prison_number, 
-                    posts: posts   
+                    posts: posts,
+                    students: students.rows
+                     
              });
             }
         })
@@ -268,6 +270,10 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
     })
 })
 
+app.post("/messages/:dialogId", (req, res) => {
+    let dialogId = req.params.dialogId
+    res.render("messages", {dialogId: dialogId})
+})
 
 app.post("/view/post", async(req, res) => {
     let { name, postId, prisonNumber, text, comment, date, editing } = req.body

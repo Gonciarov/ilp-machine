@@ -1,3 +1,10 @@
+CREATE TABLE projects ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, title VARCHAR (30) NOT NULL, review VARCHAR (2000) NOT NULL, date VARCHAR (20) NOT NULL);
+
+CREATE TABLE users ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, name VARCHAR (30) NOT NULL, password VARCHAR(600) NOT NULL, UNIQUE(prison_number));
+
+CREATE TABLE posts ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, text VARCHAR (2000) NOT NULL, comment VARCHAR(2000), date VARCHAR (20) NOT NULL));
+
+
 "I know how to comment out a line of code": "false",
 "I know how to create Variable": "false",
 "I know how to assign Value to Variables": "false",
