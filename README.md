@@ -6,8 +6,11 @@ This is a browser application aimed to store Code4000 learners' weekly reflectio
 
 - all users ('students', 'admin') can login and logout into the system;
 - students can create, edit, and delete reflections ('posts');
+- students can tick their learnt tech and soft skills out and see percentage of curriculum completed
 - admin can create, edit, and delete comments on each post ('comments');
 - admin can create, edit, and delete project reviews ('reviews');
+- admin can see students general info in one place and generate reports in PDF;
+
 
 <b>Tech</b>
 
@@ -17,9 +20,9 @@ This is a browser application aimed to store Code4000 learners' weekly reflectio
 
 <b>To install:</b>
 
-- Upload the app to the server;
+Upload the app to the server;
 
-- Create .env file in the root of the app with following values:
+Create .env file in the root of the app with following values:
 
 - DB_USER=`your db user name` 
 - DB_PASSWORD=`your password`
@@ -28,13 +31,13 @@ This is a browser application aimed to store Code4000 learners' weekly reflectio
 - DB_DATABASE=code4000
 - ADMIN_PRISON_NUMBER=`your admin prison number`
 
-- Create Postgres database Code4000, create tables (see commands in sqlCommands.json)
+Create Postgres database Code4000, create tables (see commands in sqlCommands.json)
 
-- create account for admin, add admin prison number to .env
+create account for admin, add admin prison number to .env
 
-- Run 'node server.js' and see the thing at `your host`:`your port`
+Run 'node server.js' and see the thing at `your host`:`your port`
 
-- Click 'login' and create one or more students'accounts
+Click 'login' and create one or more students'accounts
 
-- populate database tables with data (see commands in sqlCommands.json))
+populate database tables with data (see commands in sqlCommands.json))
 
