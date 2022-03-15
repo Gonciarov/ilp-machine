@@ -21,12 +21,12 @@ This is a browser application aimed to store Code4000 learners' weekly reflectio
 
 - Create .env file in the root of the app with following values:
 
-DB_USER=`your db user name` 
-DB_PASSWORD=`your password`
-DB_HOST=`your host`
-DB_PORT=`your port`
-DB_DATABASE=code4000
-ADMIN_PRISON_NUMBER=`your admin prison number`
+- DB_USER=`your db user name` 
+- DB_PASSWORD=`your password`
+- DB_HOST=`your host`
+- DB_PORT=`your port`
+- DB_DATABASE=code4000
+- ADMIN_PRISON_NUMBER=`your admin prison number`
 
 - Create Postgres database Code4000, create tables (see commands in sqlCommands.json)
 
