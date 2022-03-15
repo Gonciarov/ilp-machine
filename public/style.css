@@ -9,7 +9,15 @@ td {
   }
 
   td.message {  
-    width: 300px;
+    width: 350px;
+  }
+
+  #messagesHeader {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 5px;
+    width: 334px;
+    margin-left: 2px;
+    margin-top: 2px;
   }
 
   h2.student {
@@ -59,8 +67,8 @@ td {
 
   div.targetsTable {
     display: grid;
-    grid-template-columns: 120px 550px 350px;
-    gap: 50px;
+    grid-template-columns: 180px 550px 350px;
+    gap: 30px;
   }
 
   div.targetsTable > div {

@@ -91,22 +91,26 @@
                 </table>
             </div>
             <div>
-                <h2>Send a message</h2>
+            <div id="messagesHeader">
+               <h2 style="text-align: center;">Code4000 students</h2>
+            </div>
                 <table>
             <% for (let i = 0; i < students.length; i++) { %>
                 
                     <tr>
                         <td class="message">
-                            
-                                <b style="display:inline"><%= students[i].name %>, <%= students[i].prison_number %> </b>
                                 <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("").toString() %>
+                            
                                 <% console.log(dialogId) %>
                                 <form action="/messages/<%= dialogId %>" method="POST">
                                   <input type="hidden" name="name" value="<%= students[i].name %>">
                                     
-                                        <input type="submit" style="display:inline" class ="right" value="View">
+                                  <b style="display:inline-block"><%= students[i].name %>, <%= students[i].prison_number %></b>
+                                  <input type="submit" style="float: right" value="Message">
                                     
                                 </form>
+                            
+                            
                             
         
                         </td>
@@ -115,7 +119,8 @@
            <% } %>
         </table>
     </div>
-            </div>
+    </div>
+    </div>
            
 </body>
 
