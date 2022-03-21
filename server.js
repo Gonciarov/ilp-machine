@@ -286,12 +286,13 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
 app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let dialogId = req.params.dialogId
     let text = req.body.message
+    let dateTime = new Date().toLocaleString();
     console.log(dialogId)
     if (text) {
     let name = req.user.name
     Promise.all([
-        pool.query(`INSERT INTO messages (id, author, message)
-    VALUES ($1, $2, $3)`, [dialogId, name, text])
+        pool.query(`INSERT INTO messages (id, author, message, datetime)
+    VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime])
     ]).then(function([result]) {
         pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
             if (err) {
