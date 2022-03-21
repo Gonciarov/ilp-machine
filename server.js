@@ -270,10 +270,54 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
     })
 })
 
-app.post("/messages/:dialogId", (req, res) => {
+app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let dialogId = req.params.dialogId
-    res.render("messages", {dialogId: dialogId})
+    pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
+        if (err) {
+            console.log(err)
+        } else {
+            results = results.rows
+            console.log(results)
+        }
+        res.render("messages", {dialogId: dialogId, messages: results}) 
+    })
 })
+
+app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
+    let dialogId = req.params.dialogId
+    let text = req.body.message
+    console.log(dialogId)
+    if (text) {
+    let name = req.user.name
+    Promise.all([
+        pool.query(`INSERT INTO messages (id, author, message)
+    VALUES ($1, $2, $3)`, [dialogId, name, text])
+    ]).then(function([result]) {
+        pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
+            if (err) {
+                console.log(err)
+            } else {
+                results = results.rows
+                console.log(results)
+            }
+            res.render("messages", {dialogId: dialogId, messages: results}) 
+    })
+    })
+} else {
+
+    pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
+        if (err) {
+            console.log(err)
+        } else {
+            results = results.rows
+            console.log(results)
+        }
+        res.render("messages", {dialogId: dialogId, messages: results}) 
+    })
+}
+
+})
+     
 
 app.post("/view/post", async(req, res) => {
     let { name, postId, prisonNumber, text, comment, date, editing } = req.body
@@ -510,7 +554,12 @@ function sortPosts(...posts) {
     })
 }
 
-
+function checkDialogAccess(req, res, next) {
+    if (req.params.dialogId.includes(req.user.prison_number)) {
+        return next();
+    }
+    res.redirect("/dashboard");
+}
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

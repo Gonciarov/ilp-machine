@@ -15,9 +15,24 @@
 <script>
 
 </script>
-
+<a href="/logout">Logout</a>
+<a href="/dashboard">Dashboard</a>
 <body>
-    <%= dialogId %>
+<form action="/messages/<%= dialogId %>" method="post">
+    <textarea name="message"></textarea>
+    <button>send</button>
+</form>
+<table>
+<% for (let i = messages.length - 1; i >= 0 ; i-- ) { %>
+    <tr>
+        <td>
+    <b><%= messages[i].author %></b>
+    <br/>
+    <p><%= messages[i].message %></p>
+<% } %> 
+</td>
+</tr>
+</table>
 
 </body>
 

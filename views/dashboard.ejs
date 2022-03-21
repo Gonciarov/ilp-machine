@@ -43,9 +43,7 @@
             <div>
                 <textarea id="text" name="text" rows="20" cols="64" wrap="hard" placeholder="Write something about your last week work" required></textarea>
             </div>
-            <div>
-
-            </div>
+          
             <div>
                 <input type="submit" value="Post">
             </div>
@@ -92,19 +90,20 @@
             </div>
             <div>
             <div id="messagesHeader">
-               <h2 style="text-align: center;">Code4000 students</h2>
+               <h2>Code4000 students</h2>
             </div>
                 <table>
             <% for (let i = 0; i < students.length; i++) { %>
-                
-                    <tr>
+                    <% if (prisonNumber !== students[i].prison_number) { %>
+                    <tr class="message">
                         <td class="message">
-                                <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("").toString() %>
+                                <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
                             
                                 <% console.log(dialogId) %>
                                 <form action="/messages/<%= dialogId %>" method="POST">
                                   <input type="hidden" name="name" value="<%= students[i].name %>">
-                                    
+                                    <input type="hidden" name="participant1" value="<%= prisonNumber %>">
+                                    <input type="hidden" name="participant2" value="<%= students[i].prison_number %>">
                                   <b style="display:inline-block"><%= students[i].name %>, <%= students[i].prison_number %></b>
                                   <input type="submit" style="float: right" value="Message">
                                     
@@ -115,7 +114,7 @@
         
                         </td>
                     </tr>
-                
+                    <% } %>
            <% } %>
         </table>
     </div>
