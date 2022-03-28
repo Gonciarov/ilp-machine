@@ -90,27 +90,33 @@
             </div>
             <div>
             <div id="messagesHeader">
-               <h2>Code4000 students</h2>
+               <h2>Your messages</h2>
             </div>
                 <table>
             <% for (let i = 0; i < students.length; i++) { %>
+                
                     <% if (prisonNumber !== students[i].prison_number) { %>
                     <tr class="message">
                         <td class="message">
                                 <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
                             
-                                <% console.log(dialogId) %>
+                                
                                 <form action="/messages/<%= dialogId %>" method="POST">
                                   <input type="hidden" name="name" value="<%= students[i].name %>">
                                     <input type="hidden" name="participant1" value="<%= prisonNumber %>">
-                                    <input type="hidden" name="participant2" value="<%= students[i].prison_number %>">
-                                  <b style="display:inline-block"><%= students[i].name %>, <%= students[i].prison_number %></b>
-                                  <input type="submit" style="float: right" value="Message">
+                                    <input type="hidden" name="participant2" value="<%= students[i].name %>">
+                                  <b style="display:inline-block">
+                                    <%= students[i].name %>, 
+                                    <%= students[i].prison_number %>
+                                    <% if (notSeen[students[i].prison_number] == "unseen") { %>
+                                        <b style="display:inline-block; color: red">(new)</b>
+                                    <% } %>
+                                </b>
+                                    
+                                  <input type="submit" style="float: right" value="View">
                                     
                                 </form>
-                            
-                            
-                            
+                
         
                         </td>
                     </tr>

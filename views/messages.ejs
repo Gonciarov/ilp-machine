@@ -13,27 +13,60 @@
 
  
 <script>
-
+    window.onload = (event) => {
+        let dialogId = document.getElementById("dialogId").value
+        let xml = new XMLHttpRequest();
+        xml.open("POST", "/unseen-seen", true);
+        xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        xml.send(`dialogId=${dialogId}`);
+    }
 </script>
-<a href="/logout">Logout</a>
-<a href="/dashboard">Dashboard</a>
+
 <body>
-<form action="/messages/<%= dialogId %>" method="post">
-    <textarea name="message"></textarea>
-    <button>send</button>
-</form>
-<table>
-<% for (let i = messages.length - 1; i >= 0 ; i-- ) { %>
-    <tr>
-        <td>
-    <b><%= messages[i].author %></b>
-    <i>(on <%= messages[i].datetime %>):</i>
-    <br/>
-    <p><%= messages[i].message %></p>
-<% } %> 
-</td>
-</tr>
-</table>
+    <div class="targetsTable">
+        <div id="fixed">
+            
+            <a href="/dashboard">Back to dashboard</a>
+            <br/>
+           
+            
+            <br/>
+           
+            <br/>
+            </div>
+        <br/>
+       
+          <div>
+            <form action="/messages/<%= dialogId %>" method="POST">
+                <div>
+                    <textarea name="message" rows="20" cols="64" wrap="hard" placeholder="Write your message here" required></textarea>
+                </div>
+              
+                <div>
+                    <input type="submit" value="Send">
+                </div>
+            </form>
+            <table>
+                <br/>
+                
+                <% for (let i = messages.length - 1; i >= 0 ; i-- ) { %>
+                    <tr>
+                        <td>
+                    <b><%= messages[i].author %></b>
+                    <i>(on <%= messages[i].datetime %>):</i>
+                    <br/>
+                    <p><%= messages[i].message %></p>
+                <% } %> 
+            </td>
+            </tr>
+            
+            
+            </table>
+        
+    </div>
+    </div>
+
+   <input id="dialogId" type="hidden" value="<%= dialogId %>">
 
 </body>
 

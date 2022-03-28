@@ -47,7 +47,9 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                     name: user.rows[0].name, 
                     prisonNumber: user.rows[0].prison_number, 
                     posts: posts,
-                    students: students.rows
+                    students: students.rows,
+                    notSeen: user.rows[0].unseen
+                    
                      
              });
             }
@@ -277,7 +279,6 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
             console.log(err)
         } else {
             results = results.rows
-            console.log(results)
         }
         res.render("messages", {dialogId: dialogId, messages: results}) 
     })
@@ -286,36 +287,60 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
 app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let dialogId = req.params.dialogId
     let text = req.body.message
+    let participant2 = req.body.participant2
     let dateTime = new Date().toLocaleString();
-    console.log(dialogId)
-    if (text) {
+    let msgs = []
     let name = req.user.name
-    Promise.all([
-        pool.query(`INSERT INTO messages (id, author, message, datetime)
-    VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime])
-    ]).then(function([result]) {
+    let prisonNumber = req.user.prison_number
+    let recipient = dialogId.replace('-', '').replace(prisonNumber, '')
+    if (text) {
+        
+        Promise.all([
+            pool.query(`INSERT INTO messages (id, author, message, datetime)
+        VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime]),
+            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [recipient]),
+        ]).then(function([inserted, selected]) {
+                if (!selected.rows[0].unseen) {
+                    selected.rows[0].unseen = {}
+                } 
+                selected.rows[0].unseen[prisonNumber] = "unseen";
+                console.log(`${recipient}: `)
+                console.log(selected.rows[0].unseen)
+                pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [ selected.rows[0].unseen, recipient]),
+                pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        msgs = results.rows
+                    }
+                    res.render("messages", {dialogId: dialogId, messages: msgs, participant2: participant2})  
+            })
+        })
+    } else {
         pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
             if (err) {
                 console.log(err)
             } else {
-                results = results.rows
-                console.log(results)
+                msgs = results.rows
             }
-            res.render("messages", {dialogId: dialogId, messages: results}) 
-    })
-    })
-} else {
+            res.render("messages", {dialogId: dialogId, messages: msgs, participant2: participant2})  
+    })    
+    }
+})
 
-    pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
-        if (err) {
-            console.log(err)
-        } else {
-            results = results.rows
-            console.log(results)
-        }
-        res.render("messages", {dialogId: dialogId, messages: results}) 
+app.post("/unseen-seen", (req, res) => {
+    let prisonNumber = req.user.prison_number
+    let dialogId = req.body.dialogId
+    let anotherParticipant = dialogId.replace('-', '').replace(prisonNumber, '')
+    Promise.all([
+    pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
+    ]).then(function([selected]) {
+        if (!selected.rows[0].unseen) {
+            selected.rows[0].unseen = {}
+        } 
+        selected.rows[0].unseen[anotherParticipant] = "seen";
+        pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [selected.rows[0].unseen, prisonNumber])
     })
-}
 
 })
      
