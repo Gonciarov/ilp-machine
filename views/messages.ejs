@@ -39,7 +39,7 @@
           <div>
             <form action="/messages/<%= dialogId %>" method="POST">
                 <div>
-                    <textarea name="message" rows="20" cols="64" wrap="hard" placeholder="Write your message here" required></textarea>
+                    <textarea name="message" rows="20" cols="64" wrap="hard" maxlength="2000" placeholder="Write your message here" required></textarea>
                 </div>
               
                 <div>
