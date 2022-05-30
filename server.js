@@ -8,6 +8,8 @@ const passport = require("passport");
 const alert = require('alert');
 const initializePassport = require("./passportConfig");
 const { jsPDF, AcroFormTextField } = require("jspdf");
+const genericSkills = require("./serverHelpers/genericSkills")
+
 
 initializePassport(passport);
 
@@ -40,7 +42,7 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
             pool.query(`SELECT * FROM users`)
         ]).then(function([user, posts, students]) {
             if (req.user.prison_number == process.env.ADMIN_PRISON_NUMBER) {
-                res.render("admin", { posts: posts.rows, students: students.rows });
+                res.render("admin", { posts: posts.rows, students: students.rows, prisonNumber: req.user.prison_number });
             } else {
                 posts = sortPosts(posts.rows)
                 res.render("dashboard", { 
@@ -304,8 +306,6 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                     selected.rows[0].unseen = {}
                 } 
                 selected.rows[0].unseen[prisonNumber] = "unseen";
-                console.log(`${recipient}: `)
-                console.log(selected.rows[0].unseen)
                 pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [ selected.rows[0].unseen, recipient]),
                 pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
                     if (err) {
@@ -524,16 +524,18 @@ app.post("/register", async(req, res) => {
                     errors.push({ message: "User already registered" });
                     res.render("register", { errors });
                 } else {
+                    genericSkills.seed(prisonNumber)
                     pool.query(
-                        `INSERT INTO users (name, prison_number, password)
-                        VALUES ($1, $2, $3)
-                        RETURNING id, password`, [name, prisonNumber, hashedPassword],
+                        `INSERT INTO users (name, prison_number, password, unseen)
+                        VALUES ($1, $2, $3, $4)
+                        RETURNING id, password`, [name, prisonNumber, hashedPassword, {}],
                         (err, results) => {
                             if (err) {
                                 throw err;
                             }
 
                             req.flash("success_msg", "You are now registered please log in")
+                            genericSkills.seed(prisonNumber)
                             res.redirect('/login')
                         }
                     )

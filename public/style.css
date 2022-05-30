@@ -1,10 +1,20 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+a:visited {
+  color: inherit;
+}
+
 td {  
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0, 0.2);
     text-align: left;
     padding: 15px;
     width: 500px;
     margin-right: 10px;
     display: inline-block;
+    color: rgb(0, 0, 0, 0.7);
+    border-radius: 10px;
     
   }
 
@@ -22,6 +32,16 @@ td {
 
   textarea {
     margin-top: 2px;
+    color: rgb(0, 0, 0, 0.7);
+    border-radius: 10px;
+    border: 1px solid rgb(0, 0, 0, 0.2);
+    resize: none;
+  }
+
+  textarea:focus, input:focus {
+    outline: none;
+    background-color: (0, 0, 0, 0.1);;
+    border-radius: 10px;
   }
 
   p.break {
@@ -34,7 +54,19 @@ td {
     
   }
 
+  button {
+    border-color: 0.2px rgb(0, 0, 0, 0.2);
+    color: rgb(0, 0, 0, 0.7);
+  }
 
+  button:focus {
+    outline: none;
+  }
+
+  input {
+    border-color: 0.2px rgb(0, 0, 0, 0.2);
+    color: rgb(0, 0, 0, 0.7);
+  }
 
   .comment {
     background-color: #F5EEDC;
@@ -55,8 +87,8 @@ td {
 
   div.targetsTable {
     display: grid;
-    grid-template-columns: 120px 550px 272px;
-    gap: 50px;
+    grid-template-columns: 120px 500px 272px;
+    gap: 150px;
   }
 
   div.targetsTable > div {
@@ -68,6 +100,8 @@ td {
   .right {
     float: right;
   }
+
+ 
 
   .deleteButton {
     background-color: #DD4A48;
@@ -180,8 +214,10 @@ td {
     background-color: #ECB390;
     padding: 10px;
     text-align: center;
-    border: brown solid 1px;
+    border: brown solid 1px transparent;
     margin-top: 2px;
+    color: rgb(0, 0, 0, 0.7);
+    border-radius: 10px;
   }
 
   #studentBar {
@@ -218,9 +254,11 @@ td {
 
   #messagesHeader {
     text-align: center;
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0, 0.2);
     padding: 5px;
     margin: 1px -1px 1px 1px;
+    color: rgb(0, 0, 0, 0.7);
+    border-radius: 10px;
   }
 
   /* DD4A48

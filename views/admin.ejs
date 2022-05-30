@@ -24,6 +24,7 @@
 
     <table>
         <% for (var i = 0; i<students.length; i++) { %>
+            <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
             <tr>
                 <td>
                     <div>
@@ -37,6 +38,14 @@
                                 <input type="submit" value="View">
                             </div>
                         </form>
+
+
+
+                        <form action="/messages/<%= dialogId %>" method="POST">
+                              <div>
+                                  <input type="submit" value="View">
+                              </div>
+                          </form>
                     </div>
 
 
