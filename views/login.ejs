@@ -7,11 +7,11 @@
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
 <body>
-    <h1>login</h1>
+    
     <ul>
         <% if(messages.success_msg) { %>
             <li>
@@ -27,7 +27,8 @@
             </li>
             <% } %>
     </ul>
-
+<div id="login">
+    <h1>login</h1>
     <form action="/login" method="POST">
         <div>
             <input type="prisonNumber" id="prisonNumber" name="prisonNumber" placeholder="prison number" required>
@@ -36,14 +37,16 @@
             <input type="password" id="password" name="password" placeholder="password" required>
         </div>
         <div>
-            <input type="submit" value="Login">
+            <input type="submit" value="Click">
         </div>
-    </form>
-
-    <div>
-        <a href="/register">Register</a>
-
         <div>
+            <p>Don't have an account? <a href="/register">Register</a></p>
+    
+            <div>
+    </form>
+</div>
+
+    
 </body>
 
 </html>
