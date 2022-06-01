@@ -28,7 +28,7 @@ app.use(flash());
 app.use(express.static(__dirname + '/public'))
 
 app.get("/", (req, res) => {
-    res.render("index");
+    res.render("login");
 });
 
 app.get("/login", checkAuthenticated, (req, res) => {
