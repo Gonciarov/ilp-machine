@@ -10,7 +10,7 @@ let targetsUpdated = {};
         totalTargetsCount = getTotalTargetsCount();
         counter = getCounter();
         calculate();
-        document.getElementById("bigNum").innerText = number;
+        document.getElementById("big-num").innerText = number;
     }
 
     function stashBigNum() {
@@ -18,7 +18,7 @@ let targetsUpdated = {};
             totalTargetsCount = getTotalTargetsCount();
             counter = getCounter();
             calculate();
-            document.getElementById("bigNum").innerText = number;
+            document.getElementById("big-num").innerText = number;
         }
     }
 
@@ -32,7 +32,7 @@ let targetsUpdated = {};
     }
 
     function change() {
-        document.getElementById("notSaved").style.display = "inline";
+        document.getElementById("not-saved").style.display = "inline";
         document.getElementById("saved").style.display = "none";
         saved = false;
         
@@ -52,11 +52,11 @@ let targetsUpdated = {};
 
     function save() {
         sendRequest(column, targetsUpdated);
-        let buttons = document.getElementsByClassName("showButtons");
+        let buttons = document.getElementsByClassName("sidebar-buttons");
         for (var i = 0; i < buttons.length; i++ ) {
             buttons[i].style = "none"
         }
-        document.getElementById("notSaved").style.display = "none";
+        document.getElementById("not-saved").style.display = "none";
         document.getElementById("saved").style.display = "inline";
         saved = true;
         column = null;
@@ -72,11 +72,11 @@ let targetsUpdated = {};
         for (var i = 0; i < tables.length; i++) {
             tables[i].style.display = "none";
         }
-        let buttons = document.getElementsByClassName("showButtons");
+        let buttons = document.getElementsByClassName("sidebar-buttons");
         for (var i = 0; i < buttons.length; i++ ) {
             buttons[i].style = "none"
         }
-        document.getElementById("notSaved").style = "display:none";
+        document.getElementById("not-saved").style = "display:none";
         document.getElementById("saved").style = "display:none";
         saved = false;
     }
@@ -84,7 +84,7 @@ let targetsUpdated = {};
     function showStuff() {
         restoreState();
         column = window.event.target.name
-        document.getElementById("notSaved").style = "display:none";
+        document.getElementById("not-saved").style = "display:none";
         document.getElementById("saved").style.display = "none";
         let tables = document.getElementsByClassName("tables");
         for (var i = 0; i < tables.length; i++) {
@@ -93,7 +93,7 @@ let targetsUpdated = {};
             document.getElementById(column).style.display = "inline";
             document.getElementById("cancelButton").style.display = "inline-block";
             document.getElementById("saveButton").style.display = "inline-block";
-        let buttons = document.getElementsByClassName("showButtons");
+        let buttons = document.getElementsByClassName("sidebar-buttons");
         for (var i = 0; i < buttons.length; i++ ) {
             if (buttons[i].name === column) {
             buttons[i].style = "background-color: #DD4A48";
@@ -114,7 +114,7 @@ let targetsUpdated = {};
 
     function calculate() {
         number = Math.round((counter / totalTargetsCount * 100)).toString() + "%";
-        document.getElementById("bigNum").innerText = number;
+        document.getElementById("big-num").innerText = number;
     }
 
     function restoreState() {

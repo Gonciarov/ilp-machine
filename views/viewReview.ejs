@@ -18,8 +18,8 @@
         document.getElementById("toBeHidden1").style.display = "none"
         document.getElementById("toBeHidden2").style.display = "none"
         document.getElementById("cancelButton").style.display = "inline-block"
-        document.getElementById("formButtons").style.display = "inline-block"
-        document.getElementById("deleteButton").style.display = "inline-block"
+        document.getElementById("review-form-buttons").style.display = "inline-block"
+        document.getElementById("delete-button").style.display = "inline-block"
     }
 
     function hideTextarea() {
@@ -30,7 +30,7 @@
         document.getElementById("cancelButton").style.display = "none"
         document.getElementById("toBeHidden1").style.display = "block"
         document.getElementById("toBeHidden2").style.display = "block"
-        document.getElementById("deleteButton").style.display = "none"
+        document.getElementById("delete-button").style.display = "none"
     }
 
     function saveAndHideTextarea() {
@@ -99,13 +99,13 @@
                         <input type="hidden" id="editing" name="editing" value="editing">
                         <input type="text" id="title" name="title" size="32" style="display:none" value="<%= title %>" required>
                         <textarea id="review" name="review" style="display:none" rows="20" cols="64" required><%= review %></textarea>
-                        <div id="formButtons">
+                        <div id="review-form-buttons">
                         <button id="cancelButton" onclick="hideTextarea()"  style="display:none">Cancel</button>
                         <button id="saveButton" onclick="saveAndHideTextarea()"  style="display:none">Save</button>
                         </div>
                     </form>
                     
-                        <button class="deleteButton" id="deleteButton" onclick="confirmDelete()" style="display:none">Delete</button>
+                        <button class="delete-button" id="delete-button" onclick="confirmDelete()" style="display:none">Delete</button>
                     
                     
                  

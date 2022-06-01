@@ -1,9 +1,11 @@
+/* general */
+
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-input[type=submit] {
-  margin-top: 10px;
+a {
+  margin-right: 3px;
 }
 
 a:visited {
@@ -11,300 +13,300 @@ a:visited {
 }
 
 td {  
-    border: 1px solid rgb(0, 0, 0, 0.2);
-    text-align: left;
-    padding: 15px;
-    width: 500px;
-    margin-right: 10px;
-    display: inline-block;
-    color: rgb(0, 0, 0, 0.7);
-    border-radius: 10px;
-    
-  }
-
-  h2.student {
-    padding: 10px;
-    display: inline-block;
-  }
-
-
-
-  textarea,
-  p {
-      white-space: pre-wrap;
-  }
-
-  textarea {
-    margin-top: 2px;
-    color: rgb(0, 0, 0, 0.7);
-    border-radius: 10px;
-    border: 1px solid rgb(0, 0, 0, 0.2);
-    resize: none;
-  }
-
-  textarea:focus, input:focus {
-    outline: none;
-    background-color: (0, 0, 0, 0.1);;
-    border-radius: 10px;
-  }
-
-  p.break {
-    white-space: pre-wrap;
-    
-  }
-
-  .post {
-    background-color: #C0D8C0;
-    
-  }
-
-  button {
-    border-color: 0.2px rgb(0, 0, 0, 0.2);
-    color: rgb(0, 0, 0, 0.7);
-  }
-
-  button:focus {
-    outline: none;
-  }
-
-  input {
-    border-color: 0.2px rgb(0, 0, 0, 0.2);
-    color: rgb(0, 0, 0, 0.7);
-  }
-
-  .comment {
-    background-color: #F5EEDC;
-    margin-bottom: 10px;
-    margin-top: 3px;
-   
-  }
-
-  div.grid-container {
-    display: grid;
-    grid-template-columns: 550px 550px;
-    gap: 50px;
-  }
-
-  div.grid-container > div {
-    padding: 10px;
-  }
-
-  div.targetsTable {
-    display: grid;
-    grid-template-columns: 120px 500px 272px;
-    gap: 150px;
-  }
-
-  div.targetsTable > div {
-
-  }
-
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  text-align: left;
+  padding: 15px;
+  width: 500px;
+  margin-right: 10px;
+  display: inline-block;
+  color: rgb(0, 0, 0, 0.7);
+  border-radius: 10px;
   
+}
 
-  .right {
-    float: right;
-  }
+textarea,
+p {
+  white-space: pre-wrap;
+}
 
- 
+textarea {
+  margin-top: 2px;
+  color: rgb(0, 0, 0, 0.7);
+  border-radius: 10px;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  resize: none;
+}
 
-  .deleteButton {
-    background-color: #DD4A48;
-    color: white;
-    display: inline;
-  }
+textarea:focus, input:focus {
+  outline: none;
+  background-color: (0, 0, 0, 0.1);;
+  border-radius: 10px;
+}
 
-  .review {
-    background-color: #ECB390;
-  }
+p.break {
+  white-space: pre-wrap;
+  
+}
 
+button {
+  border-color: 0.2px rgb(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0, 0.7);
+}
 
-  a {
-    margin-right: 3px;
-  }
+button:focus {
+  outline: none;
+}
 
-  #review {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
+input {
+  border-color: 0.2px rgb(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0, 0.7);
+  margin-top: 10px;
+  
+}
 
-  #title {
-    margin-top: 20px;
-  }
+.delete-button {
+  background-color: #DD4A48;
+  color: white;
+  display: inline;
+}
 
-  div.formButtons {
-    display: inline-block;
-  }
+.right {
+  float: right;
+}
 
-  td.true {
-    background-color: #C0D8C0;
-  }
+/* STUDENT SIDE - posts and comments */
 
-  td.false {
-    background-color: white;
-  }
+.post {
+  background-color: #C0D8C0;
+  
+}
 
-  #notSaved {
-    color: #DD4A48;
-  }
+.comment {
+  background-color: #F5EEDC;
+  margin-bottom: 10px;
+  margin-top: 3px;
+  
+}
 
-  #saved {
-    color: rgb(72, 129, 72);
-  }
+/* STUDENT AND ADMIN SIDES - reviews */
 
-  #savedNotSaved {
-    margin-top: 20px;
-  }
+.review {
+  background-color: #ECB390;
+  margin-top: 10px;
+  
+}
 
-  .bigNum {
-    
-    color: #DD4A48;
-    display: inline-block; 
-    
-  }
+#review, #textarea-review {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
-  .bigNumTech {
-    
-    color: #DD4A48;
-    margin-right: 20px;
-    display: inline-block;
-    text-align: center;
-    width: 100px;
-    vertical-align: top;
-  }
+.title {
+  margin-top: 20px;
+}
 
-  .bigNumSoft {
-    
-    color: grey;
-    display: inline-block; 
-    text-align: center;
-    margin-right: 20px;
-    width: 100px;
-    vertical-align: top;
-  }
-
-  .bigNumPosts {
-    
-    color: rgb(98, 155, 98);
-    display: inline-block; 
-    margin-right: 20px;
-    text-align: center;
-    width: 100px;
-    vertical-align: top;
-  }
-
-  .bigNumReviews {
-    
-    color: rgb(233, 147, 94);
-    display: inline-block; 
-    text-align: center;
-    width: 100px;
-    vertical-align: top;
-  }
-
-  .bigNum h1, 
-  .bigNumTech h1, 
-  .bigNumSoft h1, 
-  .bigNumPosts h1,
-  .bigNumReviews h1 {
-    font-size: 48px;
-    margin-bottom: -7px;
-  }
+div.review-form-buttons {
+  display: inline-block;
+}
 
 
-  #fixed {
-    position: fixed;
-    width: 180px;
-    height: 500px;
-    background-color: #ECB390;
-    padding: 10px;
-    text-align: center;
-    border: brown solid 1px transparent;
-    margin-top: 2px;
-    color: rgb(0, 0, 0, 0.7);
-    border-radius: 10px;
-  }
+/* STUDENT SIDE - sidebar */
 
-  #studentBar {
-    background-color: #F5EEDC;
-    border: grey solid 1px;
-    margin: 10px;
-    padding: 15px;
-    width: 500px;
-    text-align: center;
-  }
+#sidebar {
+  position: fixed;
+  width: 180px;
+  height: 500px;
+  background-color: #ECB390;
+  padding: 10px;
+  text-align: center;
+  border: brown solid 1px transparent;
+  margin-top: 2px;
+  color: rgb(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
 
-  #studentNameDate {
-    float: left;
-  }
+.sidebar-buttons {
+  width: 90px;
+  margin-bottom: 5px;
+  text-align: center;
+}
 
-  #studentBarBottomRow {
-    display: inline-block;
-  }
+#not-saved {
+  color: #DD4A48;
+}
 
-  #report {
-    float: right;
-  }
+#saved {
+  color: rgb(72, 129, 72);
+}
 
-  .showButtons {
-    width: 90px;
-    margin-bottom: 5px;
-    text-align: center;
-  }
+#saved-status-container {
+  margin-top: 20px;
+}
 
-  .message {
-    width: 250px;
-    padding: 10px;
-  }
+.big-num {
+  
+  color: #DD4A48;
+  display: inline-block; 
+  
+}
 
-  #messagesHeader {
-    text-align: center;
-    border: 1px solid rgb(0, 0, 0, 0.2);
-    padding: 5px;
-    margin: 1px -1px 1px 1px;
-    color: rgb(0, 0, 0, 0.7);
-    border-radius: 10px;
-  }
+/* STUDENT SIDE - skills bars */
+
+td.true {
+  background-color: #C0D8C0;
+}
+
+td.false {
+  background-color: white;
+}
+
+/* STUDENT SIDE - messages panel */
+
+#messages-header {
+  text-align: center;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  padding: 5px;
+  margin: 1px -1px 1px 1px;
+  color: rgb(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+
+.message {
+  width: 250px;
+  padding: 10px;
+}
+
+/* ADMIN SIDE - student bar */
+
+#student-bar {
+  background-color: #F5EEDC;
+  border: grey solid 1px;
+  margin: 10px;
+  padding: 15px;
+  width: 500px;
+  text-align: center;
+}
+
+#student-name-date {
+  float: left;
+}
+
+#student-bar-bottom {
+  display: inline-block;
+}
+
+#report-button {
+  float: right;
+}
+
+.big-num-tech {
+  
+  color: #DD4A48;
+  margin-right: 20px;
+  display: inline-block;
+  text-align: center;
+  width: 100px;
+  vertical-align: top;
+}
+
+.big-num-soft {
+  
+  color: grey;
+  display: inline-block; 
+  text-align: center;
+  margin-right: 20px;
+  width: 100px;
+  vertical-align: top;
+}
+
+.big-num-posts {
+  
+  color: rgb(98, 155, 98);
+  display: inline-block; 
+  margin-right: 20px;
+  text-align: center;
+  width: 100px;
+  vertical-align: top;
+}
+
+.big-num-reviews {
+  
+  color: rgb(233, 147, 94);
+  display: inline-block; 
+  text-align: center;
+  width: 100px;
+  vertical-align: top;
+}
+
+.big-num h1, 
+.big-num-tech h1, 
+.big-num-soft h1, 
+.big-num-posts h1,
+.big-num-reviews h1 {
+  font-size: 48px;
+  margin-bottom: -7px;
+}
+
+/* ADMIN SIDE - student's posts and reviews grid */
+
+div.grid-container {
+  display: grid;
+  grid-template-columns: 550px 550px;
+  gap: 50px;
+}
+
+div.grid-container > div {
+  padding: 10px;
+}
+
+div.targets-table {
+  display: grid;
+  grid-template-columns: 120px 500px 272px;
+  gap: 150px;
+}
 
 /* register, login */
 
-  #terms-and-conditions, #register-form, #login {
-    
-    width: 700px;
-    border: 1px solid rgb(0, 0, 0, 0.2);
-    margin: auto;
-    padding: 20px;
-    margin-bottom: 50px;
-  }
-
-  #register-form {
-    display: none;
-    text-align: center;
-  }
-
-  #login {
-    text-align: center;
-  }
-
-  .tickbox {
-    width: 30px;
-    height: 30px;
-    margin-left: 30px;
+#terms-and-conditions, 
+#register-form, 
+#login-form {
   
-  }
-  #rules-header {
-    text-align: center;
-  }
+  width: 700px;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  margin: auto;
+  padding: 20px;
+  margin-bottom: 50px;
+}
 
-  .rule-text {
-    width: 600px;
-    display: inline-block;
-    vertical-align: middle;
+#register-form {
+  display: none;
+  text-align: center;
+}
 
-  }
+#login-form {
+  text-align: center;
+}
 
-  #rules-bottom {
-    text-align: center;
-  }
+.tickbox {
+  width: 30px;
+  height: 30px;
+  margin-left: 30px;
 
-  /* DD4A48
-  ECB390 */
+}
+#rules-header {
+  text-align: center;
+}
+
+.rule-text {
+  width: 600px;
+  display: inline-block;
+  vertical-align: middle;
+
+}
+
+#rules-bottom {
+  text-align: center;
+}
+
+/* colours used previously: DD4A48
+ECB390 */

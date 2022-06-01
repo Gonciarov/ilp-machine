@@ -41,13 +41,13 @@
     function getTechSkillsNums() {
         let completed = parseInt(document.getElementById("techSkillsCompleted").value);
         let total = parseInt(document.getElementById("techSkillsTotal").value);
-        calculateAndDisplay(total, completed, "bigNumTech")
+        calculateAndDisplay(total, completed, "big-num-tech")
     }
 
     function getSoftSkillsNums() {
        let completed = parseInt(document.getElementById("softSkillsCompleted1").value);
        let total = parseInt(document.getElementById("softSkillsTotal").value);
-        calculateAndDisplay(total, completed, "bigNumSoft")
+        calculateAndDisplay(total, completed, "big-num-soft")
     }
 
     function calculateAndDisplay(total, completed, string) {
@@ -73,8 +73,8 @@
 <body>
 
 <div><a href="/dashboard">Back to all users</a></div>
-<div id="studentBar">
-    <div id="studentNameDate">
+<div id="student-bar">
+    <div id="student-name-date">
         <h2>
             Student:
             <%= name %>,
@@ -84,26 +84,26 @@
     </div>
     <form action="/report/<%= prisonNumber %>" method="POST">
         <input type="hidden" id="name" name="name" value="<%= name %>">
-        <input type="hidden" id="curriculumCompleted" class="bigNumTech" name="curriculumCompleted" value="0">
-        <input type="hidden" id="softSkillsCompleted" class="bigNumSoft" name="softSkillsCompleted" value="0">
+        <input type="hidden" id="curriculumCompleted" class="big-num-tech" name="curriculumCompleted" value="0">
+        <input type="hidden" id="softSkillsCompleted" class="big-num-soft" name="softSkillsCompleted" value="0">
         <input type="hidden" id="postsTotal" name="postsTotal" value="<%= posts.length %>">
         <input type="hidden" id="reviewsTotal" name="reviewsTotal" value="<%= reviews.length %>">
-        <button type="submit" id="report">Report</button>
+        <button type="submit" id="report-button">Report</button>
     </form> 
-    <div id="studentBarBottomRow">
-    <div class="bigNumTech">
-        <h1 id="bigNumTech"></h1>
+    <div id="student-bar-bottom">
+    <div class="big-num-tech">
+        <h1 id="big-num-tech"></h1>
         <p>curriculum completed</p>
     </div>
-    <div class="bigNumSoft">
-        <h1 id="bigNumSoft"></h1>
+    <div class="big-num-soft">
+        <h1 id="big-num-soft"></h1>
         <p>soft skills learnt</p>
     </div>
-    <div class="bigNumPosts">
+    <div class="big-num-posts">
         <h1><%= posts.length %></h1>
         <p>reflections</p>
     </div>
-    <div class="bigNumReviews">
+    <div class="big-num-reviews">
         <h1><%= reviews.length %></h1>
         <p>project reviews</p>
     </div>
@@ -207,7 +207,7 @@
                 
                 <form action="/view/review" method="POST">
                     <input type="hidden" id="prisonNumber" name="prisonNumber" value="<%= prisonNumber %>">
-                    <input type="hidden" id="review" name="review" value="<%= reviews[i].review %>">
+                    <input type="hidden" id="textarea-review" name="review" value="<%= reviews[i].review %>">
                     <input type="hidden" id="reviewId" name="reviewId" value="<%= reviews[i].id %>">
                     <input type="hidden" id="name" name="name" value="<%= name %>">
                     <input type="hidden" id="title" name="title" value="<%= reviews[i].title %>">

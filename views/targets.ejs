@@ -21,26 +21,26 @@
     
     
     
-    <div class="targetsTable">
+    <div class="targets-table">
         <div>
-            <div id="fixed">
+            <div id="sidebar">
                 <a href="/dashboard">Back to dashboard</a>
                 <h1>My targets</h1>
                 <br/>
-                <button name="htmlcss" class="showButtons" onclick="showStuff()">HTML+CSS</button>
-                <button name="jsbasics" class="showButtons" onclick="showStuff()">Javascript</button>
-                <button name="reactjs" class="showButtons" onclick="showStuff()">ReactJS</button> 
-                <div class="bigNum">
-                    <h1 type="text" id="bigNum"></h1>
+                <button name="htmlcss" class="sidebar-buttons" onclick="showStuff()">HTML+CSS</button>
+                <button name="jsbasics" class="sidebar-buttons" onclick="showStuff()">Javascript</button>
+                <button name="reactjs" class="sidebar-buttons" onclick="showStuff()">ReactJS</button> 
+                <div class="big-num">
+                    <h1 type="text" id="big-num"></h1>
                     <p>of curriculum completed</p>
                 
                 <div>
                     <button id="cancelButton" style="display:none" onclick="cancel()">Cancel</button>
                     <button id="saveButton" style="display:none" onclick="save()">Save</button>
                 </div>
-                <div id="savedNotSaved">
+                <div id="saved-status-container">
                     <i id="saved" style="display:none">saved</i>
-                    <i id="notSaved" style="display:none">not saved</i>
+                    <i id="not-saved" style="display:none">not saved</i>
                 </div>
             </div>
         <br/>

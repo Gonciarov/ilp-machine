@@ -16,8 +16,7 @@
         document.getElementById("saveButton").style.display = "inline-block"
         document.getElementById("toBeHidden").style.display = "none"
         document.getElementById("cancelButton").style.display = "inline-block"
-        // document.getElementById("formButtons").style.display = "inline-block"
-        document.getElementById("deleteButton").style.display = "inline-block"     
+        document.getElementById("delete-button").style.display = "inline-block"     
     }
 
     function hideTextarea() {
@@ -26,7 +25,7 @@
         document.getElementById("saveButton").style.display = "none"
         document.getElementById("cancelButton").style.display = "none"
         document.getElementById("toBeHidden").style.display = "block"
-        document.getElementById("deleteButton").style.display = "none"
+        document.getElementById("delete-button").style.display = "none"
     }
 
     function saveAndHideTextarea() {
@@ -103,7 +102,7 @@
     
     <div style="display:inline-block">
     <% if (comment) {%>
-    <button class="deleteButton" id="deleteButton" onclick="confirmDelete()" style="display:none; margin:5px">Delete</button>
+    <button class="delete-button" id="delete-button" onclick="confirmDelete()" style="display:none; margin:5px">Delete</button>
     <% } %>
     <form action="/dashboard/<%= prisonNumber %>" method="POST">
         <div>

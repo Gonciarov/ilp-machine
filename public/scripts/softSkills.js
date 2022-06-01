@@ -10,7 +10,7 @@ window.onload = (event) => {
     totalSoftSkillsCount = getTotalSoftSkillsCount();
     counter = getCounter();
     calculate();
-    document.getElementById("bigNum").innerText = number;
+    document.getElementById("big-num").innerText = number;
 }
 
 function stashBigNum() {
@@ -18,7 +18,7 @@ function stashBigNum() {
         totalSoftSkillsCount = getTotalSoftSkillsCount();
         counter = getCounter();
         calculate();
-        document.getElementById("bigNum").innerText = number;
+        document.getElementById("big-num").innerText = number;
     }
 }
 
@@ -34,7 +34,7 @@ function sendRequest(column, softSkillsUpdated) {
 
 function change() {
     
-    document.getElementById("notSaved").style.display = "inline";
+    document.getElementById("not-saved").style.display = "inline";
     document.getElementById("saved").style.display = "none";
     saved = false;
     if (window.event.target.className === "true") {
@@ -51,8 +51,8 @@ function change() {
 
 function save() {
     sendRequest(column, softSkillsUpdated);
-    let buttons = document.getElementsByClassName("showButtons");
-    document.getElementById("notSaved").style.display = "none";
+    let buttons = document.getElementsByClassName("sidebar-buttons");
+    document.getElementById("not-saved").style.display = "none";
     document.getElementById("saved").style.display = "inline";
     saved = true;
     column = null;
@@ -68,11 +68,11 @@ function cancel() {
     for (var i = 0; i < tables.length; i++) {
         tables[i].style.display = "none";
     }
-    let buttons = document.getElementsByClassName("showButtons");
+    let buttons = document.getElementsByClassName("sidebar-buttons");
     for (var i = 0; i < buttons.length; i++ ) {
         buttons[i].style = "none"
     }
-    document.getElementById("notSaved").style = "display:none";
+    document.getElementById("not-saved").style = "display:none";
     document.getElementById("saved").style = "display:none";
     saved = false;
 }
@@ -80,7 +80,7 @@ function cancel() {
 function showStuff() {
     restoreState();
     column = window.event.target.name
-    document.getElementById("notSaved").style = "display:none";
+    document.getElementById("not-saved").style = "display:none";
     document.getElementById("saved").style.display = "none";
     let tables = document.getElementsByClassName("tables");
     for (var i = 0; i < tables.length; i++) {
@@ -89,7 +89,7 @@ function showStuff() {
         document.getElementById(column).style.display = "inline";
         document.getElementById("cancelButton").style.display = "inline-block";
         document.getElementById("saveButton").style.display = "inline-block";
-    let buttons = document.getElementsByClassName("showButtons");
+    let buttons = document.getElementsByClassName("sidebar-buttons");
 }
 
 
@@ -103,7 +103,7 @@ function getCounter() {
 
 function calculate() {
     number = Math.round((counter / totalSoftSkillsCount * 100)).toString() + "%";
-    document.getElementById("bigNum").innerText = number;
+    document.getElementById("big-num").innerText = number;
 }
 
 function restoreState() {
