@@ -180,19 +180,26 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
 
 app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     let prisonNumber = req.user.prison_number
-    pool.query(
-        `SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber],
-        (err, results) => {
-            if (err) {
-                throw err;
-            } else {
-                let reviews = results.rows
-                res.render("reviews", {reviews: reviews})
+    let name = req.user.name
+    Promise.all([
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM users`)
+            ]).then(function([user, reviews, students]) {
+                        reviews = reviews.rows
+                        students = students.rows
+                        res.render("reviews", 
+                        {
+                            reviews: reviews, 
+                            students: students, 
+                            prisonNumber: prisonNumber, 
+                            name: name,
+                            notSeen: user.rows[0].unseen
+                        })
+            })     
             }
-        }
     )
     
-})
 
 
 app.post("/view/review", checkAdminRole, (req, res) => {
@@ -282,7 +289,7 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
         } else {
             results = results.rows
         }
-        res.render("messages", {dialogId: dialogId, messages: results}) 
+        res.render("messages", {dialogId: dialogId, messages: results})
     })
 })
 
@@ -525,6 +532,10 @@ app.post("/register", async(req, res) => {
                     res.render("register", { errors });
                 } else {
                     genericSkills.seed(prisonNumber)
+                    ilp.seed(prisonNumber)
+                    let date = new Date().toDateString();
+                    pool.query(`INSERT INTO posts (text, prison_number, date, comment)
+                    VALUES ($1, $2, $3, $4)`, ['INITIAL POST', prisonNumber, date, 'NOT TO BE COMMENTED']);
                     pool.query(
                         `INSERT INTO users (name, prison_number, password, unseen)
                         VALUES ($1, $2, $3, $4)

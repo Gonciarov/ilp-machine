@@ -12,30 +12,47 @@
 
 <body>
 
-    <div class="targets-table">
-        <div id="sidebar">
-            <a href="/dashboard">Back to dashboard</a>
-            <br/>
-            <h1>My project reviews
+    <div class="navbar">
+        <h1><a href="/dashboard">CODE4000</a></h1>
+        <ul>
+            <li><a href="/reviews">Tutor reviews</a></li>
+            <li><a href="/targets">Tech skills</a></li>
+            <li><a href="/softskills">Soft skills</a></li>
+            <li><a href="/ilp">ILP</a></li>
+            <li><a href="/rules">Classroom rules</a></li>
+          </ul>
+    </div>
+
+    <div class="dashboard-table">
+        <div class="sidebar">
+            <div class="fixed-part">
+            <h1>Hello,
+                <%= name %>!
             </h1>
-            
+            <a href="/dashboard">Dashboard</a>
             <br/>
             <a href="/targets">Tech skills</a>
             <br/>
             <a href="/softskills">Soft skills</a>
             <br/>
             <p><i>Please do your best to update your reflections every Friday and refresh your tech and soft skills records monthly</i></p>
+            </div>
         </div>
     <br/>
 
-
+<div class="dashboard-column-1">
     <table>
+        <tr>
+        <div class="posts-header">
+            <h2>Your project reviews</h2>
+        </div>
+        </tr>
     <% if (!reviews[0]) { %>
         <p><i>No reviews yet</i></p>
     <% } else { %> 
     <% for (var i = 0; i < reviews.length; i++) { %>
         <tr>
-        <td class="review">
+        <td class="post">
        <b><%= reviews[i].title %></b>
         
         <i class="right"><%= reviews[i].date %></i>
@@ -49,6 +66,44 @@
 </tr>
   <% } %>
   <%}%>
+</table>
+</div>
+<div class="dashboard-column-2">
+    <table>
+        <tr>
+            <td class="messages-header">
+                <h2>Your messages</h2>
+            </td>
+        </tr>
+<% for (let i = 0; i < students.length; i++) { %>
+ 
+        <% if (prisonNumber !== students[i].prison_number) { %>
+        <tr>
+            <td class="message">
+                    <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
+                
+                    
+                    <form action="/messages/<%= dialogId %>" method="POST">
+                      <input type="hidden" name="name" value="<%= students[i].name %>">
+                        <input type="hidden" name="participant1" value="<%= prisonNumber %>">
+                        <input type="hidden" name="participant2" value="<%= students[i].name %>">
+                      <b style="display:inline-block">
+                        <%= students[i].name %>, 
+                        <%= students[i].prison_number %>
+                        <% if (notSeen[students[i].prison_number] == "unseen") { %>
+                            <b style="display:inline-block; color: red">(new)</b>
+                        <% } %>
+                    </b>
+                        
+                      <input type="submit" style="float: right" value="View">
+                        
+                    </form>
+    
+
+            </td>
+        </tr>
+        <% } %>
+<% } %>
 </table>
 </div>
 </body>

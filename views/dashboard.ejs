@@ -13,13 +13,22 @@
 <body>
 
     
-
+<div class="navbar">
+    <h1><a href="/dashboard">CODE4000</a></h1>
+    <ul>
+        <li><a href="/reviews">Tutor reviews</a></li>
+        <li><a href="/targets">Tech skills</a></li>
+        <li><a href="/softskills">Soft skills</a></li>
+        <li><a href="/ilp">ILP</a></li>
+        <li><a href="/rules">Classroom rules</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+</div>
       
-        <div class="targets-table">
-            
-            <div id="sidebar">
-                <a href="/logout" style="float: left;">Logout</a>
-                <br/>
+       
+<div class="dashboard-table"> 
+            <div class="sidebar">
+                <div class="fixed-part">
                 <h1>Hello,
                     <%= name %>!
                 </h1>
@@ -30,18 +39,20 @@
                 <a href="/softskills">Soft skills</a>
                 <br/>
                 <p><i>Please do your best to update your reflections every Friday and refresh your tech and soft skills records monthly</i></p>
-
+                </div>
             </div>
             
-        
+           
         <br/>
         
-    
-        <div>
         
+        <div class="dashboard-column-2">
+            <div class="posts-header">
+            <h2>Your weekly reflections</h2>
+            </div>
         <form action="/dashboard" method="POST">
             <div>
-                <textarea id="text" name="text" rows="20" cols="64" wrap="hard" placeholder="Write something about your last week work" required></textarea>
+                <textarea id="text" name="text" rows="20" cols="64" wrap="hard" placeholder="Please update your reflections every Friday (it's only visible to you and your tutor)" required></textarea>
             </div>
           
             <div>
@@ -49,7 +60,7 @@
             </div>
         </form>
 
-        <h2>Your reflections: </h2>
+       <br/>
                 <table>
                     <% for (var i = posts.length - 1; i>=0; i--) { %>
                         
@@ -88,15 +99,18 @@
                         <% } %>
                 </table>
             </div>
-            <div>
-            <div id="messages-header">
-               <h2>Your messages</h2>
-            </div>
+            <div class="dashboard-column-2">
+          
                 <table>
+                    <tr>
+                        <td class="messages-header">
+                            <h2>Your messages</h2>
+                        </td>
+                    </tr>
             <% for (let i = 0; i < students.length; i++) { %>
-                
+             
                     <% if (prisonNumber !== students[i].prison_number) { %>
-                    <tr class="message">
+                    <tr>
                         <td class="message">
                                 <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
                             
@@ -123,6 +137,9 @@
                     <% } %>
            <% } %>
         </table>
+
+        <br/>
+        
     </div>
     </div>
     </div>

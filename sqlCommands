@@ -6,6 +6,8 @@ CREATE TABLE posts ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL,
 
 CREATE TABLE targets ( prison_number VARCHAR (10) NOT NULL, htmlcss JSON, jsbasics JSON, reactjs JSON);
 
+
+
 CREATE TABLE softskills ( prison_number VARCHAR (10) NOT NULL, softskills JSON );
 
 

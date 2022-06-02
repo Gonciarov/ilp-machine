@@ -2,10 +2,13 @@
 
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
+  color: rgb(0, 0, 0, 0.7);
 }
 
 a {
   margin-right: 3px;
+
 }
 
 a:visited {
@@ -19,8 +22,7 @@ td {
   width: 500px;
   margin-right: 10px;
   display: inline-block;
-  color: rgb(0, 0, 0, 0.7);
-  border-radius: 10px;
+ 
   
 }
 
@@ -32,7 +34,6 @@ p {
 textarea {
   margin-top: 2px;
   color: rgb(0, 0, 0, 0.7);
-  border-radius: 10px;
   border: 1px solid rgb(0, 0, 0, 0.2);
   resize: none;
 }
@@ -40,7 +41,7 @@ textarea {
 textarea:focus {
   outline: none;
   background-color: (0, 0, 0, 0.1);;
-  border-radius: 10px;
+
 }
 
 p.break {
@@ -78,18 +79,57 @@ input:focus {
   float: right;
 }
 
+/* STUDENT SIDE - navbar */
+
+.navbar {
+  background-color: rgb(106, 106, 106);
+  height: 80px;
+  margin-top: -10px;
+  color: white;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar h1 {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 30px;
+}
+.navbar ul {
+display: inline-block;
+vertical-align: middle;
+}
+
+.navbar li {
+  display: inline;
+  
+}
+
+.navbar li+li {
+  margin-left: 10px;
+}
+
 /* STUDENT SIDE - posts and comments */
 
 .post {
-  background-color: #C0D8C0;
+  background-color: rgb(215, 215, 215);
   
 }
 
 .comment {
-  background-color: #F5EEDC;
+  background-color: rgb(244, 244, 244);
   margin-bottom: 10px;
   margin-top: 3px;
   
+}
+
+.posts-header {
+  text-align: center;
+  padding: 10px;
+  border: none;
 }
 
 /* STUDENT AND ADMIN SIDES - reviews */
@@ -116,17 +156,23 @@ div.review-form-buttons {
 
 /* STUDENT SIDE - sidebar */
 
-#sidebar {
-  position: fixed;
-  width: 180px;
-  height: 500px;
-  background-color: #ECB390;
+.sidebar {
+ 
+  width: 300px;
+  height: 100%;
+  background-color: rgb(200, 200, 200);
   padding: 10px;
   text-align: center;
-  border: brown solid 1px transparent;
-  margin-top: 2px;
   color: rgb(0, 0, 0, 0.7);
-  border-radius: 10px;
+}
+
+.sidebar .fixed-part {
+  position: fixed;
+  text-align: center;
+  width: 250px;
+  padding: 10px;
+  text-align: center;
+
 }
 
 .sidebar-buttons {
@@ -166,18 +212,17 @@ td.false {
 
 /* STUDENT SIDE - messages panel */
 
-#messages-header {
+.messages-header {
   text-align: center;
-  border: 1px solid rgb(0, 0, 0, 0.2);
-  padding: 5px;
-  margin: 1px -1px 1px 1px;
-  color: rgb(0, 0, 0, 0.7);
-  border-radius: 10px;
+  width: 400px;
+  padding: 10px;
+  border: none;
 }
 
 .message {
-  width: 250px;
+  width: 400px;
   padding: 10px;
+  background-color: rgb(226, 226, 226);
 }
 
 /* ADMIN SIDE - student bar */
@@ -265,8 +310,19 @@ div.grid-container > div {
 
 div.targets-table {
   display: grid;
-  grid-template-columns: 120px 500px 272px;
-  gap: 150px;
+  grid-template-columns: 300px 500px 272px;
+  gap: 100px;
+}
+
+div.dashboard-table {
+  display: grid;
+  grid-template-columns: 350px 10px 580px 600px;
+  gap: 0px;
+}
+
+div.dashboard-table .dashboard-column-1,
+div.dashboard-table .dashboard-column-2 {
+  margin-top: 30px;
 }
 
 /* register, login */
@@ -313,4 +369,4 @@ div.targets-table {
 }
 
 /* colours used previously: DD4A48
-ECB390 */
+ECB390 C0D8C0 F5EEDC */
