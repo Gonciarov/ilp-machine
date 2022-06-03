@@ -1,4 +1,4 @@
-let softSkillsUpdated = {};
+let softskillsUpdated = {};
 let column;
 let saved = false;
 let counter = 0;
@@ -23,13 +23,13 @@ function stashBigNum() {
 }
 
 
-function sendRequest(column, softSkillsUpdated) {
+function sendRequest(column, softskillsUpdated) {
    
     let xml = new XMLHttpRequest();
     xml.open("POST", "/softskills", true);
     xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-    xml.send(`column=${column}&data=${JSON.stringify(softSkillsUpdated)}`);
-    softSkillsUpdated = {}
+    xml.send(`column=${column}&data=${JSON.stringify(softskillsUpdated)}`);
+    softskillsUpdated = {}
 }
 
 function change() {
@@ -39,24 +39,24 @@ function change() {
     saved = false;
     if (window.event.target.className === "true") {
         window.event.target.className = "false";
-        softSkillsUpdated[window.event.target.id] = "false";
+        softskillsUpdated[window.event.target.id] = "false";
         counter -= 1;
     } else {
         window.event.target.className = "true";
-        softSkillsUpdated[window.event.target.id] = "true";
+        softskillsUpdated[window.event.target.id] = "true";
         counter += 1;
         }
         calculate();
    }
 
 function save() {
-    sendRequest(column, softSkillsUpdated);
+    sendRequest(column, softskillsUpdated);
     let buttons = document.getElementsByClassName("sidebar-buttons");
     document.getElementById("not-saved").style.display = "none";
     document.getElementById("saved").style.display = "inline";
     saved = true;
     column = null;
-    softSkillsUpdated = {}
+    softskillsUpdated = {}
     calculate();
     }
     
@@ -108,7 +108,7 @@ function calculate() {
 
 function restoreState() {
     stashBigNum();
-    let arr = Object.entries(softSkillsUpdated)
+    let arr = Object.entries(softskillsUpdated)
     for ( let i = 0; i < arr.length; i++ ) {
         let element = document.getElementById(arr[i][0])
         if (arr[i][1] === "true") {
@@ -125,6 +125,6 @@ function restoreState() {
         }
     }
     column = null;
-    softSkillsUpdated = {}
+    softskillsUpdated = {}
     
 }

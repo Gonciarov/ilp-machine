@@ -45,8 +45,8 @@
     }
 
     function getSoftSkillsNums() {
-       let completed = parseInt(document.getElementById("softSkillsCompleted1").value);
-       let total = parseInt(document.getElementById("softSkillsTotal").value);
+       let completed = parseInt(document.getElementById("softskillsCompleted1").value);
+       let total = parseInt(document.getElementById("softskillsTotal").value);
         calculateAndDisplay(total, completed, "big-num-soft")
     }
 
@@ -85,7 +85,7 @@
     <form action="/report/<%= prisonNumber %>" method="POST">
         <input type="hidden" id="name" name="name" value="<%= name %>">
         <input type="hidden" id="curriculumCompleted" class="big-num-tech" name="curriculumCompleted" value="0">
-        <input type="hidden" id="softSkillsCompleted" class="big-num-soft" name="softSkillsCompleted" value="0">
+        <input type="hidden" id="softskillsCompleted" class="big-num-soft" name="softskillsCompleted" value="0">
         <input type="hidden" id="postsTotal" name="postsTotal" value="<%= posts.length %>">
         <input type="hidden" id="reviewsTotal" name="reviewsTotal" value="<%= reviews.length %>">
         <button type="submit" id="report-button">Report</button>
@@ -225,20 +225,20 @@
 
 
 </div>
-<% let softSkillsTotal = 0 %>
-<% let softSkillsCompleted = 0; %>
-<% for (skill in softSkills) { %>
-    <% softSkillsTotal += 1 %>
-    <% if (softSkills[skill] == "true") { %>
-       <% softSkillsCompleted += 1 %>
+<% let softskillsTotal = 0 %>
+<% let softskillsCompleted = 0; %>
+<% for (skill in softskills) { %>
+    <% softskillsTotal += 1 %>
+    <% if (softskills[skill] == "true") { %>
+       <% softskillsCompleted += 1 %>
        <%}%>
 <%}%>
 
 
 
 
-<input type="hidden" id='softSkillsTotal' value="<%= softSkillsTotal %>">
-<input type="hidden" id='softSkillsCompleted1' value="<%= softSkillsCompleted %>">
+<input type="hidden" id='softskillsTotal' value="<%= softskillsTotal %>">
+<input type="hidden" id='softskillsCompleted1' value="<%= softskillsCompleted %>">
 
 <% let techSkillsTotal = 0 %>
 <% let techSkillsCompleted = 0; %>

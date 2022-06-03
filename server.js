@@ -91,19 +91,19 @@ app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
             pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
-        ]).then(function([posts, user, reviews, techSkills, softSkills]) {
+        ]).then(function([posts, user, reviews, techSkills, softskills]) {
             let name = user.rows[0].name;
             let htmlcss = techSkills.rows[0].htmlcss;
             let jsbasics = techSkills.rows[0].jsbasics;
             let reactjs = techSkills.rows[0].reactjs;
-            softSkills = softSkills.rows[0].softskills;
+            softskills = softskills.rows[0].softskills;
             res.render("viewPostsAndReviews", { 
                 name: name, 
                 prisonNumber: prisonNumber, 
                 posts: sortPosts(posts.rows), 
                 reviews: reviews.rows,
                 techSkills: [htmlcss, jsbasics, reactjs],
-                softSkills: softSkills
+                softskills: softskills
             })     
         })
 }),
@@ -121,11 +121,11 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
         pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
-    ]).then(function([posts, reviews, techSkills, softSkills]) {
+    ]).then(function([posts, reviews, techSkills, softskills]) {
         let htmlcss = techSkills.rows[0].htmlcss;
         let jsbasics = techSkills.rows[0].jsbasics;
         let reactjs = techSkills.rows[0].reactjs;
-        softSkills = softSkills.rows[0].softskills;
+        softskills = softskills.rows[0].softskills;
         posts = sortPosts(posts.rows)
         reviews = reviews.rows
         if (comment) {
@@ -141,7 +141,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
                     prisonNumber, 
                     date: date, 
                     techSkills: [htmlcss, jsbasics, reactjs],
-                    softSkills: softSkills
+                    softskills: softskills
                  })
             })
         } else if (review) {
@@ -159,7 +159,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
                     posts: posts, 
                     reviews: reviews,
                     techSkills: [htmlcss, jsbasics, reactjs],
-                    softSkills: softSkills 
+                    softskills: softskills 
                 })
             })
             
@@ -170,7 +170,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
         ]).then(function([reviews]) {
             reviews = sortPosts(reviews.rows)     
             res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews, techSkills: [htmlcss, jsbasics, reactjs],
-                softSkills: softSkills  })
+                softskills: softskills  })
         })
         }
     })
@@ -255,7 +255,7 @@ app.get("/softskills", checkNotAuthenticated, (req, res) => {
             if (err) {
                 console.log(err);
             } else {  
-                res.render('softSkills', {
+                res.render('softskills', {
                     softskills: 
                         results.rows[0].softskills 
                              })
@@ -276,7 +276,7 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
             }
         } 
         pool.query(`UPDATE softskills SET softskills = '${JSON.stringify(softskills)}' WHERE prison_number = $1`, [prisonNumber])    
-        res.render('softSkills', {softskills: softskills})
+        res.render('softskills', {softskills: softskills})
 
     })
 })
@@ -387,7 +387,7 @@ app.post("/delete/comment", checkAdminRole, async(req, res) => {
 
 app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
  let prisonNumber = req.params.prisonNumber;
- let {name, curriculumCompleted, softSkillsCompleted, postsTotal, reviewsTotal} = req.body
+ let {name, curriculumCompleted, softskillsCompleted, postsTotal, reviewsTotal} = req.body
  Promise.all([
     pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
     pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
@@ -402,7 +402,7 @@ app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
     doc.text(10, 40, `name: ${name}\nprison number: ${prisonNumber}`);
     doc.text(10, 60, `Started Code4000 course on ${dateStarted}\r\n
                     ${curriculumCompleted} of curriculum completed\r\n
-                    ${softSkillsCompleted} of soft skilles developed\r\n
+                    ${softskillsCompleted} of soft skilles developed\r\n
                     ${postsTotal} posts in total\r\n
                     ${reviewsTotal} projects reviewed by instructors\r\n`);
     doc.addPage('a4', 'p');
