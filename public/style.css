@@ -4,6 +4,7 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin: 0;
   color: rgb(0, 0, 0, 0.7);
+  min-width: 100vh;
 }
 
 a {
@@ -84,6 +85,7 @@ input:focus {
 .navbar {
   background-color: rgb(106, 106, 106);
   height: 80px;
+  width: 100%;
   margin-top: -10px;
   color: white;
 }
@@ -115,12 +117,12 @@ vertical-align: middle;
 /* STUDENT SIDE - posts and comments */
 
 .post {
-  background-color: rgb(215, 215, 215);
+  background-color: #C0D8C0;
   
 }
 
 .comment {
-  background-color: rgb(244, 244, 244);
+  background-color: #f8faf8;
   margin-bottom: 10px;
   margin-top: 3px;
   
@@ -134,9 +136,9 @@ vertical-align: middle;
 
 /* STUDENT AND ADMIN SIDES - reviews */
 
-.review {
-  background-color: #ECB390;
-  margin-top: 10px;
+.review-text {
+  background-color: #fcf5f1;
+  margin-bottom: 10px;
   
 }
 
@@ -145,8 +147,8 @@ vertical-align: middle;
   margin-bottom: 10px;
 }
 
-.title {
-  margin-top: 20px;
+.review-title {
+  background-color: #ECB390;
 }
 
 div.review-form-buttons {
@@ -160,6 +162,7 @@ div.review-form-buttons {
  
   width: 300px;
   height: 100%;
+  min-height: 100vh;
   background-color: rgb(200, 200, 200);
   padding: 10px;
   text-align: center;
@@ -171,15 +174,9 @@ div.review-form-buttons {
   text-align: center;
   width: 250px;
   padding: 10px;
-  text-align: center;
-
 }
 
-.sidebar-buttons {
-  width: 90px;
-  margin-bottom: 5px;
-  text-align: center;
-}
+
 
 #not-saved {
   color: #DD4A48;
@@ -200,7 +197,8 @@ div.review-form-buttons {
   
 }
 
-/* STUDENT SIDE - skills bars */
+/* STUDENT SIDE - techskills and softskills */
+
 
 td.true {
   background-color: #C0D8C0;
@@ -208,6 +206,19 @@ td.true {
 
 td.false {
   background-color: white;
+}
+
+.sidebar-buttons {
+  width: 90px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.techskills-header, 
+.softskills-header {
+  text-align: center;
+  padding: 10px;
+  border: none;
 }
 
 /* STUDENT SIDE - messages panel */
@@ -296,32 +307,34 @@ td.false {
   margin-bottom: -7px;
 }
 
-/* ADMIN SIDE - student's posts and reviews grid */
+/* GRIDS */
 
-div.grid-container {
+div.admin-container {
   display: grid;
   grid-template-columns: 550px 550px;
   gap: 50px;
 }
 
-div.grid-container > div {
+div.admin-container > div {
   padding: 10px;
-}
-
-div.techskills-table {
-  display: grid;
-  grid-template-columns: 300px 500px 272px;
-  gap: 100px;
 }
 
 div.dashboard-table {
   display: grid;
-  grid-template-columns: 350px 10px 580px 600px;
+  grid-template-columns: 360px 0px 580px 600px;
+  gap: 0px;
+}
+
+div.techskills-table, div.softskills-table {
+  display: grid;
+  grid-template-columns: 350px 580px 600px;
   gap: 0px;
 }
 
 div.dashboard-table .dashboard-column-1,
-div.dashboard-table .dashboard-column-2 {
+div.dashboard-table .dashboard-column-2,
+div.techskills-table .techskills-column-1,
+div.techskills-table .techskills-column-2 {
   margin-top: 30px;
 }
 

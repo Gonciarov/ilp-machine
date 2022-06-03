@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="/style.css"/>
+    <script src="scripts/dashboard.js"></script>
 </head>
 
 <body>
@@ -46,10 +47,10 @@
         <br/>
         
         
-        <div class="dashboard-column-2">
-            <div class="posts-header">
-            <h2>Your weekly reflections</h2>
-            </div>
+        <div class="dashboard-column-1">
+            
+            <h2 class="posts-header">Your weekly reflections</h2>
+           
         <form action="/dashboard" method="POST">
             <div>
                 <textarea id="text" name="text" rows="20" cols="64" wrap="hard" placeholder="Please update your reflections every Friday (it's only visible to you and your tutor)" required></textarea>
@@ -98,51 +99,51 @@
                         </tr>
                         <% } %>
                 </table>
-            </div>
-            <div class="dashboard-column-2">
-          
-                <table>
-                    <tr>
-                        <td class="messages-header">
-                            <h2>Your messages</h2>
-                        </td>
-                    </tr>
-            <% for (let i = 0; i < students.length; i++) { %>
-             
-                    <% if (prisonNumber !== students[i].prison_number) { %>
-                    <tr>
-                        <td class="message">
-                                <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
+        </div>
+        <div class="dashboard-column-2">
+        
+            <table>
+                <tr>
+                    <td class="messages-header">
+                        <h2>Your messages</h2>
+                    </td>
+                </tr>
+        <% for (let i = 0; i < students.length; i++) { %>
+            
+                <% if (prisonNumber !== students[i].prison_number) { %>
+                <tr>
+                    <td class="message">
+                            <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
+                        
                             
+                            <form action="/messages/<%= dialogId %>" method="POST">
+                                <input type="hidden" name="name" value="<%= students[i].name %>">
+                                <input type="hidden" name="participant1" value="<%= prisonNumber %>">
+                                <input type="hidden" name="participant2" value="<%= students[i].name %>">
+                                <b style="display:inline-block">
+                                <%= students[i].name %>, 
+                                <%= students[i].prison_number %>
+                                <% if (notSeen[students[i].prison_number] == "unseen") { %>
+                                    <b style="display:inline-block; color: red">(new)</b>
+                                <% } %>
+                            </b>
                                 
-                                <form action="/messages/<%= dialogId %>" method="POST">
-                                  <input type="hidden" name="name" value="<%= students[i].name %>">
-                                    <input type="hidden" name="participant1" value="<%= prisonNumber %>">
-                                    <input type="hidden" name="participant2" value="<%= students[i].name %>">
-                                  <b style="display:inline-block">
-                                    <%= students[i].name %>, 
-                                    <%= students[i].prison_number %>
-                                    <% if (notSeen[students[i].prison_number] == "unseen") { %>
-                                        <b style="display:inline-block; color: red">(new)</b>
-                                    <% } %>
-                                </b>
-                                    
-                                  <input type="submit" style="float: right" value="View">
-                                    
-                                </form>
-                
-        
-                        </td>
-                    </tr>
-                    <% } %>
-           <% } %>
-        </table>
+                                <input type="submit" style="float: right" value="View">
+                                
+                            </form>
+            
+    
+                    </td>
+                </tr>
+                <% } %>
+        <% } %>
+    </table>
 
-        <br/>
-        
+    <br/>
+    
+        </div>
     </div>
-    </div>
-    </div>
+   
            
 </body>
 

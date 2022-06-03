@@ -78,6 +78,7 @@ let techskillsUpdated = {};
         }
         document.getElementById("not-saved").style = "display:none";
         document.getElementById("saved").style = "display:none";
+        document.getElementById("select-module").style = "display:block";
         saved = false;
     }
 
@@ -86,6 +87,7 @@ let techskillsUpdated = {};
         column = window.event.target.name
         document.getElementById("not-saved").style = "display:none";
         document.getElementById("saved").style.display = "none";
+        document.getElementById("select-module").style = "display:none";
         let tables = document.getElementsByClassName("tables");
         for (var i = 0; i < tables.length; i++) {
             tables[i].style.display = "none";
@@ -139,3 +141,22 @@ let techskillsUpdated = {};
         techskillsUpdated = {}
         
     }
+
+    document.addEventListener('scroll', function(e) {
+        console.log(window.scrollX)
+           if (window.scrollX > 20) {
+               
+               document.getElementsByClassName("sidebar")[0].style = "width: 200px; padding: 0px;"
+               document.getElementsByClassName("fixed-part")[0].style = "display: none;";
+               document.getElementsByClassName("techskills-column-1")[0].style = "margin-left: -80px;";
+               document.getElementsByClassName("techskills-column-2")[0].style = "margin-left: -70px;";
+               document.getElementsByClassName("techskills-header")[0].style = "margin-left: -80px;";
+           } 
+           else {
+                document.getElementsByClassName("sidebar")[0].style = "width: 300px; padding: 10px;"
+               document.getElementsByClassName("fixed-part")[0].style = "display: block";
+               document.getElementsByClassName("techskills-column-1")[0].style = "margin-left: 0px";
+               document.getElementsByClassName("techskills-column-2")[0].style = "margin-left: 0px;";
+               document.getElementsByClassName("techskills-header")[0].style = "margin-left: 0px;";
+           } 
+       })

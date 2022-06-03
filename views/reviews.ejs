@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="/style.css"/>
+    <script src="scripts/dashboard.js"></script>
 </head>
 
 <body>
@@ -41,25 +42,21 @@
     <br/>
 
 <div class="dashboard-column-1">
+    <h2 class="posts-header">Your project reviews</h2>
     <table>
-        <tr>
-        <div class="posts-header">
-            <h2>Your project reviews</h2>
-        </div>
-        </tr>
     <% if (!reviews[0]) { %>
         <p><i>No reviews yet</i></p>
     <% } else { %> 
     <% for (var i = 0; i < reviews.length; i++) { %>
         <tr>
-        <td class="post">
+        <td class="review-title">
        <b><%= reviews[i].title %></b>
         
         <i class="right"><%= reviews[i].date %></i>
     </td>
 </tr>
 <tr>
-        <td class="comment">
+        <td class="review-text">
         <p class="break">
        <%= reviews[i].review %></p>
     </td>

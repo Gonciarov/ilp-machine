@@ -213,36 +213,45 @@ app.post("/view/review", checkAdminRole, (req, res) => {
 
 app.get("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
-    pool.query(
-        `SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber], (err, results) => {
-            if (err) {
-                console.log(err);
-            } else {
-               
-              
+    Promise.all([
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM users`)
+    ]).then(function([user, results, students]) {
+               students = students.rows;
                 res.render('techskills', {
+                    students: students,
+                    prisonNumber: prisonNumber,
+                    notSeen: user.rows[0].unseen,
                     techskills: {
                         htmlcss: results.rows[0].htmlcss, 
                         jsbasics: results.rows[0].jsbasics, 
                         reactjs: results.rows[0].reactjs} })
-            }
+            })
     })
-})
+
 
 app.post("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     let data = JSON.parse(req.body.data)
     let {column} = req.body
     Promise.all([
-        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber])
-    ]).then(function([results]) {  
+        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM users`),
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+    ]).then(function([results, students, user]) {  
         for (i in data) {
             if (i) {  
                 results.rows[0][column][i] = data[i]     
             }
-        } 
+        }
+        students = students.rows
         pool.query(`UPDATE techskills SET ${column} = '${JSON.stringify(results.rows[0][column])}' WHERE prison_number = $1`, [prisonNumber])    
-        res.render('techskills', {techskills: [results.htmlcss, results.jsbasics, results.reactjs]})
+        res.render('techskills', {
+            students: students, 
+            prisonNumber: prisonNumber,
+            notSeen: user.rows[0].unseen,
+            techskills: [results.htmlcss, results.jsbasics, results.reactjs]})
     })
 })
 
@@ -250,33 +259,45 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
 
 app.get("/softskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
-    pool.query(
-        `SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber], (err, results) => {
-            if (err) {
-                console.log(err);
-            } else {  
+    Promise.all([
+        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM users`),
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+    ]).then(function([results, students, user]) {  
+        students = students.rows
                 res.render('softskills', {
+                    students: students, 
+                    prisonNumber: prisonNumber, 
+                    notSeen: user.rows[0].unseen,
                     softskills: 
                         results.rows[0].softskills 
                              })
-            }
+            })
     })
-})
+
 
 app.post("/softskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     let data = JSON.parse(req.body.data)
     Promise.all([
-        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
-    ]).then(function([results]) {
+        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM users`),
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
+    ]).then(function([results, students, user]) {
         let softskills = results.rows[0].softskills
+        students = students.rows
         for (i in data) {
             if (i) { 
                 softskills[i] = data[i]     
             }
         } 
         pool.query(`UPDATE softskills SET softskills = '${JSON.stringify(softskills)}' WHERE prison_number = $1`, [prisonNumber])    
-        res.render('softskills', {softskills: softskills})
+        res.render('softskills', {
+            softskills: softskills,
+            students: students, 
+            prisonNumber: prisonNumber,
+            notSeen: user.rows[0].unseen
+        })
 
     })
 })
