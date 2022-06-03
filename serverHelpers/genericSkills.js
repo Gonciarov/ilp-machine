@@ -2,7 +2,7 @@
 const { pool } = require("../dbConfig");
 
 function seed(prisonNumber) {
-    pool.query("INSERT INTO targets (prison_number, htmlcss, jsbasics, reactjs) VALUES ($1, $2, $3, $4)", [
+    pool.query("INSERT INTO techskills (prison_number, htmlcss, jsbasics, reactjs) VALUES ($1, $2, $3, $4)", [
         prisonNumber,
         {"I know what a browser is":"false","I know what to do if I get stuck":"false","I know what coding is":"false","I know what HTML is":"false",
 "I know how to use HTML tags":"false","I know how to build a static web page with HTML":"false","I know what Naming Conventions are":"false",

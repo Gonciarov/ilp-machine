@@ -4,16 +4,16 @@ CREATE TABLE users ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL,
 
 CREATE TABLE posts ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, text VARCHAR (2000) NOT NULL, comment VARCHAR(2000), date VARCHAR (20) NOT NULL));
 
-CREATE TABLE targets ( prison_number VARCHAR (10) NOT NULL, htmlcss JSON, jsbasics JSON, reactjs JSON);
+CREATE TABLE techskills ( prison_number VARCHAR (10) NOT NULL, htmlcss JSON, jsbasics JSON, reactjs JSON);
 
 
 
 CREATE TABLE softskills ( prison_number VARCHAR (10) NOT NULL, softskills JSON );
 
 
-UPDATE targets SET jsbasics = '{"I know how to comment out a line of code": "false", "I know how to create Variable": "false", "I know how to assign Value to Variables": "false", "I know how to assign Value of one Varible to Another": "false", "I know how to declare String variables": "false", "I know what is Case Sensitivity in JS": "false", "I know the difference between var, let, and const": "false", "I know how to add, subtract, multiply, divide, increment, and decrement numbers": "false", "I know what Plus Equal operator means": "false", "I know how to concatenate strings": "false", "I know how to find a length of the string": "false", "I know how to find the Nth letter of the word using brackets": "false", "I know what Array is in JS": "false", "I know how to access Array data with Indexes": "false", "I know how to use push, pop, shift, and unshift methods": "false","I know how to create a function in JS": "false", "I know how to pass values to Functions with Arguments": "false","I know how Return works in Functions": "false", "I know the difference between Local and Global Scope": "false", "I know what is Undefined Value": "false", "I know what is True and False in JS": "false", "I know how to create an If-Else statement": "false", "I know the meaning of Equality and Inequality operators": "false", "I know the meaning of Strict Equality and Strict Inequality operators": "false", "I know what <= and >= mean in JS": "false", "I know how to use else if statement": "false", "I know how to use Switch statement": "false", "I know what Object is in JS": "false", "I know how to access a value from Object key and value pair": "false", "I know how to operate nested Arrays": "false", "I know how to operate nested Objects": "false", "I know how to create a For loop": "false", "I know how to use Nested For loops": "false", "I know replace For Loop with recursion": "false", "I know how to use ParseInt and toString": "false", "I know how to replace if-else expression with conditional operator": "false"}' WHERE prison_number = 'a@a';
+UPDATE techskills SET jsbasics = '{"I know how to comment out a line of code": "false", "I know how to create Variable": "false", "I know how to assign Value to Variables": "false", "I know how to assign Value of one Varible to Another": "false", "I know how to declare String variables": "false", "I know what is Case Sensitivity in JS": "false", "I know the difference between var, let, and const": "false", "I know how to add, subtract, multiply, divide, increment, and decrement numbers": "false", "I know what Plus Equal operator means": "false", "I know how to concatenate strings": "false", "I know how to find a length of the string": "false", "I know how to find the Nth letter of the word using brackets": "false", "I know what Array is in JS": "false", "I know how to access Array data with Indexes": "false", "I know how to use push, pop, shift, and unshift methods": "false","I know how to create a function in JS": "false", "I know how to pass values to Functions with Arguments": "false","I know how Return works in Functions": "false", "I know the difference between Local and Global Scope": "false", "I know what is Undefined Value": "false", "I know what is True and False in JS": "false", "I know how to create an If-Else statement": "false", "I know the meaning of Equality and Inequality operators": "false", "I know the meaning of Strict Equality and Strict Inequality operators": "false", "I know what <= and >= mean in JS": "false", "I know how to use else if statement": "false", "I know how to use Switch statement": "false", "I know what Object is in JS": "false", "I know how to access a value from Object key and value pair": "false", "I know how to operate nested Arrays": "false", "I know how to operate nested Objects": "false", "I know how to create a For loop": "false", "I know how to use Nested For loops": "false", "I know replace For Loop with recursion": "false", "I know how to use ParseInt and toString": "false", "I know how to replace if-else expression with conditional operator": "false"}' WHERE prison_number = 'a@a';
 
-UPDATE targets SET htmlcss = '{"I know what a browser is":"false",
+UPDATE techskills SET htmlcss = '{"I know what a browser is":"false",
     "I know what to do if I get stuck":true,"I know what coding is":"true",
     "I know what HTML is": "false",
     "I know how to use HTML tags": "false",
@@ -40,7 +40,7 @@ UPDATE targets SET htmlcss = '{"I know what a browser is":"false",
     "I know how to use developer tools (Console) in browser":"false",
     "I know how to style any static web page with CSS":"false"}' WHERE prison_number = 'a@a';
 
-UPDATE targets SET reactjs = '{"I have a fantastic soft skill 1":"false",
+UPDATE techskills SET reactjs = '{"I have a fantastic soft skill 1":"false",
     "I can do something":"false",
     "I have a fantastic react skill 3":"false",
     "I have a fantastic react skill 4":"false",

@@ -308,7 +308,7 @@ div.grid-container > div {
   padding: 10px;
 }
 
-div.targets-table {
+div.techskills-table {
   display: grid;
   grid-template-columns: 300px 500px 272px;
   gap: 100px;

@@ -1,4 +1,4 @@
-let targetsUpdated = {};
+let techskillsUpdated = {};
     let column;
     let saved = false;
     let counter = 0;
@@ -23,12 +23,12 @@ let targetsUpdated = {};
     }
 
 
-    function sendRequest(column, targetsUpdated) {
+    function sendRequest(column, techskillsUpdated) {
         let xml = new XMLHttpRequest();
-        xml.open("POST", "/targets", true);
+        xml.open("POST", "/techskills", true);
         xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-        xml.send(`column=${column}&data=${JSON.stringify(targetsUpdated)}`);
-        targetsUpdated = {}
+        xml.send(`column=${column}&data=${JSON.stringify(techskillsUpdated)}`);
+        techskillsUpdated = {}
     }
 
     function change() {
@@ -38,11 +38,11 @@ let targetsUpdated = {};
         
        if (window.event.target.className === "true") {
             window.event.target.className = "false";
-            targetsUpdated[window.event.target.id] = "false";
+            techskillsUpdated[window.event.target.id] = "false";
             counter -= 1;
         } else {
             window.event.target.className = "true";
-            targetsUpdated[window.event.target.id] = "true";
+            techskillsUpdated[window.event.target.id] = "true";
             counter += 1;
             }
            
@@ -51,7 +51,7 @@ let targetsUpdated = {};
     }
 
     function save() {
-        sendRequest(column, targetsUpdated);
+        sendRequest(column, techskillsUpdated);
         let buttons = document.getElementsByClassName("sidebar-buttons");
         for (var i = 0; i < buttons.length; i++ ) {
             buttons[i].style = "none"
@@ -60,7 +60,7 @@ let targetsUpdated = {};
         document.getElementById("saved").style.display = "inline";
         saved = true;
         column = null;
-        targetsUpdated = {}
+        techskillsUpdated = {}
         calculate();
         }
         
@@ -119,7 +119,7 @@ let targetsUpdated = {};
 
     function restoreState() {
         stashBigNum();
-        let arr = Object.entries(targetsUpdated)
+        let arr = Object.entries(techskillsUpdated)
         for ( let i = 0; i < arr.length; i++ ) {
             let element = document.getElementById(arr[i][0])
             if (arr[i][1] === "true") {
@@ -136,6 +136,6 @@ let targetsUpdated = {};
             }
         }
         column = null;
-        targetsUpdated = {}
+        techskillsUpdated = {}
         
     }

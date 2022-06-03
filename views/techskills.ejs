@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="/style.css"/>
-    <script src="scripts/targets.js"></script>
+    <script src="scripts/techskills.js"></script>
 </head>
 
 
@@ -21,11 +21,11 @@
     
     
     
-    <div class="targets-table">
+    <div class="techskills-table">
         <div>
             <div id="sidebar">
                 <a href="/dashboard">Back to dashboard</a>
-                <h1>My targets</h1>
+                <h1>My techskills</h1>
                 <br/>
                 <button name="htmlcss" class="sidebar-buttons" onclick="showStuff()">HTML+CSS</button>
                 <button name="jsbasics" class="sidebar-buttons" onclick="showStuff()">Javascript</button>
@@ -52,11 +52,11 @@
     <% let counter = 0; %>
     
     <% let totalTargetsCount = 0; %>
-    <% for (t in targets) { %>
-        <% let targs = targets[t] %>
+    <% for (t in techskills) { %>
+        <% let targs = techskills[t] %>
         
-        <% let index = Object.keys(targets).indexOf(t) %>
-        <% let tableName = Object.keys(targets)[index] %>
+        <% let index = Object.keys(techskills).indexOf(t) %>
+        <% let tableName = Object.keys(techskills)[index] %>
         <div>
         <div style="vertical-align: top">
         <table id="<%= tableName %>" class="tables" style="display:none">

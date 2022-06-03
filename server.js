@@ -89,7 +89,7 @@ app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
-            pool.query(`SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber]),
+            pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
         ]).then(function([posts, user, reviews, techSkills, softSkills]) {
             let name = user.rows[0].name;
@@ -119,7 +119,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
     Promise.all([
         pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
     ]).then(function([posts, reviews, techSkills, softSkills]) {
         let htmlcss = techSkills.rows[0].htmlcss;
@@ -211,17 +211,17 @@ app.post("/view/review", checkAdminRole, (req, res) => {
 
 })
 
-app.get("/targets", checkNotAuthenticated, (req, res) => {
+app.get("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     pool.query(
-        `SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber], (err, results) => {
+        `SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber], (err, results) => {
             if (err) {
                 console.log(err);
             } else {
                
               
-                res.render('targets', {
-                    targets: {
+                res.render('techskills', {
+                    techskills: {
                         htmlcss: results.rows[0].htmlcss, 
                         jsbasics: results.rows[0].jsbasics, 
                         reactjs: results.rows[0].reactjs} })
@@ -229,20 +229,20 @@ app.get("/targets", checkNotAuthenticated, (req, res) => {
     })
 })
 
-app.post("/targets", checkNotAuthenticated, (req, res) => {
+app.post("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     let data = JSON.parse(req.body.data)
     let {column} = req.body
     Promise.all([
-        pool.query(`SELECT * FROM targets WHERE prison_number = $1`, [prisonNumber])
+        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber])
     ]).then(function([results]) {  
         for (i in data) {
             if (i) {  
                 results.rows[0][column][i] = data[i]     
             }
         } 
-        pool.query(`UPDATE targets SET ${column} = '${JSON.stringify(results.rows[0][column])}' WHERE prison_number = $1`, [prisonNumber])    
-        res.render('targets', {targets: [results.htmlcss, results.jsbasics, results.reactjs]})
+        pool.query(`UPDATE techskills SET ${column} = '${JSON.stringify(results.rows[0][column])}' WHERE prison_number = $1`, [prisonNumber])    
+        res.render('techskills', {techskills: [results.htmlcss, results.jsbasics, results.reactjs]})
     })
 })
 
