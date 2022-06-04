@@ -49,7 +49,7 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                     name: user.rows[0].name, 
                     prisonNumber: user.rows[0].prison_number, 
                     posts: posts,
-                    students: students.rows,
+                    students: sortPosts(students.rows),
                     notSeen: user.rows[0].unseen
                     
                      
@@ -350,13 +350,17 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                         let notSeen = []
                         for (let i=0; i < students.length; i++) {
                             if (students[i].prison_number === prisonNumber) {
-                               notSeen.push(students[i].unseen)
+                               notSeen.push(students[i].unseen);
+                            if (students[i].prison_number === 'aaaaaa') {
+                                participant2 = students[i]
+                            }
                             }
                         }
+                        // console.log("server" + participant2)
                         res.render("messages", {
                             dialogId: dialogId, 
                             messages: msgs, 
-                            participant2: participant2,
+                            participant2: "Ogogo",
                             students: students,
                             prisonNumber: prisonNumber,
                             participant2pn: recipient,

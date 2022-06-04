@@ -18,6 +18,25 @@ window.onload = (event) => {
     xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
     xml.send(`dialogId=${dialogId}`);
 }
+
+document.addEventListener('scroll', function(e) {
+    console.log(window.scrollX)
+       if (window.scrollX > 20) {
+           
+           document.getElementsByClassName("sidebar")[0].style = "width: 200px; padding: 0px;"
+           document.getElementsByClassName("fixed-part")[0].style = "display: none;";
+           document.getElementsByClassName("dashboard-column-1")[0].style = "margin-left: -80px;";
+           document.getElementsByClassName("dashboard-column-2")[0].style = "margin-left: -70px;";
+           document.getElementsByClassName("posts-header")[0].style = "margin-left: -80px;";
+       } 
+       else {
+            document.getElementsByClassName("sidebar")[0].style = "width: 300px; padding: 10px;"
+           document.getElementsByClassName("fixed-part")[0].style = "display: block";
+           document.getElementsByClassName("dashboard-column-1")[0].style = "margin-left: 0px";
+           document.getElementsByClassName("dashboard-column-2")[0].style = "margin-left: 0px;";
+           document.getElementsByClassName("posts-header")[0].style = "margin-left: 0px;";
+       } 
+   })
 </script>
 
 
@@ -25,7 +44,9 @@ window.onload = (event) => {
 
 
 <body>
-
+ 
+        <% console.log(participant2) %>
+ 
     <div class="navbar">
         <h1><a href="/dashboard">CODE4000</a></h1>
         <ul>
@@ -39,6 +60,7 @@ window.onload = (event) => {
     </div>
     <div class="dashboard-table">
         <div class="sidebar">
+            <div class="fixed-part">
             
             <a href="/dashboard">Back to dashboard</a>
             <br/>
@@ -48,12 +70,16 @@ window.onload = (event) => {
            
             <br/>
             </div>
+        </div>
         <br/>
        
-          <div>
+          <div class="dashboard-column-1">
+              <h2 class="posts-header">You and <%= participant2 %></h2>
             <form action="/messages/<%= dialogId %>" method="POST">
                 <div>
                     <textarea name="message" rows="20" cols="64" wrap="hard" maxlength="2000" placeholder="Write your message here" required></textarea>
+                    <input type="hidden" name="participant2" value="<%= participant2 %>">
+                    <input type="hidden" name="participant2pn" value="<%= participant2pn %>">
                 </div>
               
                 <div>
@@ -78,7 +104,7 @@ window.onload = (event) => {
             </table>
         
     </div>
-    <div>
+    <div class="dashboard-column-2">
         <table>
             <tr>
                 <td class="messages-header">
