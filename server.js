@@ -187,7 +187,7 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
         pool.query(`SELECT * FROM users`)
             ]).then(function([user, reviews, students]) {
                         reviews = reviews.rows
-                        students = students.rows
+                        students = sortPosts(students.rows)
                         res.render("reviews", 
                         {
                             reviews: reviews, 
@@ -218,7 +218,7 @@ app.get("/techskills", checkNotAuthenticated, (req, res) => {
         pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`)
     ]).then(function([user, results, students]) {
-               students = students.rows;
+               students = sortPosts(students.rows);
                 res.render('techskills', {
                     students: students,
                     prisonNumber: prisonNumber,
@@ -245,7 +245,7 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
                 results.rows[0][column][i] = data[i]     
             }
         }
-        students = students.rows
+        students = sortPosts(students.rows);
         pool.query(`UPDATE techskills SET ${column} = '${JSON.stringify(results.rows[0][column])}' WHERE prison_number = $1`, [prisonNumber])    
         res.render('techskills', {
             students: students, 
@@ -264,7 +264,7 @@ app.get("/softskills", checkNotAuthenticated, (req, res) => {
         pool.query(`SELECT * FROM users`),
         pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
     ]).then(function([results, students, user]) {  
-        students = students.rows
+        students = sortPosts(students.rows);
                 res.render('softskills', {
                     students: students, 
                     prisonNumber: prisonNumber, 
@@ -285,7 +285,7 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
         pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
     ]).then(function([results, students, user]) {
         let softskills = results.rows[0].softskills
-        students = students.rows
+        students = sortPosts(students.rows)
         for (i in data) {
             if (i) { 
                 softskills[i] = data[i]     
@@ -315,14 +315,15 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
 })
 
 app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
-    let dialogId = req.params.dialogId
-    let text = req.body.message
-    let participant2 = req.body.participant2
+    let dialogId = req.params.dialogId;
+    let text = req.body.message;
+    let participant2 = req.body.participant2;
+    let participant2pn = req.body.participant2pn;
     let dateTime = new Date().toLocaleString();
-    let msgs = []
-    let name = req.user.name
-    let prisonNumber = req.user.prison_number
-    let recipient = dialogId.replace('-', '').replace(prisonNumber, '')
+    let msgs = [];
+    let name = req.user.name;
+    let prisonNumber = req.user.prison_number;
+    let recipient = dialogId.replace('-', '').replace(prisonNumber, '');
     if (text) {
         
         Promise.all([
@@ -339,22 +340,53 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                     if (err) {
                         console.log(err)
                     } else {
-                        msgs = results.rows
-                    }
-                    res.render("messages", {dialogId: dialogId, messages: msgs, participant2: participant2})  
+                        msgs = results.rows;
+                    
+                    pool.query('SELECT * FROM users', (err, users) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                        let students = sortPosts(users.rows);
+                        let notSeen = []
+                        for (let i=0; i < students.length; i++) {
+                            if (students[i].prison_number === prisonNumber) {
+                               notSeen.push(students[i].unseen)
+                            }
+                        }
+                        res.render("messages", {
+                            dialogId: dialogId, 
+                            messages: msgs, 
+                            participant2: participant2,
+                            students: students,
+                            prisonNumber: prisonNumber,
+                            participant2pn: recipient,
+                            notSeen: notSeen
+                       
+                        }) 
+                    }})
+                }})
             })
-        })
-    } else {
-        pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
-            if (err) {
-                console.log(err)
-            } else {
-                msgs = results.rows
-            }
-            res.render("messages", {dialogId: dialogId, messages: msgs, participant2: participant2})  
+        } else {
+        Promise.all([
+            pool.query(`SELECT * FROM users WHERE prison_number = '${prisonNumber}'`),
+            pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`),
+            pool.query('SELECT * FROM users;')
+        ]).then(function([user, results, users]) {
+            msgs = results.rows;
+            let students = sortPosts(users.rows);
+            res.render("messages", {
+                dialogId: dialogId, 
+                messages: msgs, 
+                participant2: participant2,
+                students: students,
+                notSeen: user.rows[0].unseen,
+                prisonNumber: prisonNumber,
+                participant2pn: recipient
+            })  
+        })  
+        }              
     })    
-    }
-})
+
 
 app.post("/unseen-seen", (req, res) => {
     let prisonNumber = req.user.prison_number

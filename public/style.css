@@ -236,6 +236,12 @@ td.false {
   background-color: rgb(226, 226, 226);
 }
 
+.message-highlight {
+  width: 400px;
+  padding: 10px;
+  background-color: #C0D8C0;
+}
+
 /* ADMIN SIDE - student bar */
 
 #student-bar {
