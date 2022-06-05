@@ -360,7 +360,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                         res.render("messages", {
                             dialogId: dialogId, 
                             messages: msgs, 
-                            participant2: "Ogogo",
+                            participant2: participant2,
                             students: students,
                             prisonNumber: prisonNumber,
                             participant2pn: recipient,

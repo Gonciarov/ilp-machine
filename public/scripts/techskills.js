@@ -141,22 +141,3 @@ let techskillsUpdated = {};
         techskillsUpdated = {}
         
     }
-
-    document.addEventListener('scroll', function(e) {
-        console.log(window.scrollX)
-           if (window.scrollX > 20) {
-               
-               document.getElementsByClassName("sidebar")[0].style = "width: 200px; padding: 0px;"
-               document.getElementsByClassName("fixed-part")[0].style = "display: none;";
-               document.getElementsByClassName("grid-student-col-1")[0].style = "margin-left: -80px;";
-               document.getElementsByClassName("grid-student-col-2")[0].style = "margin-left: -70px;";
-               document.getElementsByClassName("techskills-header")[0].style = "margin-left: -80px;";
-           } 
-           else {
-                document.getElementsByClassName("sidebar")[0].style = "width: 300px; padding: 10px;"
-               document.getElementsByClassName("fixed-part")[0].style = "display: block";
-               document.getElementsByClassName("grid-student-col-1")[0].style = "margin-left: 0px";
-               document.getElementsByClassName("grid-student-col-2")[0].style = "margin-left: 0px;";
-               document.getElementsByClassName("techskills-header")[0].style = "margin-left: 0px;";
-           } 
-       })
