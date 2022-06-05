@@ -8,8 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="/style.css"/>
-    <script src="scripts/dashboard.js"></script>
 </head>
+
+<script>
+    function submitForm() {
+        let id = 'form' + window.event.currentTarget.id.slice(2)
+        let form = document.getElementById(id)
+        form.submit()
+    }
+    
+    </script>
 
 <body>
 
@@ -24,7 +32,7 @@
           </ul>
     </div>
 
-    <div class="dashboard-table">
+    <div class="grid-student">
         <div class="sidebar">
             <div class="fixed-part">
             <h1>Hello,
@@ -41,8 +49,8 @@
         </div>
     <br/>
 
-<div class="dashboard-column-1">
-    <h2 class="posts-header">Your project reviews</h2>
+<div class="grid-student-col-1">
+    <h2 class="col-1-header">Your project reviews</h2>
     <table>
     <% if (!reviews[0]) { %>
         <p><i>No reviews yet</i></p>
@@ -65,10 +73,10 @@
   <%}%>
 </table>
 </div>
-<div class="dashboard-column-2">
+<div class="grid-student-col-2">
     <table>
         <tr>
-            <td class="messages-header">
+            <td class="col-2-header">
                 <h2>Your messages</h2>
             </td>
         </tr>
@@ -76,11 +84,11 @@
  
         <% if (prisonNumber !== students[i].prison_number) { %>
         <tr>
-            <td class="message">
+            <td id="td<%= students[i].prison_number %>" onclick="submitForm()" class="message">
                     <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>
                 
                     
-                    <form action="/messages/<%= dialogId %>" method="POST">
+                    <form id="form<%= students[i].prison_number %>" action="/messages/<%= dialogId %>" method="POST">
                       <input type="hidden" name="name" value="<%= students[i].name %>">
                         <input type="hidden" name="participant1" value="<%= prisonNumber %>">
                         <input type="hidden" name="participant2" value="<%= students[i].name %>">
@@ -92,7 +100,7 @@
                         <% } %>
                     </b>
                         
-                      <input type="submit" style="float: right" value="View">
+                 
                         
                     </form>
     

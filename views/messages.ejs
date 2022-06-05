@@ -19,26 +19,13 @@ window.onload = (event) => {
     xml.send(`dialogId=${dialogId}`);
 }
 
-document.addEventListener('scroll', function(e) {
-    console.log(window.scrollX)
-       if (window.scrollX > 20) {
-           
-           document.getElementsByClassName("sidebar")[0].style = "width: 200px; padding: 0px;"
-           document.getElementsByClassName("fixed-part")[0].style = "display: none;";
-           document.getElementsByClassName("dashboard-column-1")[0].style = "margin-left: -80px;";
-           document.getElementsByClassName("dashboard-column-2")[0].style = "margin-left: -70px;";
-           document.getElementsByClassName("posts-header")[0].style = "margin-left: -80px;";
-       } 
-       else {
-            document.getElementsByClassName("sidebar")[0].style = "width: 300px; padding: 10px;"
-           document.getElementsByClassName("fixed-part")[0].style = "display: block";
-           document.getElementsByClassName("dashboard-column-1")[0].style = "margin-left: 0px";
-           document.getElementsByClassName("dashboard-column-2")[0].style = "margin-left: 0px;";
-           document.getElementsByClassName("posts-header")[0].style = "margin-left: 0px;";
-       } 
-   })
-</script>
-
+    function submitForm() {
+        let id = 'form' + window.event.currentTarget.id.slice(2)
+        let form = document.getElementById(id)
+        form.submit()
+    }
+    
+    </script>
 
  
 
@@ -58,7 +45,7 @@ document.addEventListener('scroll', function(e) {
             <li><a href="/logout">Logout</a></li>
           </ul>
     </div>
-    <div class="dashboard-table">
+    <div class="grid-student">
         <div class="sidebar">
             <div class="fixed-part">
             
@@ -73,8 +60,8 @@ document.addEventListener('scroll', function(e) {
         </div>
         <br/>
        
-          <div class="dashboard-column-1">
-              <h2 class="posts-header">You and <%= participant2 %></h2>
+          <div class="grid-student-col-1">
+              <h2 class="col-1-header">You and <%= participant2 %></h2>
             <form action="/messages/<%= dialogId %>" method="POST">
                 <div>
                     <textarea name="message" rows="20" cols="64" wrap="hard" maxlength="2000" placeholder="Write your message here" required></textarea>
@@ -104,10 +91,10 @@ document.addEventListener('scroll', function(e) {
             </table>
         
     </div>
-    <div class="dashboard-column-2">
+    <div class="grid-student-col-2">
         <table>
             <tr>
-                <td class="messages-header">
+                <td class="col-2-header">
                     <h2>Your messages</h2>
                 </td>
             </tr>
@@ -117,10 +104,10 @@ document.addEventListener('scroll', function(e) {
                 <% if (students[i].prison_number === participant2pn) { %>
                 <td class="message-highlight">
                     <% } else { %>
-                        <td class="message">
+                        <td id="td<%= students[i].prison_number %>" onclick="submitForm()" class="message">
                             <% } %>
                         <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>   
-                    <form action="/messages/<%= dialogId %>" method="POST">
+                    <form id="form<%= students[i].prison_number %>" action="/messages/<%= dialogId %>" method="POST">
                     <input type="hidden" name="name" value="<%= students[i].name %>">
                         <input type="hidden" name="participant1" value="<%= prisonNumber %>">
                         <input id="students" type="hidden" value="<%= students %>">
@@ -134,7 +121,7 @@ document.addEventListener('scroll', function(e) {
                             <b style="display:inline-block; color: red">(new)</b>
                         <% } %>
                     </b>   
-                    <input type="submit" style="float: right" value="View">
+                 
                     </form>
                 </td>
             </tr>

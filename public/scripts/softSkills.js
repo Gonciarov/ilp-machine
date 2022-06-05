@@ -142,8 +142,8 @@ document.addEventListener('scroll', function(e) {
        else {
             document.getElementsByClassName("sidebar")[0].style = "width: 300px; padding: 10px;"
            document.getElementsByClassName("fixed-part")[0].style = "display: block";
-           document.getElementsByClassName("softskills-column-1")[0].style = "margin-left: 0px";
-           document.getElementsByClassName("softskills-column-2")[0].style = "margin-left: 0px;";
+           document.getElementsByClassName("grid-student-col-1")[0].style = "margin-left: 0px";
+           document.getElementsByClassName("grid-student-col-2")[0].style = "margin-left: 0px;";
            document.getElementsByClassName("softskills-header")[0].style = "margin-left: 0px;";
        } 
    })

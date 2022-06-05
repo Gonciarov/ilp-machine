@@ -11,6 +11,15 @@
     <script src="scripts/softskills.js"></script>
 </head>
 
+<script>
+    function submitForm() {
+        let id = 'form' + window.event.currentTarget.id.slice(2)
+        let form = document.getElementById(id)
+        form.submit()
+    }
+    
+    </script>
+
 <body>
 
     <div class="navbar">
@@ -25,7 +34,7 @@
           </ul>
     </div>
 
-    <div class="softskills-table">
+    <div class="grid-student">
         
             <div class="sidebar">
                 <div class="fixed-part">
@@ -49,6 +58,7 @@
              <br/>
                 </div>
             </div>
+            <br/>
     
 
     
@@ -56,8 +66,8 @@
     
     <% let totalSoftSkillsCount = 0; %>
     
-        <div class="softskills-column-1">
-            <h2 class="softskills-header">Can you deal with people?</h2>
+        <div class="grid-student-col-1">
+            <h2 class="col-1-header">Can you deal with people?</h2>
             <div style="vertical-align: top">
                 <table id="softskills" class="tables" style="display:none">
                 
@@ -81,19 +91,19 @@
 
             </div>
         </div>
-    <div>
+    <div class="grid-student-col-2">
         <table>
             <tr>
-                <td class="messages-header">
+                <td class="col-2-header">
                     <h2>Your messages</h2>
                 </td>
             </tr>
                 <% for (let i = 0; i < students.length; i++) { %>
                         <% if (prisonNumber !== students[i].prison_number) { %>
             <tr>
-                <td class="message">
+                <td id="td<%= students[i].prison_number %>" onclick="submitForm()" class="message">
                         <% let dialogId = [prisonNumber, students[i].prison_number].sort().join("-").toString() %>   
-                    <form action="/messages/<%= dialogId %>" method="POST">
+                    <form id="form<%= students[i].prison_number %>" action="/messages/<%= dialogId %>" method="POST">
                     <input type="hidden" name="name" value="<%= students[i].name %>">
                         <input type="hidden" name="participant1" value="<%= prisonNumber %>">
                         <input type="hidden" name="participant2" value="<%= students[i].name %>">
@@ -104,7 +114,7 @@
                             <b style="display:inline-block; color: red">(new)</b>
                         <% } %>
                     </b>   
-                    <input type="submit" style="float: right" value="View">
+                  
                     </form>
                 </td>
             </tr>

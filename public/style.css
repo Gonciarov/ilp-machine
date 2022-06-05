@@ -4,7 +4,8 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin: 0;
   color: rgb(0, 0, 0, 0.7);
-  min-width: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 a {
@@ -128,12 +129,6 @@ vertical-align: middle;
   
 }
 
-.posts-header {
-  text-align: center;
-  padding: 10px;
-  border: none;
-}
-
 /* STUDENT AND ADMIN SIDES - reviews */
 
 .review-text {
@@ -169,14 +164,23 @@ div.review-form-buttons {
   color: rgb(0, 0, 0, 0.7);
 }
 
+@media screen and (max-width: 1200px) {
+  .sidebar {
+    width: 50px;
+    padding: 0px;
+  }
+
+  .sidebar .fixed-part {
+    display: none;
+  }
+}
+
 .sidebar .fixed-part {
   position: fixed;
   text-align: center;
   width: 250px;
   padding: 10px;
 }
-
-
 
 #not-saved {
   color: #DD4A48;
@@ -214,30 +218,17 @@ td.false {
   text-align: center;
 }
 
-.techskills-header, 
-.softskills-header {
-  text-align: center;
-  padding: 10px;
-  border: none;
-}
+/* STUDENT SIDE - messages */
 
-/* STUDENT SIDE - messages panel */
-
-.messages-header {
-  text-align: center;
-  width: 400px;
-  padding: 10px;
-  border: none;
-}
 
 .message {
-  width: 400px;
+  width: 300px;
   padding: 10px;
   background-color: rgb(226, 226, 226);
 }
 
 .message-highlight {
-  width: 400px;
+  width: 300px;
   padding: 10px;
   background-color: #C0D8C0;
 }
@@ -325,23 +316,41 @@ div.admin-container > div {
   padding: 10px;
 }
 
-div.dashboard-table {
+div.grid-student {
   display: grid;
-  grid-template-columns: 360px 0px 580px 600px;
+  grid-template-columns: 380px 0px 600px 600px;
   gap: 0px;
 }
 
-div.techskills-table, div.softskills-table {
-  display: grid;
-  grid-template-columns: 350px 580px 600px;
-  gap: 0px;
-}
-
-div.dashboard-table .dashboard-column-1,
-div.dashboard-table .dashboard-column-2,
-div.techskills-table .techskills-column-1,
-div.techskills-table .techskills-column-2 {
+div.grid-student .grid-student-col-1,
+div.grid-student .grid-student-col-2 {
   margin-top: 30px;
+}
+
+div.grid-student .grid-messages-col-1 {
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 1200px) {
+  div.grid-student .grid-student-col-1,
+  div.grid-student .grid-student-col-2 {
+    margin-left: -200px;
+  }
+}
+
+
+.col-1-header {
+  text-align: center;
+  padding: 10px;
+  border: none;
+}
+
+.col-2-header {
+  text-align: center;
+  width: 300px;
+  padding: 10px;
+  border: none;
+  text-align: center;
 }
 
 /* register, login */
@@ -387,5 +396,5 @@ div.techskills-table .techskills-column-2 {
   text-align: center;
 }
 
-/* colours used previously: DD4A48
+/* colours used: DD4A48
 ECB390 C0D8C0 F5EEDC */
