@@ -88,7 +88,7 @@ app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
         Promise.all([
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
-            pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+            pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
         ]).then(function([posts, user, reviews, techSkills, softskills]) {
@@ -118,7 +118,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
     let date = req.body.date || new Date().toDateString();
     Promise.all([
         pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
     ]).then(function([posts, reviews, techSkills, softskills]) {
@@ -146,11 +146,11 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
             })
         } else if (review) {
             Promise.all([
-            pool.query(`INSERT INTO projects (prison_number, review, title, date)
+            pool.query(`INSERT INTO reviews (prison_number, review, title, date)
             VALUES ($1, $2, $3, $4)`, [prisonNumber, review, title, date]), 
             ]).then(function() {
                 Promise.all([
-                pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
+                pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber])
             ]).then(function([reviews]) {
                 reviews = sortPosts(reviews.rows)
                 res.render("viewPostsAndReviews", { 
@@ -166,7 +166,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
         })
         } else {
         Promise.all([
-            pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber])
+            pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber])
         ]).then(function([reviews]) {
             reviews = sortPosts(reviews.rows)     
             res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews, techSkills: [htmlcss, jsbasics, reactjs],
@@ -183,7 +183,7 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     let name = req.user.name
     Promise.all([
         pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`)
             ]).then(function([user, reviews, students]) {
                         reviews = reviews.rows
@@ -205,7 +205,7 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
 app.post("/view/review", checkAdminRole, (req, res) => {
     let { name, reviewId, prisonNumber, review, title, date, editing } = req.body
     if (editing) {
-        pool.query(`UPDATE projects SET review='${review}' WHERE ID = ${reviewId}`)
+        pool.query(`UPDATE reviews SET review='${review}' WHERE ID = ${reviewId}`)
     } 
     res.render("viewReview", { name: name, date: date, reviewId: reviewId, prisonNumber: prisonNumber, review: review, title: title })
 
@@ -317,6 +317,7 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
 app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let dialogId = req.params.dialogId;
     let text = req.body.message;
+    let y = req.body.y;
     let participant2 = req.body.participant2;
     let participant2pn = req.body.participant2pn;
     let dateTime = new Date().toLocaleString();
@@ -364,7 +365,8 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                             students: students,
                             prisonNumber: prisonNumber,
                             participant2pn: recipient,
-                            notSeen: notSeen
+                            notSeen: notSeen,
+                            y: y
                        
                         }) 
                     }})
@@ -385,7 +387,8 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                 students: students,
                 notSeen: user.rows[0].unseen,
                 prisonNumber: prisonNumber,
-                participant2pn: recipient
+                participant2pn: recipient,
+                y: y
             })  
         })  
         }              
@@ -408,6 +411,47 @@ app.post("/unseen-seen", (req, res) => {
 
 })
      
+app.get("/ilp", checkNotAuthenticated, (req, res) => {
+    Promise.all([
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [req.user.prison_number]),
+        pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [req.user.prison_number]),
+        
+    ]).then(function([user, targets]) {
+                targets = targets.rows[0];
+                console.log(targets)
+                name = req.user.name;
+                res.render("ilp", {name: name, targets: targets})             
+         })
+        })
+
+app.post("/ilp", checkNotAuthenticated, (req, res) => {
+    let prisonNumber = req.user.prison_number
+    let data = JSON.parse(req.body.data)
+    console.log(data)
+    let {module} = req.body
+    Promise.all([
+        pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
+        pool.query(`SELECT * FROM users`),
+        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+    ]).then(function([targets, students, user]) {  
+        for (i in data) {
+            if (i) {
+                console.log(module)
+                console.log(targets.rows[0][module])
+                targets.rows[0][module][i] = data[i]     
+            }
+        }
+        students = sortPosts(students.rows);
+        pool.query(`UPDATE ilp SET ${module} = '${JSON.stringify(targets.rows[0][module])}' WHERE prison_number = $1`, [prisonNumber])    
+        res.render('ilp', {
+            // students: students, 
+            prisonNumber: prisonNumber,
+            // notSeen: user.rows[0].unseen,
+            targets: targets.rows[0]
+        })
+    })
+})
+        
 
 app.post("/view/post", async(req, res) => {
     let { name, postId, prisonNumber, text, comment, date, editing } = req.body
@@ -434,7 +478,7 @@ app.post("/delete/post", async(req, res) => {
 
 app.post("/delete/review", checkAdminRole, async(req, res) => {
     let id = req.body.reviewId
-    pool.query(`DELETE FROM projects WHERE id = ${id}`)
+    pool.query(`DELETE FROM reviews WHERE id = ${id}`)
     })
 
 app.post("/delete/comment", checkAdminRole, async(req, res) => {
@@ -447,7 +491,7 @@ app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
  let {name, curriculumCompleted, softskillsCompleted, postsTotal, reviewsTotal} = req.body
  Promise.all([
     pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
-    pool.query(`SELECT * FROM projects WHERE prison_number = $1`, [prisonNumber]),
+    pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
 ]).then(function([posts, reviews]) {
     posts = sortPosts(posts.rows)
     reviews = sortPosts(reviews.rows)
@@ -461,7 +505,7 @@ app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
                     ${curriculumCompleted} of curriculum completed\r\n
                     ${softskillsCompleted} of soft skilles developed\r\n
                     ${postsTotal} posts in total\r\n
-                    ${reviewsTotal} projects reviewed by instructors\r\n`);
+                    ${reviewsTotal} reviews reviewed by instructors\r\n`);
     doc.addPage('a4', 'p');
     doc.setFontSize(30);
     doc.text(10, 20, `${name}'s reflections: `);
@@ -620,6 +664,8 @@ app.post('/login', passport.authenticate('local', {
     failureRedirect: "/login",
     failureFlash: true
 }));
+
+
 
 /* functions */
 

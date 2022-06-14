@@ -11,39 +11,68 @@
     <script src="scripts/ilp.js"></script>
 </head>
 
-
 <body>
 
     <div class="navbar">
         <h1><a href="/dashboard">CODE4000</a></h1>
         <ul>
-            <li><a href="/reviews">Tutor reviews</a></li>
+            <li><a href="/reviews">Reviews</a></li>
             <li><a href="/techskills">Tech skills</a></li>
             <li><a href="/softskills">Soft skills</a></li>
             <li><a href="/ilp">ILP</a></li>
-            <li><a href="/rules">Classroom rules</a></li>
+            <li><a class="classroom-rules" href="/rules">Classroom rules</a></li>
           </ul>
     </div>
 
-    <div class="grid-student">
+    <div class="grid-ilp">
         <div class="sidebar">
             <div class="fixed-part">
             <h1>Hello,
-                name!
+                <%= name %>!
             </h1>
-            <a href="/dashboard">Dashboard</a>
-            <br/>
-            <a href="/techskills">Tech skills</a>
-            <br/>
-            <a href="/softskills">Soft skills</a>
-            <br/>
-            <p><i>Please do your best to update your reflections every Friday and refresh your tech and soft skills records monthly</i></p>
+            <p>Select a module: </p>
+            <% for (t in targets["full_title"]) { %>
+                
+                <button value='<%= t %>' onclick="showStuff()"><%= targets["full_title"][t] %></button>
+               
+                <%}%>
+            
+        
+           <div class="saved-status-container">
+            <div>
+                <button id="ilp-cancel-button" style="display:none" onclick="cancel()">Cancel</button>
+                <button id="ilp-save-button" style="display:none" onclick="save()">Save</button>
             </div>
+            <div class="saved-status-container">
+                <i id="ilp-saved" style="display:none">saved</i>
+                <i id="ilp-not-saved" style="display:none">not saved</i>
+            </div>
+        </div> 
+        </div>
         </div>
     <br/>
-
-<div class="grid-student-col-1">
-    <h2 class="col-1-header">Your project reviews</h2>
+        
+    
+    <div class="grid-ilp-col-1">
+        <i id="ilp-select-module"><--- Select a module from sidebar</i>
+            <% for (t in targets) { %>
+                <% if (t != "prison_number") { %>
+                <table id='table<%= t %>' class="single-module">
+                    <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
+                <tr>  
+                    <% for (i in targets[t]) { %>      
+                    <td id="<%= i %>" class="<%= targets[t][i] %>" onclick="change()"><%= i %></td>
+                    
+        </tr>
+        <%}%>
+        <%}%>
+        </table>
+      <%}%>
+    
+      
+    
+   
+    </div>
 
 </div>
 

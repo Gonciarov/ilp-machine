@@ -115,6 +115,12 @@ vertical-align: middle;
   margin-left: 10px;
 }
 
+@media screen and (max-width: 800px) {
+  .classroom-rules {
+    display: none;
+  }
+}
+
 /* STUDENT SIDE - posts and comments */
 
 .post {
@@ -164,7 +170,7 @@ div.review-form-buttons {
   color: rgb(0, 0, 0, 0.7);
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
   .sidebar {
     width: 50px;
     padding: 0px;
@@ -182,15 +188,15 @@ div.review-form-buttons {
   padding: 10px;
 }
 
-#not-saved {
+#not-saved, #ilp-not-saved {
   color: #DD4A48;
 }
 
-#saved {
+#saved, #ilp-saved {
   color: rgb(72, 129, 72);
 }
 
-#saved-status-container {
+.saved-status-container {
   margin-top: 20px;
 }
 
@@ -322,6 +328,12 @@ div.grid-student {
   gap: 0px;
 }
 
+div.grid-ilp {
+  display: grid;
+  grid-template-columns: 380px 0px 1200px;
+  gap: 0px;
+}
+div.grid-ilp .grid-ilp-col-1,
 div.grid-student .grid-student-col-1,
 div.grid-student .grid-student-col-2 {
   margin-top: 30px;
@@ -331,9 +343,11 @@ div.grid-student .grid-messages-col-1 {
   margin-top: 30px;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
+  div.grid-ilp .grid-ilp-col-1,
   div.grid-student .grid-student-col-1,
-  div.grid-student .grid-student-col-2 {
+  div.grid-student .grid-student-col-2,
+  .col-1-header {
     margin-left: -200px;
   }
 }
@@ -351,6 +365,12 @@ div.grid-student .grid-messages-col-1 {
   padding: 10px;
   border: none;
   text-align: center;
+}
+
+/* ILP */
+
+.single-module {
+  display: none;
 }
 
 /* register, login */

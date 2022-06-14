@@ -1,4 +1,4 @@
-CREATE TABLE projects ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, title VARCHAR (30) NOT NULL, review VARCHAR (2000) NOT NULL, date VARCHAR (20) NOT NULL);
+CREATE TABLE reviews ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, title VARCHAR (30) NOT NULL, review VARCHAR (2000) NOT NULL, date VARCHAR (20) NOT NULL);
 
 CREATE TABLE users ( id serial PRIMARY KEY, prison_number VARCHAR (10) NOT NULL, name VARCHAR (30) NOT NULL, password VARCHAR(600) NOT NULL, UNIQUE(prison_number));
 
@@ -70,5 +70,260 @@ UPDATE softskills SET softskills = '{"I have a fantastic soft skill 1":"false",
     "I have a fantastic soft skill 12":"false",
     "I have a fantastic soft skill 13":"false",
     "I have a fantastic soft skill 14":"false"}' WHERE prison_number = 'a@a';
+
+           CREATE TABLE ilp (
+               prison_number VARCHAR (10) NOT NULL,
+m1_1 JSON,
+m2_1 JSON,
+m2_2 JSON,
+m2_3 JSON,
+m2_4 JSON,
+m2_5 JSON,
+m2_6 JSON,
+m2_7 JSON,
+m3_1 JSON,
+m3_2 JSON,
+m3_3 JSON,
+m3_4 JSON,
+m3_5 JSON,
+m3_6 JSON,
+m3_7 JSON,
+m3_8 JSON,
+React JSON,
+Jquery JSON,
+recommended_time JSON,
+full_title JSON
+current VARCHAR(20),
+completed VARCHAR(20));
+
+INSERT INTO ilp (prison_number) VALUES ('a@a');
+
+UPDATE ilp SET m1_1 = '{
+"See film Why Computer Science is Changing Everything": "false", 
+"See film Kenyatta Leal - the Journey from Ex-Offender to Rocket Space Employee": "false",
+"See short film Building a Foundation": "false",
+"See short Film Will Smith - Fail Early, Fail Often, Fail Forward": "false",
+"See short Film Eddie Izzard – Computers": "false",
+"Learn the browser concept – see short film What is a browser?": "false",
+"Learn general concepts of web – read How The Web Works – In One Easy Lesson": "false",
+"Learn History of the Internet, by Melih Bigil": "false",
+"Learn how picture works on web – see Images, Pixels and RGB film": "false",
+"Read  How to Go From Hobbyist to Professional Developer – freeCodeCamp": "false",
+"Complete How the Web Works Quiz": "false",
+"Complete Programming Inspiration Quiz": "false",
+"Learn how files are managed – read Introduction to File Management": "false",
+"Complete File Management Quiz": "false",
+"Learn the concept of stand ups from Stand Ups file": "false",
+"Learn concept of Agile and Mentoring from module 1.1 Code4000 Introduction general part": "false",
+"Complete Becoming Agile Quiz": "false",
+"Complete Quiz: What if I get stuck?": "false",
+"Complete Mentoring Quiz": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m1_1 = '{
+"See film Why Computer Science is Changing Everything": "false", 
+"See film Kenyatta Leal - the Journey from Ex-Offender to Rocket Space Employee": "false",
+"See short film Building a Foundation": "false",
+"See short Film Will Smith - Fail Early, Fail Often, Fail Forward": "false",
+"See short Film Eddie Izzard – Computers": "false",
+"Learn the browser concept – see short film What is a browser?": "false",
+"Learn general concepts of web – read How The Web Works – In One Easy Lesson": "false",
+"Learn History of the Internet, by Melih Bigil": "false",
+"Learn how picture works on web – see Images, Pixels and RGB film": "false",
+"Read  How to Go From Hobbyist to Professional Developer – freeCodeCamp": "false",
+"Complete How the Web Works Quiz": "false",
+"Complete Programming Inspiration Quiz": "false",
+"Learn how files are managed – read Introduction to File Management": "false",
+"Complete File Management Quiz": "false",
+"Learn the concept of stand ups from Stand Ups file": "false",
+"Learn concept of Agile and Mentoring from module 1.1 Code4000 Introduction general part": "false",
+"Complete Becoming Agile Quiz": "false",
+"Complete Quiz: What if I get stuck?": "false",
+"Complete Mentoring Quiz": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_1 = '{
+"Understand what is coding – see film What is coding?": "false",
+"Learn concept of HTML tags, attributes and elements": "false",
+"Learn how to create a page title": "false",
+"Learn how to mark paragraphs, emphasis, line breaks, headings, lists, links, images, file paths, tables, forms, input on web page": "false",
+"Learn what is naming conventions in coding": "false",
+"Learn what is Code Indentation": "false",
+"Complete Wrap Up Quiz": "false",
+"Complete Film Festival Website Exercise": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_2 = '{
+"Learn how CSS works in general – see CSS Zen Garden film": "false",
+"Learn three ways to apply CSS:  Inline, internal, and external": "false",
+"Learn what is Selectors, Properties, and Values": "false",
+"Learn how to apply colours in CSS": "false",
+"Learn what is font-family, font-size, font-weight, font-style in CSS": "false",
+"Learn what is text-decoration, text-transform, text-spacing in CSS": "false",
+"Learn concepts of Margins and Padding": "false",
+"Learn how Box Model works": "false",
+"Learn how Border works in CSS": "false",
+"Complete Putting it all together exercise": "false",
+"Complete Wrap Up exercise (Dentist Website)": "false",
+"Complete Basic CSS and Asset Management Quiz": "false",
+"Complete Styling Film Festival Website Exercise": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_3 = '{
+"Learn how Sublime Code Editor works": "false",
+"Complete Code Editors Quiz": "false",
+"Read chapters 1, 2, 3, 10, 11, 12 of Duckett": "false",
+"Complete HTML Quiz": "false",
+"Complete CSS Quiz": "false",
+"Watch Algonquin HTML semantics": "false",
+"Watch  Algonquin HTML indentation": "false",
+"Watch  Algonquin Marking up a webpage": "false",
+"Watch  Algonquin Using CSS": "false",
+"Watch  Algonquin CSS indentation": "false",
+"Watch  Algonquin Basic Typography": "false",
+"Watch  Algonquin Browser developer tools": "false",
+"Watch  Algonquin Typography-only layout": "false",
+"Watch  Algonquin Navigation": "false",
+"Watch  Algonquin Before & after pseudo elements": "false",
+"Build Chocolate Website exercise": "false",
+"Complete  Shay Howes Learn to Code HTML & CSS exercise": "false",
+"Learn how to operate multiple files": "false",
+"Learn how text command palette works": "false",
+"Complete Night Sky Part I exercise": "false",
+"Complete Design your website exercise": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_4 = '{
+"Read about Boxes, Lists, Tables and Forms from chapters 13, 14 and 15 of Duckett": "false",
+"Learn concepts of Box Models, Box Model Extents, Positioning Models, Indented, Offset and Aligned Positioning": "false",
+"Watch Algonquin Everything is a box": "false",
+"Watch Algonquin Flow and Display": "false",
+"Watch Algonquin Float and clear": "false",
+"Watch Algonquin Position and z-index": "false",
+"Watch Miscellaneous New Boston – CSS3 Awesome Footer Tutorial": "false",
+"Complete Night Sky Exercise Part 2": "false",
+"Continue Building Your Own Website, use columns, margins, padding, menu bar, z-index, footer, coeerect indentation, correct HTML tags usage": "false",
+"Complete In-n-Out Burger Website exercise": "false"
+}' WHERE prison_number = 'a@a';
+
+
+UPDATE ilp SET m2_5 = '{
+"Review your knowledge how to use links – Duckett Chapter 4": "false",
+"Review your knowledge how to use images – Duckett Chapter 5": "false",
+"Review your knowledge how to use tables – Duckett Chapter 6": "false",
+"Review your knowledge how to use forms – Duckett Chapter 7": "false",
+"Review your knowledge how to use images – Duckett Chapter 16": "false",
+"Algonquin Using Images": "false",
+"Algonquin Images for retina screens": "false",
+"Algonquin Small screen layout": "false",
+"Algonquin Validators": "false",
+"Algonquin Performance": "false",
+"Algonquin From wireframe to website": "false",
+"Algonquin Browser Testing": "false",
+"Algonquin CSS animations (Web dev 3)": "false",
+"Algonquin media queries (Web dev 2)": "false",
+"Complete HTML images Quiz from Moodle 2.5": "false",
+"Exercise: Recreate One Delivery Website Homepage": "false",
+"Complete Night Sky Exercise Part 3": "false",
+ "Building Your Own Website – add links, forms, buttons, images, lists, tables, correct form indentation, html tags": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_6 = '{
+"Learn what to do if code does not work": "false",
+"Complete If you are stuck quiz": "false",
+"Learn concept of loops from Mark Zuckerberg on REPEAT loops": "false",
+"Learn concept of REPEAT UNTIL from Chris Bosh explains REPEAT UNTIL loops": "false",
+"Learn concept of IF THEN ELSE statements from Bill Gates explains IF THEN ELSE statements": "false",
+"Complete Hour of Code exercise": "false",
+"Complete Scratch: Pong exercise": "false",
+"Complete Scratch: Breakout exercise": "false",
+"Complete Scratch: Asteroids exercise": "false",
+"Complete Scratch: Maze Game exercise": "false",
+"Learn concept of pair programming from 1.2 module": "false",
+"Complete Pair Programming Quiz": "false",
+"Complete Video Games Quiz": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_6 = '{
+"Learn what to do if code does not work": "false",
+"Complete If you are stuck quiz": "false",
+"Learn concept of loops from Mark Zuckerberg on REPEAT loops": "false",
+"Learn concept of REPEAT UNTIL from Chris Bosh explains REPEAT UNTIL loops": "false",
+"Learn concept of IF THEN ELSE statements from Bill Gates explains IF THEN ELSE statements": "false",
+"Complete Hour of Code exercise": "false",
+"Complete Scratch: Pong exercise": "false",
+"Complete Scratch: Breakout exercise": "false",
+"Complete Scratch: Asteroids exercise": "false",
+"Complete Scratch: Maze Game exercise": "false",
+"Learn concept of pair programming from 1.2 module": "false",
+"Complete Pair Programming Quiz": "false",
+"Complete Video Games Quiz": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET m2_7 = '{
+"Learn what Variable is": "false",
+"Learn what String is": "false",
+"Learn how Math operators work in JS": "false",
+"Learn how if statement works": "false",
+"Learn how Alert and Prompt work in Javascript": "false",
+"Learn how if-else statement works": "false",
+"learn what an Array is in JS": "false",
+"Learn how for loop works in JS": "false",
+"Learn changing case in JS": "false",
+"Learn how to replace chars in strings": "false",
+"Learn how to convert strrings to Integers": "false",
+"Learn how switch statement works": "false",
+"Learn how while loop works": "false",
+"Learn how to comment the text out": "false",
+"Learn how to manipulate images and text": "false",
+"Learn how Alert and Prompt work in Javascript": "false",
+"Build a Hangman Game": "false"
+}' WHERE prison_number = 'a@a';
+
+
+UPDATE ilp SET m3_1 = '{
+"Understand what the virtual machine is and why we use it": "false",
+"Be able to navigate around files and folders using the Files application": "false",
+"Use the Sublime Text Editor to open folders, files and edit code": "false",
+"Know how to use the Command Line Interface and enter some basic commands": "false",
+"Be able to explain the meaning of commands: cd, mkdir, touch, cp, mv": "false",
+"Be able to use commands in CLI": "false",
+"Understand what version control is and why it is important": "false",
+"Know what Git is and what it is used for": "false",
+"Be able to use some basic GitHub commands and explain what they do": "false",
+"Understand what is meant by Branching": "false"
+}' WHERE prison_number = 'a@a';
+
+
+UPDATE ilp SET m3_5 = '{
+"Learn different data types: Undefined, Boolean, String, Integer": "false",
+"Learn what Objects are in JS": "false",
+"Learn how to manipulate properties in objects": "false",
+"Learn what is OOP": "false",
+"Complete Moodle 3.5 Exercises": "false",
+"Learn how functions work": "false",
+"Learn how to pass arguments to functions": "false",
+"Learn how Date works in JS": "false",
+"Learn what reserved words are in Javascript": "false",
+"Build Berry Blobber Game": "false"
+}' WHERE prison_number = 'a@a';
+
+UPDATE ilp SET full_title = '{
+"m1_1": "Code4000 Intro",
+"m2_1": "HTML Intro",
+"m2_2": "CSS Intro",
+"m2_3": "HTML+CSS Deep Dive I",
+"m2_4": "HTML+CSS Deep Dive II",
+"m2_5": "HTML+CSS Deep Dive III",
+"m2_6": "Intro to coding",
+"m2_7": "Javascript Basics",
+"m3_1": "Git",
+"m3_5": "Advanced Javascript"}' WHERE prison_number = 'a@a';
+
+
+
+
+
+
     
    

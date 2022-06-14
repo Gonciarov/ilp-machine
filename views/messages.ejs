@@ -22,26 +22,38 @@ window.onload = (event) => {
     function submitForm() {
         let id = 'form' + window.event.currentTarget.id.slice(2)
         let form = document.getElementById(id)
+        execute(form);
+    }
+
+function execute(form) {
+    document.getElementsByClassName("grid-student-col-1")[0].innerHTML = " ";
+    setTimeout(function(){
+        submitAfterPause(form);
+    }, 50)
+}
+
+function submitAfterPause(form) {
         form.submit()
     }
-    
+
+
+
     </script>
 
- 
+
 
 
 <body>
- 
-        <% console.log(participant2) %>
+
  
     <div class="navbar">
         <h1><a href="/dashboard">CODE4000</a></h1>
         <ul>
-            <li><a href="/reviews">Tutor reviews</a></li>
+            <li><a href="/reviews">Reviews</a></li>
             <li><a href="/techskills">Tech skills</a></li>
             <li><a href="/softskills">Soft skills</a></li>
             <li><a href="/ilp">ILP</a></li>
-            <li><a href="/rules">Classroom rules</a></li>
+            <li><a class="classroom-rules" href="/rules">Classroom rules</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
     </div>
@@ -64,7 +76,7 @@ window.onload = (event) => {
               <h2 class="col-1-header">You and <%= participant2 %></h2>
             <form action="/messages/<%= dialogId %>" method="POST">
                 <div>
-                    <textarea name="message" rows="20" cols="64" wrap="hard" maxlength="2000" placeholder="Write your message here" required></textarea>
+                    <textarea name="message" rows="20" cols="64" wrap="hard" maxlength="2000" placeholder="Hello <%= participant2 %>!" required></textarea>
                     <input type="hidden" name="participant2" value="<%= participant2 %>">
                     <input type="hidden" name="participant2pn" value="<%= participant2pn %>">
                 </div>
@@ -114,6 +126,7 @@ window.onload = (event) => {
                         <input id="notSeen" type="hidden" value="<%= notSeen %>">
                         <input type="hidden" name="participant2" value="<%= students[i].name %>">
                         <input type="hidden" name="participant2pn" value="<%= participant2pn %>">
+                        <input id="y" name="y" type="hidden" value="<%= y %>">
                     <b style="display:inline-block">
                         <%= students[i].name %>, 
                         <%= students[i].prison_number %>

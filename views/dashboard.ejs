@@ -25,11 +25,11 @@ function submitForm() {
 <div class="navbar">
     <h1><a href="/dashboard">CODE4000</a></h1>
     <ul>
-        <li><a href="/reviews">Tutor reviews</a></li>
+        <li><a href="/reviews">Reviews</a></li>
         <li><a href="/techskills">Tech skills</a></li>
         <li><a href="/softskills">Soft skills</a></li>
         <li><a href="/ilp">ILP</a></li>
-        <li><a href="/rules">Classroom rules</a></li>
+        <li><a class="classroom-rules" href="/rules">Classroom rules</a></li>
         <li><a href="/logout">Logout</a></li>
       </ul>
 </div>
@@ -61,7 +61,7 @@ function submitForm() {
            
         <form action="/dashboard" method="POST">
             <div>
-                <textarea id="text" name="text" rows="20" cols="64" wrap="hard" placeholder="Please update your reflections every Friday (it's only visible to you and your tutor)" required></textarea>
+                <textarea id="text" name="text" rows="20" cols="64" wrap="hard" maxlength="1400" placeholder="Please update your reflections every Friday (it's only visible to you and your tutor)" required></textarea>
             </div>
           
             <div>
