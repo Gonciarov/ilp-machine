@@ -49,9 +49,9 @@ let targetsUpdated = {};
         for (let i=0; i<allModules.length; i++) {
             allModules[i].style = "display: none;"
         }
-        let buttons = document.getElementsByClassName("sidebar-buttons");
+        let buttons = document.getElementsByClassName("ilp-cancel-save-buttons");
         for (var i = 0; i < buttons.length; i++ ) {
-            buttons[i].style = "none"
+            buttons[i].style = "display: none"
         }
         document.getElementById("ilp-not-saved").style = "display:none";
         document.getElementById("ilp-saved").style = "display:none";
@@ -66,6 +66,7 @@ let targetsUpdated = {};
         document.getElementById("ilp-not-saved").style = "display:none";
         document.getElementById("ilp-saved").style.display = "none";
         document.getElementById("ilp-select-module").style = "display:none";
+        document.getElementById("add-module").style = "display: none";
         let allModules = document.getElementsByClassName("single-module");
         for (let i=0; i<allModules.length; i++) {
             allModules[i].style = "display: none;"
@@ -73,23 +74,33 @@ let targetsUpdated = {};
         document.getElementById(`table${module}`).style.display="block"
         document.getElementById("ilp-cancel-button").style.display = "inline-block";
         document.getElementById("ilp-save-button").style.display = "inline-block";
-        let buttons = document.getElementsByClassName("sidebar-buttons");
+        let buttons = document.getElementsByClassName("ilp-cancel-save-buttons");
         for (var i = 0; i < buttons.length; i++ ) {
-            if (buttons[i].name === module) {
-            buttons[i].style = "background-color: #DD4A48";
-        } else {
-            buttons[i].style = "none"
+            buttons[i].style = "display: block"
         }
+    }
+
+    function addModule() {
+        restoreState();
+        document.getElementById("add-module-button").style = "display: none";
+        document.getElementById("add-module").style = "display: block";
+        document.getElementById("ilp-not-saved").style = "display:none";
+        document.getElementById("ilp-saved").style.display = "none";
+        let allModules = document.getElementsByClassName("single-module");
+        for (let i=0; i<allModules.length; i++) {
+            allModules[i].style = "display: none;"
+        }
+        let buttons = document.getElementsByClassName("ilp-cancel-save-buttons");
+        for (var i = 0; i < buttons.length; i++ ) {
+            buttons[i].style = "display: none"
         }
     }
 
     function restoreState() {
-        let arr = targetsUpdated
-        console.log(arr)
-        for ( i in arr ) {
+        for ( i in targetsUpdated ) {
             
             let element = document.getElementById(i)
-            if (arr[i] === "true") {
+            if (targetsUpdated[i] === "true") {
                 if (element.className) {
                     element.className = "false";
                 }
@@ -105,4 +116,12 @@ let targetsUpdated = {};
         module = null;
         targetsUpdated = {}
         
+    }
+
+    function displayModuleDescription() {
+        
+        restoreState();
+        let id = window.event.currentTarget.value
+        document.getElementById("description-" +id).style = "display: block;"
+       
     }
