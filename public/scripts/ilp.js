@@ -1,4 +1,4 @@
-let targetsUpdated = {};
+    let targetsUpdated = {};
     let module;
     let saved = false;
     
@@ -13,10 +13,150 @@ let targetsUpdated = {};
     }
 
     function change() {
-        document.getElementById("ilp-not-saved").style.display = "inline";
-        document.getElementById("ilp-saved").style.display = "none";
+        displayNotSavedStatus();
+        hideSavedStatus();
+        changeTargetClasName()
         saved = false;
-       if (window.event.target.className === "true") {
+    }
+
+    function save() {
+        sendRequest(module, targetsUpdated);
+        hideNotSavedStatus();
+        displaySavedStatus()
+        saved = true;
+        module = null;
+        targetsUpdated = {}
+        }
+        
+    function cancel() {
+        restoreState();
+        hideCancelAndSaveButtons();
+        hideAllModules();
+        hideNotSavedStatus();
+        hideSavedStatus();
+        displaySelectAModulePointer();
+        saved = false;
+    }
+
+    function showTargets() {
+       
+        restoreState();
+        hideNotSavedStatus();
+        hideSavedStatus();
+        hideSelectAModulePointer();
+        hideAddModuleMenu();
+        hideAddAModuleButton();
+        hideAllModules();
+        displayTargetsTable();
+        displayCancelAndSaveButtons();
+    }
+
+    function addModule() {
+        restoreState();
+        hideAddAModuleButton();
+        displayAddModuleMenu();
+        hideNotSavedStatus();
+        hideSavedStatus();
+        hideAllModules();
+        hideCancelAndSaveButtons();
+    }
+
+    function displayModuleDescription() {
+        restoreState();
+        hideModulesDescriptions();
+        hideSelectAModulePointer();
+        displaySingleModuleDescription();
+    }
+
+    function hideModuleDescription() {
+        restoreState();
+        displaySelectAModulePointer();
+        hideSingleModuleDescription();
+        displayAddAModuleButton();
+    }
+
+    function hideSelectAModulePointer() {
+        document.getElementById("ilp-select-module").style = "display: none;"
+    }
+
+    function displaySelectAModulePointer() {
+        document.getElementById("ilp-select-module").style = "display: block;"
+    }
+
+    function hideAddAModuleButton() {
+        document.getElementById("add-module-button").style = "display: none";
+    }
+
+    function displayAddAModuleButton() {
+        document.getElementById("add-module-button").style = "display: inline-block";
+    }
+
+    function displayAddModuleMenu() {
+        document.getElementById("add-module").style = "display: block";
+    }
+
+    function hideAddModuleMenu() {
+        document.getElementById("add-module").style = "display: none";
+    }
+
+    function hideModulesDescriptions() {
+        let modules = document.getElementsByClassName("descriptions")
+        for (let i= 0; i< modules.length; i++ ) {
+            modules[i].style = "display: none;"
+        }
+    }
+
+    function displaySingleModuleDescription() {
+        let id = window.event.currentTarget.value
+        document.getElementById("description" + id).style = "display: block;"
+    }
+
+    function hideSingleModuleDescription() {
+        window.event.currentTarget.parentElement.style = "display: none;"
+        let id = window.event.currentTarget.parentElement.parentElement.id
+        document.getElementById(id).style = "display: none;"
+    }
+
+    function hideNotSavedStatus() {
+        document.getElementById("ilp-not-saved").style = "display:none";
+    }
+
+    function displayNotSavedStatus() {
+        document.getElementById("ilp-not-saved").style.display = "inline";
+    }
+
+    function hideSavedStatus() {
+        document.getElementById("ilp-saved").style.display = "none";
+    }
+
+    function displaySavedStatus() {
+        document.getElementById("ilp-saved").style.display = "inline";
+    }
+
+    function hideAllModules() {
+        let allModules = document.getElementsByClassName("single-module");
+        for (let i=0; i<allModules.length; i++) {
+            allModules[i].style = "display: none;"
+        }
+    }
+
+    function hideCancelAndSaveButtons() {
+        document.getElementById("ilp-cancel-button").style.display = "none";
+        document.getElementById("ilp-save-button").style.display = "none";
+    }
+
+    function displayCancelAndSaveButtons() {
+        document.getElementById("ilp-cancel-button").style.display = "inline-block";
+        document.getElementById("ilp-save-button").style.display = "inline-block";
+    }
+
+    function displayTargetsTable() {
+        module = window.event.target.value;
+        document.getElementById(`table${module}`).style.display="block"
+    }
+
+    function changeTargetClasName() {
+        if (window.event.target.className === "true") {
             window.event.target.className = "false";
             targetsUpdated[window.event.target.id] = "false";
             
@@ -25,75 +165,6 @@ let targetsUpdated = {};
             targetsUpdated[window.event.target.id] = "true";
             
             }
-        
-    }
-
-    function save() {
-        sendRequest(module, targetsUpdated);
-        let buttons = document.getElementsByClassName("sidebar-buttons");
-        for (var i = 0; i < buttons.length; i++ ) {
-            buttons[i].style = "none"
-        }
-        document.getElementById("ilp-not-saved").style.display = "none";
-        document.getElementById("ilp-saved").style.display = "inline";
-        saved = true;
-        module = null;
-        targetsUpdated = {}
-        }
-        
-    function cancel() {
-        restoreState();
-        document.getElementById("ilp-save-button").style.display = "none";
-        document.getElementById("ilp-cancel-button").style.display = "none";
-        let allModules = document.getElementsByClassName("single-module");
-        for (let i=0; i<allModules.length; i++) {
-            allModules[i].style = "display: none;"
-        }
-        let buttons = document.getElementsByClassName("ilp-cancel-save-buttons");
-        for (var i = 0; i < buttons.length; i++ ) {
-            buttons[i].style = "display: none"
-        }
-        document.getElementById("ilp-not-saved").style = "display:none";
-        document.getElementById("ilp-saved").style = "display:none";
-        document.getElementById("ilp-select-module").style = "display:block";
-        saved = false;
-    }
-
-    function showStuff() {
-        restoreState();
-        module = window.event.target.value;
-        console.log(module)
-        document.getElementById("ilp-not-saved").style = "display:none";
-        document.getElementById("ilp-saved").style.display = "none";
-        document.getElementById("ilp-select-module").style = "display:none";
-        document.getElementById("add-module").style = "display: none";
-        let allModules = document.getElementsByClassName("single-module");
-        for (let i=0; i<allModules.length; i++) {
-            allModules[i].style = "display: none;"
-        }
-        document.getElementById(`table${module}`).style.display="block"
-        document.getElementById("ilp-cancel-button").style.display = "inline-block";
-        document.getElementById("ilp-save-button").style.display = "inline-block";
-        let buttons = document.getElementsByClassName("ilp-cancel-save-buttons");
-        for (var i = 0; i < buttons.length; i++ ) {
-            buttons[i].style = "display: block"
-        }
-    }
-
-    function addModule() {
-        restoreState();
-        document.getElementById("add-module-button").style = "display: none";
-        document.getElementById("add-module").style = "display: block";
-        document.getElementById("ilp-not-saved").style = "display:none";
-        document.getElementById("ilp-saved").style.display = "none";
-        let allModules = document.getElementsByClassName("single-module");
-        for (let i=0; i<allModules.length; i++) {
-            allModules[i].style = "display: none;"
-        }
-        let buttons = document.getElementsByClassName("ilp-cancel-save-buttons");
-        for (var i = 0; i < buttons.length; i++ ) {
-            buttons[i].style = "display: none"
-        }
     }
 
     function restoreState() {
@@ -114,14 +185,5 @@ let targetsUpdated = {};
             }
         }
         module = null;
-        targetsUpdated = {}
-        
-    }
-
-    function displayModuleDescription() {
-        
-        restoreState();
-        let id = window.event.currentTarget.value
-        document.getElementById("description-" +id).style = "display: block;"
-       
+        targetsUpdated = {} 
     }

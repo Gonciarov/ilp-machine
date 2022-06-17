@@ -373,6 +373,10 @@ div.grid-student .grid-messages-col-1 {
   display: none;
 }
 
+#descriptions {
+  display: none;
+}
+
 #add-module {
   display: none;
 }

@@ -34,10 +34,10 @@
             <p>Your current modules: </p>
             <% for (t in targets["current"]) { %>
                 
-                <button value='<%= t %>' onclick="showStuff()"><%= targets["full_title"][t] %></button>
+                <button value='<%= t %>' onclick="showTargets()"><%= targets["full_title"][t] %></button>
                 <p>Target date: <%= targets["current"][t] %></p>
                 <%}%>
-            <button id="add-module-button" onclick="addModule()">Add</button>
+            <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add</button></div>
         </div>
 
         <div id="add-module">      
@@ -66,7 +66,7 @@
     <br/>
         
     
-    <div class="grid-ilp-col-1">
+    <div id="ilp-targets" class="grid-ilp-col-1">
         <i id="ilp-select-module"><--- Select a module from sidebar</i>
             <% for (t in targets) { %>
                 <% if (t != "prison_number") { %>
@@ -82,26 +82,30 @@
         </table>
       <%}%>
     
-      
+          
+      <% for (t in targets) { %>
+        <% if (t != "prison_number") { %>
+        <table>
+            <tr>
+            <td style="display: none;" id="description<%= t %>" class="descriptions"><div><p><%= targets["descriptions"][t] %></p>
+            <button onclick="hideModuleDescription()">Cancel</button>
+            <form action="/ilp" method="POST">
+                <input type="hidden" name="module" value="<%= t %>">
+                <input type="submit" value="Add"/>
+            </form>
+        </div>
+        </td>
+ 
+</tr>
+<%}%>
+</table>
+<%}%>
     
    
     </div>
 
-    <div id="module-description">
-        <% for (t in targets) { %>
-            <% if (t != "prison_number") { %>
-            <table id='table<%= t %>' class="single-module">
-                <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
-            <tr>  
-                <% for (i in targets[t]) { %>      
-                <td id="<%= i %>" class="<%= targets[t][i] %>" onclick="change()"><%= i %></td>
-                
-    </tr>
-    <%}%>
-    <%}%>
-    </table>
-  <%}%>
-    </div>
+
+    
 
 </div>
 

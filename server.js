@@ -357,7 +357,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                             }
                             }
                         }
-                        // console.log("server" + participant2)
+
                         res.render("messages", {
                             dialogId: dialogId, 
                             messages: msgs, 
@@ -418,7 +418,6 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
         
     ]).then(function([user, targets]) {
                 targets = targets.rows[0];
-                console.log(targets)
                 name = req.user.name;
                 res.render("ilp", {name: name, targets: targets})             
          })
@@ -427,7 +426,6 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
 app.post("/ilp", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     let data = JSON.parse(req.body.data)
-    console.log(data)
     let {module} = req.body
     Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
@@ -436,8 +434,6 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     ]).then(function([targets, students, user]) {  
         for (i in data) {
             if (i) {
-                console.log(module)
-                console.log(targets.rows[0][module])
                 targets.rows[0][module][i] = data[i]     
             }
         }
