@@ -26,7 +26,7 @@
 
     <div class="grid-ilp">
         <div class="sidebar">
-            <div class="fixed-part">
+            <div class="not-fixed-part">
             <h1>Hello,
                 <%= name %>!
             </h1>
@@ -92,7 +92,7 @@
             <form action="/ilp" method="POST">
                 <input type="hidden" name="module" value="<%= t %>">
                 <input type="hidden" name="requestFromSidebar" value="true">
-                <input type="hidden" name="date" value="07/07/2022">
+                <input type="date" name="date" required>
                 <input type="submit" value="Add">
 
                 

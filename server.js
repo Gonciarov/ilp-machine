@@ -428,16 +428,13 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     let {module} = req.body;
     let prisonNumber = req.user.prison_number;
     if (req.body.requestFromSidebar === "true") {
-        console.log(module)
         Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
             ]).then(function([results]) {
                 current = results.rows[0].current;
-                
                 targets = results.rows[0];
                 let date = req.body.date;
                 current[module] = date;
-                console.log(current);
                 targets.current = current;
                 pool.query(`UPDATE ilp SET current = '${JSON.stringify(current)}' WHERE prison_number = $1`, [prisonNumber])
                 res.render('ilp', {

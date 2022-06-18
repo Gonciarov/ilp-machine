@@ -179,10 +179,20 @@ div.review-form-buttons {
   .sidebar .fixed-part {
     display: none;
   }
+
+  .sidebar .not-fixed-part {
+    display: none;
+  }
 }
 
 .sidebar .fixed-part {
   position: fixed;
+  text-align: center;
+  width: 250px;
+  padding: 10px;
+}
+
+.sidebar .not-fixed-part {
   text-align: center;
   width: 250px;
   padding: 10px;

@@ -177,7 +177,7 @@
                 if (element.className) {
                     element.className = "false";
                 }
-                 else { element.parentElement.className = "false"}
+                 else {element.parentElement.className = "false"}
                 
             } else {
                 if (element.className) {
