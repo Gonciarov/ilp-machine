@@ -13,16 +13,16 @@
     }
 
     function change() {
-        displayNotSavedStatus();
-        hideSavedStatus();
+        displayStatusNotSaved();
+        hideStatusSaved();
         changeTargetClasName()
         saved = false;
     }
 
     function save() {
         sendRequest(module, targetsUpdated);
-        hideNotSavedStatus();
-        displaySavedStatus()
+        hideStatusNotSaved();
+        displayStatusSaved()
         saved = true;
         module = null;
         targetsUpdated = {}
@@ -32,8 +32,8 @@
         restoreState();
         hideCancelAndSaveButtons();
         hideAllModules();
-        hideNotSavedStatus();
-        hideSavedStatus();
+        hideStatusNotSaved();
+        hideStatusSaved();
         displaySelectAModulePointer();
         saved = false;
     }
@@ -41,8 +41,8 @@
     function showTargets() {
        
         restoreState();
-        hideNotSavedStatus();
-        hideSavedStatus();
+        hideStatusNotSaved();
+        hideStatusSaved();
         hideSelectAModulePointer();
         hideAddModuleMenu();
         hideAddAModuleButton();
@@ -55,8 +55,8 @@
         restoreState();
         hideAddAModuleButton();
         displayAddModuleMenu();
-        hideNotSavedStatus();
-        hideSavedStatus();
+        hideStatusNotSaved();
+        hideStatusSaved();
         hideAllModules();
         hideCancelAndSaveButtons();
     }
@@ -108,28 +108,28 @@
 
     function displaySingleModuleDescription() {
         let id = window.event.currentTarget.value
+        console.log(id)
         document.getElementById("description" + id).style = "display: block;"
     }
 
     function hideSingleModuleDescription() {
-        window.event.currentTarget.parentElement.style = "display: none;"
         let id = window.event.currentTarget.parentElement.parentElement.id
         document.getElementById(id).style = "display: none;"
     }
 
-    function hideNotSavedStatus() {
+    function hideStatusNotSaved() {
         document.getElementById("ilp-not-saved").style = "display:none";
     }
 
-    function displayNotSavedStatus() {
+    function displayStatusNotSaved() {
         document.getElementById("ilp-not-saved").style.display = "inline";
     }
 
-    function hideSavedStatus() {
+    function hideStatusSaved() {
         document.getElementById("ilp-saved").style.display = "none";
     }
 
-    function displaySavedStatus() {
+    function displayStatusSaved() {
         document.getElementById("ilp-saved").style.display = "inline";
     }
 

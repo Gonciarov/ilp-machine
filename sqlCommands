@@ -11,7 +11,7 @@ CREATE TABLE techskills ( prison_number VARCHAR (10) NOT NULL, htmlcss JSON, jsb
 CREATE TABLE softskills ( prison_number VARCHAR (10) NOT NULL, softskills JSON );
 
 
-UPDATE techskills SET jsbasics = '{"I know how to comment out a line of code": "false", "I know how to create Variable": "false", "I know how to assign Value to Variables": "false", "I know how to assign Value of one Varible to Another": "false", "I know how to declare String variables": "false", "I know what is Case Sensitivity in JS": "false", "I know the difference between var, let, and const": "false", "I know how to add, subtract, multiply, divide, increment, and decrement numbers": "false", "I know what Plus Equal operator means": "false", "I know how to concatenate strings": "false", "I know how to find a length of the string": "false", "I know how to find the Nth letter of the word using brackets": "false", "I know what Array is in JS": "false", "I know how to access Array data with Indexes": "false", "I know how to use push, pop, shift, and unshift methods": "false","I know how to create a function in JS": "false", "I know how to pass values to Functions with Arguments": "false","I know how Return works in Functions": "false", "I know the difference between Local and Global Scope": "false", "I know what is Undefined Value": "false", "I know what is True and False in JS": "false", "I know how to create an If-Else statement": "false", "I know the meaning of Equality and Inequality operators": "false", "I know the meaning of Strict Equality and Strict Inequality operators": "false", "I know what <= and >= mean in JS": "false", "I know how to use else if statement": "false", "I know how to use Switch statement": "false", "I know what Object is in JS": "false", "I know how to access a value from Object key and value pair": "false", "I know how to operate nested Arrays": "false", "I know how to operate nested Objects": "false", "I know how to create a For loop": "false", "I know how to use Nested For loops": "false", "I know replace For Loop with recursion": "false", "I know how to use ParseInt and toString": "false", "I know how to replace if-else expression with conditional operator": "false"}' WHERE prison_number = 'a@a';
+UPDATE techskills SET jsbasics = '{"I know how to comment out a line of code": "false", "I know how to create Variable": "false", "I know how to assign Value to Variables": "false", "I know how to assign Value of one Varible to Another": "false", "I know how to declare String variables": "false", "I know what is Case Sensitivity in JS": "false", "I know the difference between var, let, and const": "false", "I know how to add, subtract, multiply, divide, increment, and decrement numbers": "false", "I know what Plus Equal operator means": "false", "I know how to concatenate strings": "false", "I know how to find a length of the string": "false", "I know how to find the Nth letter of the word using brackets": "false", "I know what Array is in JS": "false", "I know how to access Array data with Indexes": "false", "I know how to use push, pop, shift, and unshift methods": "false","I know how to create a function in JS": "false", "I know how to pass values to Functions with Arguments": "false","I know how Return works in Functions": "false", "I know the difference between Local and Global Scope": "false", "I know what is Undefined Value": "false", "I know what is True and False in JS": "false", "I know how to create an If-Else statement": "false", "I know the meaning of Equality and Inequality operators": "false", "I know the meaning of Strict Equality and Strict Inequality operators": "false", "I know what <= and >= mean in JS": "false", "I know how to use else if statement": "false", "I know how to use Switch statement": "false", "I know what Object is in JS": "false", "I know how to access a value from Object key and value pair": "false", "I know how to operate nested Arrays": "false", "I know how to operate nested Objects": "false", "I know how to create a For loop": "false", "I know how to use Nested For loops": "false", "I know replace For Loop with recursion": "false", "I know how to use ParseInt and toString": "false", "I know how to replace if-else expression with conditional operator": "false"}' WHERE prison_number = 'nnnnnn';
 
 UPDATE techskills SET htmlcss = '{"I know what a browser is":"false",
     "I know what to do if I get stuck":true,"I know what coding is":"true",
@@ -38,7 +38,7 @@ UPDATE techskills SET htmlcss = '{"I know what a browser is":"false",
     "I know how to create ordered and unordered lists in HTML":"false",
     "I know how to use code editor (Sublime, VSCode, etc)":"false",
     "I know how to use developer tools (Console) in browser":"false",
-    "I know how to style any static web page with CSS":"false"}' WHERE prison_number = 'a@a';
+    "I know how to style any static web page with CSS":"false"}' WHERE prison_number = 'nnnnnn';
 
 UPDATE techskills SET reactjs = '{"I have a fantastic soft skill 1":"false",
     "I can do something":"false",
@@ -53,7 +53,7 @@ UPDATE techskills SET reactjs = '{"I have a fantastic soft skill 1":"false",
     "I have a fantastic react skill 11":"false",
     "I have a fantastic react skill 12":"false",
     "I have a fantastic react skill 13":"false",
-    "I have a fantastic react skill 14":"false"}' WHERE prison_number = 'a@a';
+    "I have a fantastic react skill 14":"false"}' WHERE prison_number = 'nnnnnn';
 
        
 UPDATE softskills SET softskills = '{"I have a fantastic soft skill 1":"false",
@@ -69,10 +69,10 @@ UPDATE softskills SET softskills = '{"I have a fantastic soft skill 1":"false",
     "I have a fantastic soft skill 11":"false",
     "I have a fantastic soft skill 12":"false",
     "I have a fantastic soft skill 13":"false",
-    "I have a fantastic soft skill 14":"false"}' WHERE prison_number = 'a@a';
+    "I have a fantastic soft skill 14":"false"}' WHERE prison_number = 'nnnnnn';
 
-           CREATE TABLE ilp (
-               prison_number VARCHAR (10) NOT NULL,
+CREATE TABLE targets (
+prison_number VARCHAR (10) NOT NULL,
 m1_1 JSON,
 m2_1 JSON,
 m2_2 JSON,
@@ -92,11 +92,33 @@ m3_8 JSON,
 React JSON,
 Jquery JSON,
 recommended_time JSON,
-full_title JSON
-current VARCHAR(20),
-completed VARCHAR(20));
+full_title JSON,
+current JSON,
+completed JSON);
 
-INSERT INTO ilp (prison_number) VALUES ('a@a');
+INSERT INTO ilp (prison_number) VALUES ('nnnnnn');
+
+UPDATE targets SET m1_1 = '{
+"See film Why Computer Science is Changing Everything": "false", 
+"See film Kenyatta Leal - the Journey from Ex-Offender to Rocket Space Employee": "false",
+"See short film Building a Foundation": "false",
+"See short Film Will Smith - Fail Early, Fail Often, Fail Forward": "false",
+"See short Film Eddie Izzard – Computers": "false",
+"Learn the browser concept – see short film What is a browser?": "false",
+"Learn general concepts of web – read How The Web Works – In One Easy Lesson": "false",
+"Learn History of the Internet, by Melih Bigil": "false",
+"Learn how picture works on web – see Images, Pixels and RGB film": "false",
+"Read  How to Go From Hobbyist to Professional Developer – freeCodeCamp": "false",
+"Complete How the Web Works Quiz": "false",
+"Complete Programming Inspiration Quiz": "false",
+"Learn how files are managed – read Introduction to File Management": "false",
+"Complete File Management Quiz": "false",
+"Learn the concept of stand ups from Stand Ups file": "false",
+"Learn concept of Agile and Mentoring from module 1.1 Code4000 Introduction general part": "false",
+"Complete Becoming Agile Quiz": "false",
+"Complete Quiz: What if I get stuck?": "false",
+"Complete Mentoring Quiz": "false"
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m1_1 = '{
 "See film Why Computer Science is Changing Everything": "false", 
@@ -118,29 +140,7 @@ UPDATE ilp SET m1_1 = '{
 "Complete Becoming Agile Quiz": "false",
 "Complete Quiz: What if I get stuck?": "false",
 "Complete Mentoring Quiz": "false"
-}' WHERE prison_number = 'a@a';
-
-UPDATE ilp SET m1_1 = '{
-"See film Why Computer Science is Changing Everything": "false", 
-"See film Kenyatta Leal - the Journey from Ex-Offender to Rocket Space Employee": "false",
-"See short film Building a Foundation": "false",
-"See short Film Will Smith - Fail Early, Fail Often, Fail Forward": "false",
-"See short Film Eddie Izzard – Computers": "false",
-"Learn the browser concept – see short film What is a browser?": "false",
-"Learn general concepts of web – read How The Web Works – In One Easy Lesson": "false",
-"Learn History of the Internet, by Melih Bigil": "false",
-"Learn how picture works on web – see Images, Pixels and RGB film": "false",
-"Read  How to Go From Hobbyist to Professional Developer – freeCodeCamp": "false",
-"Complete How the Web Works Quiz": "false",
-"Complete Programming Inspiration Quiz": "false",
-"Learn how files are managed – read Introduction to File Management": "false",
-"Complete File Management Quiz": "false",
-"Learn the concept of stand ups from Stand Ups file": "false",
-"Learn concept of Agile and Mentoring from module 1.1 Code4000 Introduction general part": "false",
-"Complete Becoming Agile Quiz": "false",
-"Complete Quiz: What if I get stuck?": "false",
-"Complete Mentoring Quiz": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_1 = '{
 "Understand what is coding – see film What is coding?": "false",
@@ -151,7 +151,7 @@ UPDATE ilp SET m2_1 = '{
 "Learn what is Code Indentation": "false",
 "Complete Wrap Up Quiz": "false",
 "Complete Film Festival Website Exercise": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_2 = '{
 "Learn how CSS works in general – see CSS Zen Garden film": "false",
@@ -167,7 +167,7 @@ UPDATE ilp SET m2_2 = '{
 "Complete Wrap Up exercise (Dentist Website)": "false",
 "Complete Basic CSS and Asset Management Quiz": "false",
 "Complete Styling Film Festival Website Exercise": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_3 = '{
 "Learn how Sublime Code Editor works": "false",
@@ -191,7 +191,7 @@ UPDATE ilp SET m2_3 = '{
 "Learn how text command palette works": "false",
 "Complete Night Sky Part I exercise": "false",
 "Complete Design your website exercise": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_4 = '{
 "Read about Boxes, Lists, Tables and Forms from chapters 13, 14 and 15 of Duckett": "false",
@@ -204,7 +204,7 @@ UPDATE ilp SET m2_4 = '{
 "Complete Night Sky Exercise Part 2": "false",
 "Continue Building Your Own Website, use columns, margins, padding, menu bar, z-index, footer, coeerect indentation, correct HTML tags usage": "false",
 "Complete In-n-Out Burger Website exercise": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 
 UPDATE ilp SET m2_5 = '{
@@ -226,7 +226,7 @@ UPDATE ilp SET m2_5 = '{
 "Exercise: Recreate One Delivery Website Homepage": "false",
 "Complete Night Sky Exercise Part 3": "false",
  "Building Your Own Website – add links, forms, buttons, images, lists, tables, correct form indentation, html tags": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_6 = '{
 "Learn what to do if code does not work": "false",
@@ -242,7 +242,7 @@ UPDATE ilp SET m2_6 = '{
 "Learn concept of pair programming from 1.2 module": "false",
 "Complete Pair Programming Quiz": "false",
 "Complete Video Games Quiz": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_6 = '{
 "Learn what to do if code does not work": "false",
@@ -258,7 +258,7 @@ UPDATE ilp SET m2_6 = '{
 "Learn concept of pair programming from 1.2 module": "false",
 "Complete Pair Programming Quiz": "false",
 "Complete Video Games Quiz": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET m2_7 = '{
 "Learn what Variable is": "false",
@@ -278,7 +278,7 @@ UPDATE ilp SET m2_7 = '{
 "Learn how to manipulate images and text": "false",
 "Learn how Alert and Prompt work in Javascript": "false",
 "Build a Hangman Game": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 
 UPDATE ilp SET m3_1 = '{
@@ -292,7 +292,7 @@ UPDATE ilp SET m3_1 = '{
 "Know what Git is and what it is used for": "false",
 "Be able to use some basic GitHub commands and explain what they do": "false",
 "Understand what is meant by Branching": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 
 UPDATE ilp SET m3_5 = '{
@@ -306,7 +306,7 @@ UPDATE ilp SET m3_5 = '{
 "Learn how Date works in JS": "false",
 "Learn what reserved words are in Javascript": "false",
 "Build Berry Blobber Game": "false"
-}' WHERE prison_number = 'a@a';
+}' WHERE prison_number = 'nnnnnn';
 
 UPDATE ilp SET full_title = '{
 "m1_1": "Code4000 Intro",
@@ -318,7 +318,16 @@ UPDATE ilp SET full_title = '{
 "m2_6": "Intro to coding",
 "m2_7": "Javascript Basics",
 "m3_1": "Git",
-"m3_5": "Advanced Javascript"}' WHERE prison_number = 'a@a';
+"m3_5": "Advanced Javascript"}' WHERE prison_number = 'nnnnnn';
+
+UPDATE ilp SET current = '{
+    "m1_1": "30/06/2022"
+}' WHERE prison_number = 'nnnnnn';
+
+ALTER TABLE ilp ADD COLUMN descriptions JSON;
+
+UPDATE ilp SET descriptions = '{
+    "m2_1": "Russian Buyan-M class corvette being towed while appearing to have been damaged in combat. The hull number and name have been painted on similar to other Black Sea Fleet ships indicating this has occurred after start of the conflict. It is not clear when this ship was struck, however today a Russian navy rescue tug carrying supplies to Snake Island was sunk by Ukrainian Anti-Ship missiles."}' WHERE prison_number = 'nnnnnn';
 
 
 
