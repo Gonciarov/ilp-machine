@@ -91,7 +91,11 @@
             <button onclick="hideModuleDescription()">Cancel</button>
             <form action="/ilp" method="POST">
                 <input type="hidden" name="module" value="<%= t %>">
-                <input type="submit" value="Add"/>
+                <input type="hidden" name="requestFromSidebar" value="true">
+                <input type="hidden" name="date" value="07/07/2022">
+                <input type="submit" value="Add">
+
+                
             </form>
         </div>
         </td>

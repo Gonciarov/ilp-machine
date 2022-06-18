@@ -35,6 +35,7 @@
         hideStatusNotSaved();
         hideStatusSaved();
         displaySelectAModulePointer();
+        displayAddAModuleButton();
         saved = false;
     }
 
@@ -73,6 +74,7 @@
         displaySelectAModulePointer();
         hideSingleModuleDescription();
         displayAddAModuleButton();
+        hideAddModuleMenu()
     }
 
     function hideSelectAModulePointer() {

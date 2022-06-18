@@ -418,15 +418,38 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
         
     ]).then(function([user, targets]) {
                 targets = targets.rows[0];
-                name = req.user.name;
+                let name = req.user.name;
                 res.render("ilp", {name: name, targets: targets})             
          })
         })
 
 app.post("/ilp", checkNotAuthenticated, (req, res) => {
-    let prisonNumber = req.user.prison_number
+    let name = req.user.name;
+    let {module} = req.body;
+    let prisonNumber = req.user.prison_number;
+    if (req.body.requestFromSidebar === "true") {
+        console.log(module)
+        Promise.all([
+        pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+            ]).then(function([results]) {
+                current = results.rows[0].current;
+                
+                targets = results.rows[0];
+                let date = req.body.date;
+                current[module] = date;
+                console.log(current);
+                targets.current = current;
+                pool.query(`UPDATE ilp SET current = '${JSON.stringify(current)}' WHERE prison_number = $1`, [prisonNumber])
+                res.render('ilp', {
+                    // students: students, 
+                    prisonNumber: prisonNumber,
+                    // notSeen: user.rows[0].unseen,
+                    targets: targets,
+                    name: name
+                }) 
+    })
+    } else {
     let data = JSON.parse(req.body.data)
-    let {module} = req.body
     Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
@@ -437,7 +460,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 targets.rows[0][module][i] = data[i]     
             }
         }
-        students = sortPosts(students.rows);
+        // students = sortPosts(students.rows);
         pool.query(`UPDATE ilp SET ${module} = '${JSON.stringify(targets.rows[0][module])}' WHERE prison_number = $1`, [prisonNumber])    
         res.render('ilp', {
             // students: students, 
@@ -446,7 +469,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
             targets: targets.rows[0]
         })
     })
-})
+}})
         
 
 app.post("/view/post", async(req, res) => {
