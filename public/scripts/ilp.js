@@ -68,7 +68,8 @@
         hideStatusSaved();
         hideAllModules();
         hideCancelAndSaveButtons();
-        checkIfSideBarFitsViewport()
+        checkIfSideBarFitsViewport();
+        displayModulesMenuCancel();
     }
 
     function displayModuleDescription() {
@@ -85,7 +86,9 @@
         displayAddAModuleButton();
         displayCurrentModules();
         displayHelloName();
-        hideAddModuleMenu()
+        hideAddModuleMenu();
+        hideModulesMenuCancel();
+        checkIfSideBarFitsViewport();
     }
 
     function hideHelloName() {
@@ -134,9 +137,15 @@
     }
 
     function hideSingleModuleDescription() {
-        let id = window.event.currentTarget.parentElement.parentElement.id
-        document.getElementById(id).style = "display: none;"
+        // let id = window.event.currentTarget.parentElement.parentElement.id
+        // document.getElementById(id).style = "display: none;"
+        let descriptions = document.getElementsByClassName("descriptions")
+        for (let i=0; i<descriptions.length; i++) {
+           descriptions[i].style = "display: none;"
+        }
     }
+
+  
 
     function hideStatusNotSaved() {
         document.getElementById("ilp-not-saved").style = "display:none";
@@ -227,6 +236,14 @@
         }
     }
 
+    function displayModulesMenuCancel() {
+        document.getElementById("modules-menu-cancel").style.display = "inline-block";
+    }
+
+    function hideModulesMenuCancel() {
+        document.getElementById("modules-menu-cancel").style.display = "none";
+    }
+
     function restoreState() {
         for ( i in targetsUpdated ) {
             
@@ -254,7 +271,6 @@
     
     function isInViewport(el) {
         const rect = el.getBoundingClientRect();
-        console.log(rect.bottom)
         return (
             rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
         );

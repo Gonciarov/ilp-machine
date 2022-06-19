@@ -400,6 +400,11 @@ div.grid-student .grid-messages-col-1 {
 
 }
 
+#modules-menu-cancel {
+  display: none;
+  margin-top: 20px;
+}
+
 
 /* register, login */
 
