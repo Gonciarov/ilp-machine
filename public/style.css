@@ -389,7 +389,17 @@ div.grid-student .grid-messages-col-1 {
 
 #add-module {
   display: none;
+  margin-top: 20px;
 }
+
+.sidebar-single-thumbnail {
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 10px;
+
+}
+
 
 /* register, login */
 

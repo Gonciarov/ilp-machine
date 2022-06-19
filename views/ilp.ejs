@@ -27,18 +27,21 @@
     <div class="grid-ilp">
         <div class="sidebar">
             <div class="not-fixed-part">
-            <h1>Hello,
+            <h1 id="ilp-hello-name">Hello,
                 <%= name %>!
             </h1>
-        <div> 
+        <div id="current-modules"> 
             <p>Your current modules: </p>
             <% for (t in targets["current"]) { %>
-                
-                <button value='<%= t %>' onclick="showTargets()"><%= targets["full_title"][t] %></button>
+                <div id="thumbnail<%= t %>" class="sidebar-single-thumbnail">
+                <h3><%= targets["full_title"][t] %></h3>
                 <p>Target date: <%= targets["current"][t] %></p>
+                <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
+                </div>
                 <%}%>
             <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add</button></div>
         </div>
+   
 
         <div id="add-module">      
             <p>Select a module: </p>
@@ -53,7 +56,7 @@
         
            <div class="saved-status-container">
             <div>
-                <button class="sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Cancel</button>
+                <button class="sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
                 <button class="sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
             </div>
             <div class="saved-status-container">
@@ -93,7 +96,7 @@
                 <input type="hidden" name="module" value="<%= t %>">
                 <input type="hidden" name="requestFromSidebar" value="true">
                 <input type="date" name="date" required>
-                <input type="submit" value="Add">
+                <input type="submit" onclick="displayCurrentModules()" value="Add">
 
                 
             </form>

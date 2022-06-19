@@ -22,7 +22,7 @@
     function save() {
         sendRequest(module, targetsUpdated);
         hideStatusNotSaved();
-        displayStatusSaved()
+        displayStatusSaved();
         saved = true;
         module = null;
         targetsUpdated = {}
@@ -36,24 +36,31 @@
         hideStatusSaved();
         displaySelectAModulePointer();
         displayAddAModuleButton();
+        displayCurrentModulesThumbnails();
+        displayThumbnailViewButtons();
         saved = false;
     }
 
     function showTargets() {
-       
         restoreState();
         hideStatusNotSaved();
+        hideOtherModulesThumbnails();
         hideStatusSaved();
         hideSelectAModulePointer();
         hideAddModuleMenu();
         hideAddAModuleButton();
         hideAllModules();
+        hideThumbnailViewButtons();
         displayTargetsTable();
         displayCancelAndSaveButtons();
+       
+        
     }
 
     function addModule() {
         restoreState();
+        hideCurrentModules();
+        hideHelloName();
         hideAddAModuleButton();
         displayAddModuleMenu();
         hideStatusNotSaved();
@@ -75,6 +82,10 @@
         hideSingleModuleDescription();
         displayAddAModuleButton();
         hideAddModuleMenu()
+    }
+
+    function hideHelloName() {
+        document.getElementById("ilp-hello-name").style = "display: none;"
     }
 
     function hideSelectAModulePointer() {
@@ -167,6 +178,45 @@
             targetsUpdated[window.event.target.id] = "true";
             
             }
+    }
+
+    function hideCurrentModules() {
+        document.getElementById("current-modules").style.display = "none";
+    }
+
+    function displayCurrentModules() {
+        document.getElementById("current-modules").style.display = "block";
+    }
+
+    function hideOtherModulesThumbnails() {
+        let id = window.event.currentTarget.parentElement.id
+        let thumbnails = document.getElementsByClassName('sidebar-single-thumbnail')
+        for (let i=0; i<thumbnails.length; i++) {
+            if (thumbnails[i].id !== id) {
+                thumbnails[i].style.display = "none"
+            }
+        }
+    }
+
+    function displayCurrentModulesThumbnails() {
+        let thumbnails = document.getElementsByClassName('sidebar-single-thumbnail')
+        for (let i=0; i<thumbnails.length; i++) {
+                thumbnails[i].style.display = "block"
+        }
+    }
+
+    function hideThumbnailViewButtons() {
+        let viewButtons = document.getElementsByClassName("thumbnail-view-button")
+        for (let i=0; i<viewButtons.length; i++) {
+                viewButtons[i].style.display = "none"
+        }
+    }
+
+    function displayThumbnailViewButtons() {
+        let viewButtons = document.getElementsByClassName("thumbnail-view-button")
+        for (let i=0; i<viewButtons.length; i++) {
+                viewButtons[i].style.display = "inline-block"
+        }
     }
 
     function restoreState() {
