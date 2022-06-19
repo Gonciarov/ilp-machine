@@ -2,7 +2,7 @@
     let module;
     let saved = false;
     
-
+  
 
     function sendRequest(module, targetsUpdated) {
         let xml = new XMLHttpRequest();
@@ -38,6 +38,7 @@
         displayAddAModuleButton();
         displayCurrentModulesThumbnails();
         displayThumbnailViewButtons();
+        checkIfSideBarFitsViewport();
         saved = false;
     }
 
@@ -53,7 +54,7 @@
         hideThumbnailViewButtons();
         displayTargetsTable();
         displayCancelAndSaveButtons();
-       
+        checkIfSideBarFitsViewport()
         
     }
 
@@ -67,6 +68,7 @@
         hideStatusSaved();
         hideAllModules();
         hideCancelAndSaveButtons();
+        checkIfSideBarFitsViewport()
     }
 
     function displayModuleDescription() {
@@ -81,11 +83,17 @@
         displaySelectAModulePointer();
         hideSingleModuleDescription();
         displayAddAModuleButton();
+        displayCurrentModules();
+        displayHelloName();
         hideAddModuleMenu()
     }
 
     function hideHelloName() {
         document.getElementById("ilp-hello-name").style = "display: none;"
+    }
+
+    function displayHelloName() {
+        document.getElementById("ilp-hello-name").style = "display: block;"
     }
 
     function hideSelectAModulePointer() {
@@ -239,3 +247,27 @@
         module = null;
         targetsUpdated = {} 
     }
+
+    window.onload = (event) => {
+        checkIfSideBarFitsViewport();
+    }
+    
+    function isInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        console.log(rect.bottom)
+        return (
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+        );
+
+    }
+
+    function checkIfSideBarFitsViewport() {
+        let fixedOrNot = document.getElementById("fixed-or-not");
+        if (isInViewport(fixedOrNot)) {
+            fixedOrNot.className = "fixed-part"
+        } else {
+            fixedOrNot.className = "not-fixed-part"
+        }
+    }
+
+  
