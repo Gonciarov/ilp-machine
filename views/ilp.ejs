@@ -92,15 +92,20 @@
         <% if (t != "prison_number") { %>
         <table>
             <tr>
-            <td style="display: none;" id="description<%= t %>" class="descriptions"><div><p><%= targets["descriptions"][t] %></p>
-            <button onclick="hideModuleDescription()">Cancel</button>
-            <form action="/ilp" method="POST">
-                <input type="hidden" name="module" value="<%= t %>">
-                <input type="hidden" name="requestFromSidebar" value="true">
-                <input type="date" name="date" required>
-                <input type="submit" onclick="displayCurrentModules()" value="Add">
-            </form>
-        </div>
+            <td style="display: none;" id="description<%= t %>" class="descriptions">
+                <div>
+                    <p><%= targets["descriptions"][t] %></p>
+                    
+                    <form action="/ilp" method="POST">
+                        <input type="hidden" name="module" value="<%= t %>">
+                        <input type="hidden" name="requestFromSidebar" value="true">
+                        <p>When do you want to complete it?</p>
+                        <input type="date" name="date" required>
+                        <p>Recommended time: <%= targets["recommended_time"][t] %></p>
+                        <input type="submit" onsubmit="displayCurrentModules()" value="Add">
+                    </form>
+                    <button onclick="hideModuleDescription()">Cancel</button>
+                </div>
         </td>
  
 </tr>
