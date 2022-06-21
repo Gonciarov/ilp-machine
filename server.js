@@ -463,7 +463,8 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
             // students: students, 
             prisonNumber: prisonNumber,
             // notSeen: user.rows[0].unseen,
-            targets: targets.rows[0]
+            targets: targets.rows[0],
+            name: name
         })
     })
 }})

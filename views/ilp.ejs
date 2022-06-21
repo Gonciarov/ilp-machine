@@ -12,7 +12,7 @@
 </head>
 
 <body>
-
+    <% let today = new Date().toJSON().slice(0, 10); %>
     <div class="navbar">
         <h1><a href="/dashboard">CODE4000</a></h1>
         <ul>
@@ -37,7 +37,19 @@
                 <h3><%= targets["full_title"][t] %></h3>
                 <p>Target date: <%= targets["current"][t] %></p>
                 <input class="date" type="hidden" value='<%= targets["current"][t] %>'>
-                <p style="display: none; color: red;" id='overdue-<%= targets["current"][t] %>'>Overdue</p>
+                <p style="display: none; color: red;" class="overdue-note" id='overdue-<%= targets["current"][t] %>'>Overdue</p>
+                <p style="display: none; color: red;" class ="ilp-reschedule" id="reschedule-<%= t %>" onclick="displayRescheduleForm()">Click here to reschedule</p>
+                <div class="reschedule-form" style="display: none" id="reschedule-form-<%= t %>">
+                    <form action="/ilp" method="POST">
+                        <input type="hidden" name="module" value="<%= t %>">
+                        <input type="hidden" name="requestFromSidebar" value="true">
+                        <p>Choose a new date: </p>
+                        <input type="date" min="<%= today %>" name="date" required>
+                        <p></p>
+                        <input type="submit" onsubmit="displayCurrentModules()" value="Change">
+                    </form>
+                    <button onclick="cancel()">Cancel</button>
+                </div>
                 <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
                 </div>
                 <%}%>
@@ -114,7 +126,7 @@
                         <input type="hidden" name="module" value="<%= t %>">
                         <input type="hidden" name="requestFromSidebar" value="true">
                         <p>When do you want to complete it?</p>
-                        <input type="date" name="date" required>
+                        <input type="date" name="date" min="<%= today %>" required>
                         <p>Recommended time: <%= targets["recommended_time"][t] %></p>
                         <input type="submit" onsubmit="displayCurrentModules()" value="Add">
                     </form>

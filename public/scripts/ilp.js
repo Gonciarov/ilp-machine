@@ -34,6 +34,8 @@
         hideAllModules();
         hideStatusNotSaved();
         hideStatusSaved();
+        hideResheduleSuggestion();
+        hideRescheduleForm()
         displaySelectAModulePointer();
         displayAddAModuleButton();
         displayCurrentModulesThumbnails();
@@ -58,6 +60,7 @@
         hideYourCurrentHeader();
         displayTargetsTable();
         displayCancelAndSaveButtons();
+        displayRescheduleSuggestion();
         checkIfSideBarFitsViewport()
         
     }
@@ -75,7 +78,7 @@
         hideYourCompletedHeader();
         displayTargetsTable();
         displayCancelAndSaveButtons();
-        checkIfSideBarFitsViewport()
+        checkIfSideBarFitsViewport();
         
     }
 
@@ -313,7 +316,8 @@
 
     window.onload = (event) => {
         checkIfSideBarFitsViewport();
-        compareDate();
+        findOverdueModules();
+        hideResheduleSuggestion();
     }
     
     function isInViewport(el) {
@@ -333,9 +337,9 @@
         }
     }
 
-    
+/* ilp overdue status and reschedule */    
 
-function compareDate() { /* date calculations */
+function findOverdueModules() {
     let today = new Date().toJSON().slice(0, 10);
     let dates = document.getElementsByClassName("date")
     for (let i=0; i<dates.length; i++) {
@@ -348,6 +352,47 @@ function compareDate() { /* date calculations */
 
 function displayOverdueStatus(targetDate) {
     document.getElementById(`overdue-${targetDate}`).style.display = "block";
+}
+
+function hideOverdueStatusAll() {
+    let overdueNotes = document.getElementsByClassName("overdue-note")
+    for (let i=0; i<overdueNotes.length; i++) {  
+        console.log(overdueNotes[i].id)    
+        overdueNotes[i].style.display = "none;"
+        
+}
+}
+
+function displayRescheduleSuggestion() {
+    let reschedules = document.getElementsByClassName("ilp-reschedule")
+    for (let i=0; i<reschedules.length; i++) {      
+        reschedules[i].style.display = "block"
+        
+}
+}
+
+
+
+function hideResheduleSuggestion() {
+    let reschedules = document.getElementsByClassName("ilp-reschedule")
+    for (let i=0; i<reschedules.length; i++) {    
+        reschedules[i].style.display = "none"
+}
+}
+
+function displayRescheduleForm() {
+    hideResheduleSuggestion();
+    hideCancelAndSaveButtons();
+    hideAllModules();
+    let id = window.event.currentTarget.parentElement.id.replace('thumbnail','')
+    document.getElementById(`reschedule-form-${id}`).style.display = "block"
+}
+
+function hideRescheduleForm() {
+    let forms = document.getElementsByClassName("reschedule-form")
+    for (let i=0; i<forms.length; i++) {    
+        forms[i].style.display = "none"
+}
 }
 
   
