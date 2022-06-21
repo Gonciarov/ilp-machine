@@ -39,6 +39,8 @@
         displayCurrentModulesThumbnails();
         displayThumbnailViewButtons();
         checkIfSideBarFitsViewport();
+        displayYourCompletedHeader();
+        displayYourCurrentHeader();
         saved = false;
     }
 
@@ -52,6 +54,25 @@
         hideAddAModuleButton();
         hideAllModules();
         hideThumbnailViewButtons();
+        hideYourCompletedHeader();
+        hideYourCurrentHeader();
+        displayTargetsTable();
+        displayCancelAndSaveButtons();
+        checkIfSideBarFitsViewport()
+        
+    }
+
+    function showCompletedModuleTargets() {
+        restoreState();
+        hideStatusNotSaved();
+        hideOtherModulesThumbnails();
+        hideStatusSaved();
+        hideSelectAModulePointer();
+        hideAddAModuleButton();
+        hideAllModules();
+        hideThumbnailViewButtons();
+        hideYourCurrentHeader();
+        hideYourCompletedHeader();
         displayTargetsTable();
         displayCancelAndSaveButtons();
         checkIfSideBarFitsViewport()
@@ -61,15 +82,18 @@
     function addModule() {
         restoreState();
         hideCurrentModules();
+        hideOtherModulesThumbnails();
         hideHelloName();
         hideAddAModuleButton();
         displayAddModuleMenu();
+        displayModulesMenuCancel();
         hideStatusNotSaved();
         hideStatusSaved();
         hideAllModules();
         hideCancelAndSaveButtons();
+        hideYourCompletedHeader();
         checkIfSideBarFitsViewport();
-        displayModulesMenuCancel();
+        
     }
 
     function displayModuleDescription() {
@@ -85,6 +109,9 @@
         hideSingleModuleDescription();
         displayAddAModuleButton();
         displayCurrentModules();
+        displayCurrentModulesThumbnails();
+        displayYourCurrentHeader();
+        displayYourCompletedHeader();
         displayHelloName();
         hideAddModuleMenu();
         hideModulesMenuCancel();
@@ -95,8 +122,27 @@
         document.getElementById("ilp-hello-name").style = "display: none;"
     }
 
+
     function displayHelloName() {
         document.getElementById("ilp-hello-name").style = "display: block;"
+    }
+
+    function hideYourCurrentHeader() {
+        document.getElementById("header-your-current").style = "display: none;"
+    }
+
+
+    function displayYourCurrentHeader() {
+        document.getElementById("header-your-current").style = "display: block;"
+    }
+
+    function hideYourCompletedHeader() {
+        document.getElementById("header-your-completed").style = "display: none;"
+    }
+
+
+    function displayYourCompletedHeader() {
+        document.getElementById("header-your-completed").style = "display: block;"
     }
 
     function hideSelectAModulePointer() {

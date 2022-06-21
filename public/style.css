@@ -52,8 +52,19 @@ p.break {
 }
 
 button {
-  border-color: 0.2px rgb(0, 0, 0, 0.2);
+  border-color: rgb(0, 0, 0, 0.3);
+  border-width: thin;
   color: rgb(0, 0, 0, 0.7);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+button:active {
+  background-color: #dddbda;
+}
+
+.sidebar-buttons:active {
+  background-color: inherit;
 }
 
 button:focus {
@@ -61,7 +72,9 @@ button:focus {
 }
 
 input {
-  border-color: 0.2px rgb(0, 0, 0, 0.2);
+  background-color: transparent;
+  border-color: rgb(0, 0, 0, 0.3);
+  border-width: thin;
   color: rgb(0, 0, 0, 0.7);
   margin-top: 10px;
   
@@ -403,6 +416,12 @@ div.grid-student .grid-messages-col-1 {
 #modules-menu-cancel {
   display: none;
   margin-top: 20px;
+}
+
+.ilp-sidebar-buttons {
+  width: 90px;
+  margin-bottom: 5px;
+  text-align: center;
 }
 
 

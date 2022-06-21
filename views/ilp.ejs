@@ -31,7 +31,7 @@
                 <%= name %>!
             </h1>
         <div id="current-modules"> 
-            <p>Your current modules: </p>
+            <p id="header-your-current">Your current modules: </p>
             <% for (t in targets["current"]) { %>
                 <div id="thumbnail<%= t %>" class="sidebar-single-thumbnail">
                 <h3><%= targets["full_title"][t] %></h3>
@@ -39,7 +39,7 @@
                 <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
                 </div>
                 <%}%>
-            <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add</button></div>
+            <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add modules</button></div>
         </div>
    
 
@@ -56,17 +56,29 @@
             
             <button id="modules-menu-cancel" onclick="hideModuleDescription()">Cancel</button>
         
+            <div id="completed-modules"> 
+                <p id="header-your-completed">Your completed modules: </p>
+                <% for (t in targets["completed"]) { %>
+                    <div id="completed-thumbnail-<%= t %>" class="sidebar-single-thumbnail">
+                    <h3><%= targets["full_title"][t] %></h3>
+                    <p>Completed on: <%= targets["completed"][t] %></p>
+                    <button value='<%= t %>' class="thumbnail-view-button" onclick="showCompletedModuleTargets()">View</button>
+                    </div>
+                    <%}%>
+            </div>
+
            <div class="saved-status-container">
             <div>
-                <button class="sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
-                <button class="sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
+                <button class="ilp-sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
+                <button class="ilp-sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
             </div>
             <div class="saved-status-container">
                 <i id="ilp-saved" style="display:none">saved</i>
                 <i id="ilp-not-saved" style="display:none">not saved</i>
             </div>
-        </div> 
         </div>
+        
+    </div>
         </div>
     <br/>
         

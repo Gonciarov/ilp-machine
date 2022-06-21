@@ -329,6 +329,8 @@ ALTER TABLE ilp ADD COLUMN descriptions JSON;
 UPDATE ilp SET descriptions = '{
     "m2_1": "Russian Buyan-M class corvette being towed while appearing to have been damaged in combat. The hull number and name have been painted on similar to other Black Sea Fleet ships indicating this has occurred after start of the conflict. It is not clear when this ship was struck, however today a Russian navy rescue tug carrying supplies to Snake Island was sunk by Ukrainian Anti-Ship missiles."}' WHERE prison_number = 'nnnnnn';
 
+UPDATE ilp SET completed = '{"m1_1": "19/06/2022"}' WHERE prison_number = 'nnnnnn';
+
 
 
 
