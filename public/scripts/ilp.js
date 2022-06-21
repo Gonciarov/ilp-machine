@@ -333,10 +333,6 @@
         }
     }
 
-    function displayOverdueStatus() {
-        document.getElementById(`overdue-${targetDate}`).style.display = "block";
-    }
-
     
 
 function compareDate() { /* date calculations */
@@ -345,9 +341,13 @@ function compareDate() { /* date calculations */
     for (let i=0; i<dates.length; i++) {
         let targetDate = dates[i].value;
         if(today > targetDate) {
-            displayOverdueStatus();
+            displayOverdueStatus(targetDate);
         }
     }
+}
+
+function displayOverdueStatus(targetDate) {
+    document.getElementById(`overdue-${targetDate}`).style.display = "block";
 }
 
   
