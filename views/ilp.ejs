@@ -61,7 +61,7 @@
             <p>Select a module: </p>
 
             <% for (t in targets["full_title"]) { %>
-                <% if (!targets["current"][t]) { %>
+                <% if (!targets["current"][t] && !targets["completed"][t]) { %>
                 <button value='<%= t %>' onclick="displayModuleDescription()"><%= targets["full_title"][t] %></button>
                
                 <%}%>
