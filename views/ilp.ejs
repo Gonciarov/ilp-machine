@@ -36,6 +36,8 @@
                 <div id="thumbnail<%= t %>" class="sidebar-single-thumbnail">
                 <h3><%= targets["full_title"][t] %></h3>
                 <p>Target date: <%= targets["current"][t] %></p>
+                <input class="date" type="hidden" value='<%= targets["current"][t] %>'>
+                <p style="display: none; color: red;" id='overdue-<%= targets["current"][t] %>'>Overdue</p>
                 <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
                 </div>
                 <%}%>

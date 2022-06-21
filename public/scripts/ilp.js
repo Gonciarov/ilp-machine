@@ -313,6 +313,7 @@
 
     window.onload = (event) => {
         checkIfSideBarFitsViewport();
+        compareDate();
     }
     
     function isInViewport(el) {
@@ -331,5 +332,22 @@
             fixedOrNot.className = "not-fixed-part"
         }
     }
+
+    function displayOverdueStatus() {
+        document.getElementById(`overdue-${targetDate}`).style.display = "block";
+    }
+
+    
+
+function compareDate() { /* date calculations */
+    let today = new Date().toJSON().slice(0, 10);
+    let dates = document.getElementsByClassName("date")
+    for (let i=0; i<dates.length; i++) {
+        let targetDate = dates[i].value;
+        if(today > targetDate) {
+            displayOverdueStatus();
+        }
+    }
+}
 
   
