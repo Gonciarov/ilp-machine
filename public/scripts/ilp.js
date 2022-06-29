@@ -350,6 +350,8 @@ function findOverdueModules() {
     }
 }
 
+
+
 function displayOverdueStatus(targetDate) {
     document.getElementById(`overdue-${targetDate}`).style.display = "block";
 }
@@ -364,7 +366,7 @@ function hideOverdueStatusAll() {
 }
 
 function displayRescheduleSuggestion() {
-    let reschedules = document.getElementsByClassName("ilp-reschedule")
+    let reschedules = document.getElementsByClassName("ilp-edit")
     for (let i=0; i<reschedules.length; i++) {      
         reschedules[i].style.display = "block"
         
@@ -374,7 +376,7 @@ function displayRescheduleSuggestion() {
 
 
 function hideResheduleSuggestion() {
-    let reschedules = document.getElementsByClassName("ilp-reschedule")
+    let reschedules = document.getElementsByClassName("ilp-edit")
     for (let i=0; i<reschedules.length; i++) {    
         reschedules[i].style.display = "none"
 }
@@ -382,8 +384,8 @@ function hideResheduleSuggestion() {
 
 function displayRescheduleForm() {
     hideResheduleSuggestion();
-    hideCancelAndSaveButtons();
-    hideAllModules();
+    // hideCancelAndSaveButtons();
+    // hideAllModules();
     let id = window.event.currentTarget.parentElement.id.replace('thumbnail','')
     document.getElementById(`reschedule-form-${id}`).style.display = "block"
 }
@@ -395,4 +397,7 @@ function hideRescheduleForm() {
 }
 }
 
-  
+  function displayRequestedToRemoveStatus() {
+    let id = window.event.currentTarget.parentElement.id
+    console.log(id);
+  }

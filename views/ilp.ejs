@@ -38,16 +38,44 @@
                 <p>Target date: <%= targets["current"][t] %></p>
                 <input class="date" type="hidden" value='<%= targets["current"][t] %>'>
                 <p style="display: none; color: red;" class="overdue-note" id='overdue-<%= targets["current"][t] %>'>Overdue</p>
-                <p style="display: none; color: red;" class ="ilp-reschedule" id="reschedule-<%= t %>" onclick="displayRescheduleForm()">Click here to reschedule</p>
+                <% if (targets["requested"][t] === "delete") { %>
+                    <p style="color: red;" class="req-remove">Requested to remove</p>
+               <% } %>
+                <p style="display: none; color: red;" class="req-remove" id='req-remove-<%= targets["current"][t] %>'>Overdue</p>
+                <p style="display: none; color: red;" class ="ilp-edit" onclick="displayRescheduleForm()">Click here to edit</p>
                 <div class="reschedule-form" style="display: none" id="reschedule-form-<%= t %>">
                     <form action="/ilp" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
-                        <input type="hidden" name="requestFromSidebar" value="true">
+                        <input type="hidden" name="requestFromSidebar" value="update">
                         <p>Choose a new date: </p>
                         <input type="date" min="<%= today %>" name="date" required>
                         <p></p>
                         <input type="submit" onsubmit="displayCurrentModules()" value="Change">
                     </form>
+                    <% if (!targets["requested"][t]) { %>
+                    <form action = "/ilp-request" method = "POST">
+                        <input type="hidden" name="module" value="<%= t %>">
+                        <input type="hidden" name="requestFromSidebar" value="delete">
+                        <input type="submit" value="Remove">
+                    </form>
+                    <% } else { %>
+                        <form action = "/ilp-request" method = "POST">
+                            <input type="hidden" name="module" value="<%= t %>">
+                            <input type="hidden" name="requestFromSidebar" value="cancel-delete">
+                            <input type="submit" onsubmit="displayCurrentModules()" value="Cancel request">
+                        </form>
+                        <%}%>
+                        <% let counter = 0 %>
+                        <% for (targt in targets[t]) { %>
+                           
+                            <% if (targets[t][targt] === "false") { %>
+                                <% counter -= 1 %>
+                                <%  } %>
+                               
+                                <% } %>
+                                <% if (counter === 0) { %>
+                                    <button>Submit</button>
+                                <% } %>
                     <button onclick="cancel()">Cancel</button>
                 </div>
                 <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
@@ -124,7 +152,7 @@
                     
                     <form action="/ilp" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
-                        <input type="hidden" name="requestFromSidebar" value="true">
+                        <input type="hidden" name="requestFromSidebar" value="update">
                         <p>When do you want to complete it?</p>
                         <input type="date" name="date" min="<%= today %>" required>
                         <p>Recommended time: <%= targets["recommended_time"][t] %></p>

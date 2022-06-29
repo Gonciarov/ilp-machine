@@ -63,6 +63,10 @@ button:active {
   background-color: #dddbda;
 }
 
+input:active {
+  background-color: #dddbda;
+}
+
 .sidebar-buttons:active {
   background-color: inherit;
 }
