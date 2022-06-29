@@ -331,6 +331,18 @@ UPDATE ilp SET descriptions = '{
 
 UPDATE ilp SET completed = '{"m1_1": "19/06/2022"}' WHERE prison_number = 'nnnnnn';
 
+UPDATE ilp SET recommended_time = '{"m1_1":"2 weeks",
+"m1_1":"2 weeks",
+"m2_1":"3 weeks",
+"m2_2":"4 weeks",
+"m2_3":"2 weeks",
+"m2_4":"3 weeks",
+"m2_5":"4 weeks",
+"m2_6":"2 weeks",
+"m2_7":"3 weeks",
+"m2_8":"4 weeks",
+"m3_1":"2 weeks"}' WHERE prison_number = 'a@a';
+
 
 
 

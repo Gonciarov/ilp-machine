@@ -419,7 +419,8 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
     ]).then(function([user, targets]) {
                 targets = targets.rows[0];
                 let name = req.user.name;
-                res.render("ilp", {name: name, targets: targets})             
+                res.render("ilp", {name: name, targets: targets})  
+                           
          })
         })
 

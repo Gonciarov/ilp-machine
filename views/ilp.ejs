@@ -139,6 +139,16 @@
         <%}%>
         <%}%>
         </table>
+        <table id='completed<%= t %>' class="single-module">
+            <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
+        <tr>  
+            <% for (i in targets[t]) { %>      
+            <td class="true"><%= i %></td>
+            
+</tr>
+<%}%>
+
+</table>
       <%}%>
     
           

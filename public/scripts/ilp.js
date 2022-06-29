@@ -76,7 +76,7 @@
         hideThumbnailViewButtons();
         hideYourCurrentHeader();
         hideYourCompletedHeader();
-        displayTargetsTable();
+        displayCompletedTargetsTable();
         displayCancelAndSaveButtons();
         checkIfSideBarFitsViewport();
         
@@ -232,6 +232,11 @@
     function displayTargetsTable() {
         module = window.event.target.value;
         document.getElementById(`table${module}`).style.display="block"
+    }
+
+    function displayCompletedTargetsTable() {
+        module = window.event.target.value;
+        document.getElementById(`completed${module}`).style.display="block"
     }
 
     function changeTargetClasName() {
