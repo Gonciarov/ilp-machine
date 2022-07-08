@@ -5,17 +5,20 @@
   
 
     function sendRequest(module, targetsUpdated) {
+        if (module !== null && targetsUpdated !== {}) {
         let xml = new XMLHttpRequest();
         xml.open("POST", "/ilp", true);
         xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         xml.send(`module=${module}&data=${JSON.stringify(targetsUpdated)}`);
         targetsUpdated = {}
+        }
     }
 
     function change() {
         displayStatusNotSaved();
         hideStatusSaved();
-        changeTargetClasName()
+        changeTargetClasName();
+        checkAllTargetsCompleted();
         saved = false;
     }
 
@@ -61,7 +64,8 @@
         displayTargetsTable();
         displayCancelAndSaveButtons();
         displayRescheduleSuggestion();
-        checkIfSideBarFitsViewport()
+        checkIfSideBarFitsViewport();
+        checkAllTargetsCompletedInitial();
         
     }
 
@@ -194,7 +198,9 @@
         }
     }
 
-  
+    function hideRequstedToRemoveStatus() {
+        document.getElementsByClassName("req-remove")
+    }
 
     function hideStatusNotSaved() {
         document.getElementById("ilp-not-saved").style = "display:none";
@@ -217,6 +223,27 @@
         for (let i=0; i<allModules.length; i++) {
             allModules[i].style = "display: none;"
         }
+    }
+
+    function checkAllTargetsCompleted() {
+        let table = window.event.target.parentElement.parentElement.parentElement
+        let targets = table.getElementsByClassName("false")
+        targets.length === 0 ? displaySubmitButton() : hideSubmitButton()
+    }
+
+    function checkAllTargetsCompletedInitial() {
+        let moduleName = window.event.target.value;
+        let table = document.getElementById(`table${moduleName}`);
+        let targets = table.getElementsByClassName("false");
+        targets.length === 0 ? displaySubmitButton() : hideSubmitButton()
+    }
+
+    function displaySubmitButton() {
+        document.getElementById("submit-completed").style.display = "inline-block"
+    }
+
+    function hideSubmitButton() {
+        document.getElementById("submit-completed").style.display = "none"
     }
 
     function hideCancelAndSaveButtons() {
@@ -401,8 +428,3 @@ function hideRescheduleForm() {
         forms[i].style.display = "none"
 }
 }
-
-  function displayRequestedToRemoveStatus() {
-    let id = window.event.currentTarget.parentElement.id
-    console.log(id);
-  }

@@ -225,6 +225,7 @@ div.review-form-buttons {
 
 .saved-status-container {
   margin-top: 20px;
+  justify-content: center;
 }
 
 .big-num {

@@ -24,11 +24,13 @@ let techskillsUpdated = {};
 
 
     function sendRequest(column, techskillsUpdated) {
+        if (column !== null && techskillsUpdated !== {}) {
         let xml = new XMLHttpRequest();
         xml.open("POST", "/techskills", true);
         xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         xml.send(`column=${column}&data=${JSON.stringify(techskillsUpdated)}`);
         techskillsUpdated = {}
+        }
     }
 
     function change() {

@@ -30,6 +30,7 @@
             <h1 id="ilp-hello-name">Hello,
                 <%= name %>!
             </h1>
+            
         <div id="current-modules"> 
             <p id="header-your-current">Your current modules: </p>
             <% for (t in targets["current"]) { %>
@@ -65,20 +66,13 @@
                             <input type="submit" onsubmit="displayCurrentModules()" value="Cancel request">
                         </form>
                         <%}%>
-                        <% let counter = 0 %>
-                        <% for (targt in targets[t]) { %>
-                           
-                            <% if (targets[t][targt] === "false") { %>
-                                <% counter -= 1 %>
-                                <%  } %>
-                               
-                                <% } %>
-                                <% if (counter === 0) { %>
-                                    <button>Submit</button>
-                                <% } %>
+                        
+                                    
+                                
                     <button onclick="cancel()">Cancel</button>
                 </div>
                 <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
+                
                 </div>
                 <%}%>
             <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add modules</button></div>
@@ -111,16 +105,25 @@
 
            <div class="saved-status-container">
             <div>
+               
                 <button class="ilp-sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
                 <button class="ilp-sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
+                <button class="ilp-sidebar-buttons" id="submit-completed" style="display: none">Submit</button>
+                
             </div>
+           
             <div class="saved-status-container">
                 <i id="ilp-saved" style="display:none">saved</i>
                 <i id="ilp-not-saved" style="display:none">not saved</i>
+               
             </div>
+           
         </div>
+       
+        
         
     </div>
+    
         </div>
     <br/>
         
@@ -138,7 +141,9 @@
         </tr>
         <%}%>
         <%}%>
+        <%}%>
         </table>
+        
         <table id='completed<%= t %>' class="single-module">
             <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
         <tr>  
@@ -149,7 +154,7 @@
 <%}%>
 
 </table>
-      <%}%>
+      
     
           
       <% for (t in targets) { %>

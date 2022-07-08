@@ -24,12 +24,13 @@ function stashBigNum() {
 
 
 function sendRequest(column, softskillsUpdated) {
-   
+    if (column !== null && softskillsUpdated !== {}) {
     let xml = new XMLHttpRequest();
     xml.open("POST", "/softskills", true);
     xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
     xml.send(`column=${column}&data=${JSON.stringify(softskillsUpdated)}`);
     softskillsUpdated = {}
+    }
 }
 
 function change() {

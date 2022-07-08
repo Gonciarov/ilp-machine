@@ -449,6 +449,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     })
     } else {
     let data = JSON.parse(req.body.data)
+    console.log(data)
     Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
