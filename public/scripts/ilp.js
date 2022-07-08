@@ -125,6 +125,10 @@
         checkIfSideBarFitsViewport();
     }
 
+    function submitAddModuleRequest() {
+        displayCurrentModules();
+    }
+
     function hideHelloName() {
         document.getElementById("ilp-hello-name").style = "display: none;"
     }
@@ -185,7 +189,6 @@
 
     function displaySingleModuleDescription() {
         let id = window.event.currentTarget.value
-        console.log(id)
         document.getElementById("description" + id).style = "display: block;"
     }
 

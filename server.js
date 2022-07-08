@@ -512,6 +512,29 @@ app.post("/ilp-request", checkNotAuthenticated, (req, res) => {
                         name: name
                     }) 
                 })
+    } else if (req.body.requestFromSidebar === "add") {
+        console.log("add")
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+                ]).then(function([results]) {
+                    targets = results.rows[0];
+                    targets["requested"][module] = "add"
+                    let current = results.rows[0].current;
+                    let date = req.body.date;
+                    current[module] = date;
+                    targets.current = current;
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(current)}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    res.render('ilp', {
+                    // students: students, 
+                    prisonNumber: prisonNumber,
+                    // notSeen: user.rows[0].unseen,
+                    targets: targets,
+                    name: name
+                }) 
+                    
+               
+                })
     }
 })
         

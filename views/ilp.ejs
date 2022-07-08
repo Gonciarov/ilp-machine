@@ -42,6 +42,9 @@
                 <% if (targets["requested"][t] === "delete") { %>
                     <p style="color: red;" class="req-remove">Requested to remove</p>
                <% } %>
+               <% if (targets["requested"][t] === "add") { %>
+                <p style="color: red;" class="req-remove">Requested to add</p>
+           <% } %>
                 <p style="display: none; color: red;" class="req-remove" id='req-remove-<%= targets["current"][t] %>'>Overdue</p>
                 <p style="display: none; color: red;" class ="ilp-edit" onclick="displayRescheduleForm()">Click here to edit</p>
                 <div class="reschedule-form" style="display: none" id="reschedule-form-<%= t %>">
@@ -165,9 +168,9 @@
                 <div>
                     <p><%= targets["descriptions"][t] %></p>
                     
-                    <form action="/ilp" method="POST">
+                    <form action="/ilp-request" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
-                        <input type="hidden" name="requestFromSidebar" value="update">
+                        <input type="hidden" name="requestFromSidebar" value="add">
                         <p>When do you want to complete it?</p>
                         <input type="date" name="date" min="<%= today %>" required>
                         <p>Recommended time: <%= targets["recommended_time"][t] %></p>
