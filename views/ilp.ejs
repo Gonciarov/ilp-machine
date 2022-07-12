@@ -60,13 +60,13 @@
                         <input type="submit" onsubmit="displayCurrentModules()" value="Change">
                     </form>
                     <% if (!targets["requested"][t]) { %>
-                    <form action = "/ilp-request" method = "POST">
+                    <form action = "/ilp" method = "POST">
                         <input type="hidden" name="module" value="<%= t %>">
                         <input type="hidden" name="requestFromSidebar" value="delete">
                         <input type="submit" value="Remove">
                     </form>
                     <% } else { %>
-                        <form action = "/ilp-request" method = "POST">
+                        <form action = "/ilp" method = "POST">
                             <input type="hidden" name="module" value="<%= t %>">
                             <input type="hidden" name="requestFromSidebar" value="cancel-delete">
                             <input type="submit" onsubmit="displayCurrentModules()" value="Cancel request">
@@ -114,7 +114,7 @@
                
                 <button class="ilp-sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
                 <button class="ilp-sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
-                <form action = "/ilp-request" method = "POST">
+                <form action = "/ilp" method = "POST">
                     <input type="hidden" name="module" value="<%= t %>">
                     <input type="hidden" name="requestFromSidebar" value="complete">
                     <input class="ilp-sidebar-buttons" id="submit-completed" style="display: none" type="submit" value="Submit">
@@ -176,7 +176,7 @@
                 <div>
                     <p><%= targets["descriptions"][t] %></p>
                     
-                    <form action="/ilp-request" method="POST">
+                    <form action="/ilp" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
                         <input type="hidden" name="requestFromSidebar" value="add">
                         <p>When do you want to complete it?</p>
