@@ -33,6 +33,9 @@
             
         <div id="current-modules"> 
             <p id="header-your-current">Your current modules: </p>
+            <% if (!targets) { %>
+                 <p>boobs</p> 
+                <% } else { %>
             <% for (t in targets["current"]) { %>
                 <div id="thumbnail<%= t %>" class="sidebar-single-thumbnail">
                 <h3><%= targets["full_title"][t] %></h3>
@@ -68,7 +71,7 @@
                     <% } else { %>
                         <form action = "/ilp" method = "POST">
                             <input type="hidden" name="module" value="<%= t %>">
-                            <input type="hidden" name="requestFromSidebar" value="cancel-delete">
+                            <input type="hidden" name="requestFromSidebar" value="cancel-request">
                             <input type="submit" onsubmit="displayCurrentModules()" value="Cancel request">
                         </form>
                         <%}%>
@@ -80,6 +83,7 @@
                 <button value='<%= t %>' class="thumbnail-view-button" onclick="showTargets()">View</button>
                 
                 </div>
+                <%}%>
                 <%}%>
             <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add modules</button></div>
         </div>
@@ -109,27 +113,25 @@
                     <%}%>
             </div>
 
-           <div class="saved-status-container">
-            <div>
-               
-                <button class="ilp-sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
-                <button class="ilp-sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
-                <form action = "/ilp" method = "POST">
-                    <input type="hidden" name="module" value="<%= t %>">
-                    <input type="hidden" name="requestFromSidebar" value="complete">
-                    <input class="ilp-sidebar-buttons" id="submit-completed" style="display: none" type="submit" value="Submit">
-                </form>
-                
-                
-            </div>
-           
             <div class="saved-status-container">
-                <i id="ilp-saved" style="display:none">saved</i>
-                <i id="ilp-not-saved" style="display:none">not saved</i>
+                <div>
+                   
+                    <button class="ilp-sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
+                    <button class="ilp-sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
+                    <button class="ilp-sidebar-buttons" id="submit-completed" style="display:none" onclick="submitCompleted()">Submit</button>
+
+                   
+                    
+                    
+                </div>
+               
+                <div class="saved-status-container">
+                    <i id="ilp-saved" style="display:none">saved</i>
+                    <i id="ilp-not-saved" style="display:none">not saved</i>
+                   
+                </div>
                
             </div>
-           
-        </div>
        
         
         

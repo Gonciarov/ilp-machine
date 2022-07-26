@@ -14,6 +14,16 @@
         }
     }
 
+    function submitCompleted() {
+        if (module !== null) {
+            let xml = new XMLHttpRequest();
+            xml.open("POST", "/ilp", true);
+            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            xml.send(`module=${module}&requestFromSidebar=complete`);
+            targetsUpdated = {}
+            }
+    }
+
     function change() {
         displayStatusNotSaved();
         hideStatusSaved();
@@ -66,7 +76,6 @@
         displayRescheduleSuggestion();
         checkIfSideBarFitsViewport();
         checkAllTargetsCompletedInitial();
-        
     }
 
     function showCompletedModuleTargets() {

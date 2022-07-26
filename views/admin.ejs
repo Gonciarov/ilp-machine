@@ -13,13 +13,18 @@
 
 
 <body>
+   
+
+<div class="grid-student">
+<div class="sidebar">
     <a href="/logout">Logout</a>
     <h1>Hello admin
     </h1>
+</div>
 
+<br>
 
-
-
+<div class="grid-student-col-1">
     <h2>Your students: </h2>
 
     <table>
@@ -43,7 +48,7 @@
 
                         <form action="/messages/<%= dialogId %>" method="POST">
                               <div>
-                                  <input type="submit" value="View">
+                                  <input type="submit" value="Message">
                               </div>
                           </form>
                     </div>
@@ -56,6 +61,41 @@
 
 
     </table>
+</div>
+<div class="grid-student-col-2">
+    <h2>Last requests:</h2>
+    <table>
+        <% for (let i = 0; i < requests.length; i++) { %>
+            <tr>
+                <td>
+                    <b> <%= requests[i].date %></b>
+                    <br>
+                   <p><%= requests[i].log %></p>
+                   <br>
+                   <p></p>
+                   <form action="/ilp" method="POST">
+                    <div>
+                        <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
+                        <input type="hidden" name="module" value="<%= requests[i].module %>">
+                        <input type="hidden" name="requestFromSidebar" value="<%= requests[i].type %>">
+                        <input class="right" type="submit" value="Approve">
+                    </div>
+                </form>
+                <form action="/ilp" method="POST"></form>
+                    <div>
+                        <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
+                        <input type="hidden" name="module" value="<%= requests[i].module %>">
+                        <input class="right" type="submit" value="Decline">
+                    </div>
+                </form>
+                </td>
+            </tr>
+      <%  } %>
+    </table>
+</div>
+</div>
+  
+
 </body>
 
 </html>

@@ -42,7 +42,18 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
             pool.query(`SELECT * FROM users`)
         ]).then(function([user, posts, students]) {
             if (req.user.prison_number == process.env.ADMIN_PRISON_NUMBER) {
-                res.render("admin", { posts: posts.rows, students: students.rows, prisonNumber: req.user.prison_number });
+                pool.query(`SELECT * FROM requests`, (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    let requests = results.rows;
+                    res.render("admin", { 
+                        posts: posts.rows, 
+                        requests: requests, 
+                        students: students.rows, 
+                        prisonNumber: req.user.prison_number
+                    });
+                }})
             } else {
                 posts = sortPosts(posts.rows)
                 res.render("dashboard", { 
@@ -426,8 +437,10 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
 
 
 app.post("/ilp", checkNotAuthenticated, (req, res) => {
+    if (req.user.prison_number !== process.env.ADMIN_PRISON_NUMBER) {
     let name = req.user.name;
     let {module} = req.body;
+    console.log(module);
     let prisonNumber = req.user.prison_number;
     if (req.body.requestFromSidebar === "update") {
         Promise.all([
@@ -467,13 +480,13 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                         name: name
                     }) 
         })
-    } else if (req.body.requestFromSidebar == "cancel-delete") {
+    } else if (req.body.requestFromSidebar == "cancel-request") {
         Promise.all([
             pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
                 ]).then(function([results]) {
                     targets = results.rows[0];
                     delete targets["requested"][module]
-                    console.log(targets["requested"])
+                    delete targets["current"][module]
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber])
                     res.render('ilp', {
                         // students: students, 
@@ -509,6 +522,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 ]).then(function([results]) {
                     targets = results.rows[0];
                     targets["requested"][module] = "complete";
+                    console.log(module)
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
                     res.render('ilp', {
                     // students: students, 
@@ -520,7 +534,6 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 })
     } else {
     let data = JSON.parse(req.body.data)
-    console.log(data)
     Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
@@ -541,15 +554,51 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
             name: name
         })
     })
-}})
+}} else {
+    let prisonNumber = req.body.prisonNumber
+    let module = req.body.module
+    if (req.body.requestFromSidebar === "add") {
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
+                ]).then(function([targets]) {
+                    targets = targets.rows[0];
+                    delete targets["requested"][module]
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`DELETE FROM requests WHERE prison_number = $1 AND module = $2`, [prisonNumber, module])
+                    res.redirect('/dashboard')
+                    }) 
+    } else if (req.body.requestFromSidebar === "complete") {
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
+                ]).then(function([targets]) {
+                    targets = targets.rows[0];
+                    delete targets["requested"][module];
+                    delete targets["current"][module];
+                    targets["completed"][module] = new Date().toDateString();
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET completed = '${JSON.stringify(targets["completed"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`DELETE FROM requests WHERE prison_number = $1 AND module = $2`, [prisonNumber, module])
+                    res.redirect('/dashboard')
+                    }) 
+    } else if (req.body.requestFromSidebar === "delete") {
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
+                ]).then(function([targets]) {
+                    targets = targets.rows[0];
+                    delete targets["requested"][module]
+                    delete targets["current"][module]
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`DELETE FROM requests WHERE prison_number = $1 AND module = $2`, [prisonNumber, module])
+                    res.redirect('/dashboard')
+                    }) 
+    }
+}
+}
+)  
 
-// app.post("/ilp-request", checkNotAuthenticated, (req, res) => {
-//     let name = req.user.name;
-//     let {module} = req.body;
-//     let prisonNumber = req.user.prison_number;
 
-// })
-        
 
 app.post("/view/post", async(req, res) => {
     let { name, postId, prisonNumber, text, comment, date, editing } = req.body
