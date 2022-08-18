@@ -440,7 +440,6 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     if (req.user.prison_number !== process.env.ADMIN_PRISON_NUMBER) {
     let name = req.user.name;
     let {module} = req.body;
-    console.log(module);
     let prisonNumber = req.user.prison_number;
     if (req.body.requestFromSidebar === "update") {
         Promise.all([
@@ -486,15 +485,8 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 ]).then(function([results]) {
                     targets = results.rows[0];
                     delete targets["requested"][module]
-                    delete targets["current"][module]
-                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber])
-                    res.render('ilp', {
-                        // students: students, 
-                        prisonNumber: prisonNumber,
-                        // notSeen: user.rows[0].unseen,
-                        targets: targets,
-                        name: name
-                    }) 
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    res.redirect('/ilp')
                 })
     } else if (req.body.requestFromSidebar === "add") {
         Promise.all([
@@ -522,15 +514,14 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 ]).then(function([results]) {
                     targets = results.rows[0];
                     targets["requested"][module] = "complete";
-                    console.log(module)
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
-                    res.render('ilp', {
+                })
+                res.render('ilp', {
                     // students: students, 
                     prisonNumber: prisonNumber,
                     // notSeen: user.rows[0].unseen,
                     targets: targets,
                     name: name
-                }) 
                 })
     } else {
     let data = JSON.parse(req.body.data)

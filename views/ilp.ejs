@@ -49,7 +49,7 @@
                 <p style="color: red;" class="req-remove">Requested to add</p>
            <% } %>
            <% if (targets["requested"][t] === "complete") { %>
-            <p style="color: red;" class="req-remove">Submitted</p>
+            <p style="color: red;">Submitted</p>
        <% } %>
                 <p style="display: none; color: red;" class="req-remove" id='req-remove-<%= targets["current"][t] %>'>Overdue</p>
                 <p style="display: none; color: red;" class ="ilp-edit" onclick="displayRescheduleForm()">Click here to edit</p>
@@ -72,7 +72,7 @@
                         <form action = "/ilp" method = "POST">
                             <input type="hidden" name="module" value="<%= t %>">
                             <input type="hidden" name="requestFromSidebar" value="cancel-request">
-                            <input type="submit" onsubmit="displayCurrentModules()" value="Cancel request">
+                            <input type="submit" value="Cancel request">
                         </form>
                         <%}%>
                         
@@ -112,12 +112,14 @@
                     </div>
                     <%}%>
             </div>
-
+        
+            
             <div class="saved-status-container">
                 <div>
                    
                     <button class="ilp-sidebar-buttons" id="ilp-cancel-button" style="display:none" onclick="cancel()">Exit</button>
                     <button class="ilp-sidebar-buttons" id="ilp-save-button" style="display:none" onclick="save()">Save</button>
+        
                     <button class="ilp-sidebar-buttons" id="submit-completed" style="display:none" onclick="submitCompleted()">Submit</button>
 
                    

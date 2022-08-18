@@ -6,22 +6,25 @@
 
     function sendRequest(module, targetsUpdated) {
         if (module !== null && targetsUpdated !== {}) {
-        let xml = new XMLHttpRequest();
-        xml.open("POST", "/ilp", true);
-        xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-        xml.send(`module=${module}&data=${JSON.stringify(targetsUpdated)}`);
-        targetsUpdated = {}
+            let xml = new XMLHttpRequest();
+            xml.open("POST", "/ilp", true);
+            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            xml.send(`module=${module}&data=${JSON.stringify(targetsUpdated)}`);
+            targetsUpdated = {}
         }
     }
 
     function submitCompleted() {
         if (module !== null) {
+            console.log(module)
             let xml = new XMLHttpRequest();
             xml.open("POST", "/ilp", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
             xml.send(`module=${module}&requestFromSidebar=complete`);
-            targetsUpdated = {}
+            targetsUpdated = {};
+            location.reload();
             }
+
     }
 
     function change() {
@@ -402,8 +405,7 @@ function displayOverdueStatus(targetDate) {
 
 function hideOverdueStatusAll() {
     let overdueNotes = document.getElementsByClassName("overdue-note")
-    for (let i=0; i<overdueNotes.length; i++) {  
-        console.log(overdueNotes[i].id)    
+    for (let i=0; i<overdueNotes.length; i++) {    
         overdueNotes[i].style.display = "none;"
         
 }
