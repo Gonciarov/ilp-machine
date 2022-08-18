@@ -451,6 +451,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 current[module] = date;
                 targets.current = current;
                 pool.query(`UPDATE ilp SET current = '${JSON.stringify(current)}' WHERE prison_number = $1`, [prisonNumber])
+                updateStudentsLog()
                 res.render('ilp', {
                     // students: students, 
                     prisonNumber: prisonNumber,
@@ -459,7 +460,8 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                     name: name
                 }) 
     })
-    } else if (req.body.requestFromSidebar == "delete") {
+    } 
+    else if (req.body.requestFromSidebar === "delete") {
         Promise.all([
             pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
                 ]).then(function([results]) {
@@ -479,11 +481,15 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                         name: name
                     }) 
         })
-    } else if (req.body.requestFromSidebar == "cancel-request") {
+    } else if (req.body.requestFromSidebar === "cancel-request") {
         Promise.all([
             pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
                 ]).then(function([results]) {
                     targets = results.rows[0];
+                    if (targets["requested"][module] === "add") {
+                        delete targets["current"][module]
+                        pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    }
                     delete targets["requested"][module]
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
                     res.redirect('/ilp')
@@ -516,13 +522,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                     targets["requested"][module] = "complete";
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
                 })
-                res.render('ilp', {
-                    // students: students, 
-                    prisonNumber: prisonNumber,
-                    // notSeen: user.rows[0].unseen,
-                    targets: targets,
-                    name: name
-                })
+                res.redirect('/ilp')
     } else {
     let data = JSON.parse(req.body.data)
     Promise.all([
@@ -839,6 +839,10 @@ function checkDialogAccess(req, res, next) {
         return next();
     }
     res.redirect("/dashboard");
+}
+
+function updateStudentsLog(reqType, module) {
+
 }
 
 app.listen(PORT, () => {
