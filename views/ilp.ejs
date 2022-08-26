@@ -32,10 +32,9 @@
             </h1>
             
         <div id="current-modules"> 
+            
             <p id="header-your-current">Your current modules: </p>
-            <% if (!targets) { %>
-                 <p>boobs</p> 
-                <% } else { %>
+            <% if (Object.keys(targets["current"]).length > 0) { %>
             <% for (t in targets["current"]) { %>
                 <div id="thumbnail<%= t %>" class="sidebar-single-thumbnail">
                 <h3><%= targets["full_title"][t] %></h3>
@@ -45,6 +44,9 @@
                 <% if (targets["requested"][t] === "delete") { %>
                     <p style="color: red;" class="req-remove">Requested to remove</p>
                <% } %>
+               <% if (targets["req_new_date"][t]) { %>
+                <p style="color: red;" class="req-remove">Requested to change date</p>
+           <% } %>
                <% if (targets["requested"][t] === "add") { %>
                 <p style="color: red;" class="req-remove">Requested to add</p>
            <% } %>
@@ -84,7 +86,10 @@
                 
                 </div>
                 <%}%>
-                <%}%>
+                <%} else {%>
+                    <i>None</i>
+                    <p></p>
+                    <% } %>
             <div style="justify-content: center;"><button id="add-module-button" onclick="addModule()">Add modules</button></div>
         </div>
    
@@ -101,7 +106,9 @@
             </div>
             
             <button id="modules-menu-cancel" onclick="hideModuleDescription()">Cancel</button>
-        
+
+            <% if (Object.keys(targets["completed"]).length > 0) { %>
+            
             <div id="completed-modules"> 
                 <p id="header-your-completed">Your completed modules: </p>
                 <% for (t in targets["completed"]) { %>
@@ -112,6 +119,8 @@
                     </div>
                     <%}%>
             </div>
+
+            <% } %>
         
             
             <div class="saved-status-container">
