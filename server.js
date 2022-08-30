@@ -408,9 +408,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
 
 
 app.post("/unseen-seen", (req, res) => {
-    let prisonNumber;
-    req.user.prison_number ?
-    prisonNumber = req.user.prisonNumber : prisonNumber = req.body.prisonNumber 
+    let prisonNumber = req.user.prison_number
     let dialogId = req.body.dialogId
     let anotherParticipant = dialogId.replace('-', '').replace(prisonNumber, '')
     Promise.all([
@@ -421,6 +419,22 @@ app.post("/unseen-seen", (req, res) => {
         } 
         selected.rows[0].unseen[anotherParticipant] = "seen";
         pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [selected.rows[0].unseen, prisonNumber])
+    })
+
+})
+
+app.post("/admin-notif", (req, res) => {
+    let prisonNumber = req.body.prisonNumber
+    console.log(prisonNumber)
+    Promise.all([
+    pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
+    ]).then(function([selected]) {
+        if (!selected.rows[0].unseen) {
+            selected.rows[0].unseen = {}
+        } 
+        selected.rows[0].unseen[process.env.ADMIN_PRISON_NUMBER] = "unseen";
+        pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [selected.rows[0].unseen, prisonNumber])
+        console.log(selected.rows[0].unseen)
     })
 
 })
@@ -440,6 +454,8 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
 
 
 app.post("/ilp", checkNotAuthenticated, (req, res) => {
+    console.log(req.body)
+
     if (req.user.prison_number !== process.env.ADMIN_PRISON_NUMBER) {
     let name = req.user.name;
     let {module, date} = req.body;
@@ -872,6 +888,7 @@ function addRequestToLog(name, prisonNumber, module, type, targetDate=null) {
     VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
 }
 
+
 function sendAutomatedRequestReply(prisonNumber, decline, module, type) {      
     
     let dialogId = [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
@@ -883,17 +900,8 @@ function sendAutomatedRequestReply(prisonNumber, decline, module, type) {
         text = `Automated message: your request to ${type} module ${module} has not been accepted. Please speak to your tutor about this.`
     pool.query(`INSERT INTO messages (id, author, message, datetime)
         VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
-
-        request.post({
-            headers: {'content-type' : 'application/json'},
-            url: 'http://' + process.env.DB_HOST + ':' + PORT + '/notification',
-            body: `{"dialogId":'${dialogId}', "prisonNumber": '${prisonNumber}'}`},
-            function(error, response, body) {
-                console.log(body)
-            })
-        
-//    (`dialogId=${dialogId}`);
         }
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

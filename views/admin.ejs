@@ -10,7 +10,17 @@
     <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 
-
+<script>
+    function sendNotification() {
+        let prisonNumber = window.event.currentTarget.name
+        console.log(prisonNumber)
+        let dialogId = 'admin'
+        let xml = new XMLHttpRequest();
+        xml.open("POST", "/admin-notif", true);
+        xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        xml.send(`prisonNumber=${prisonNumber}&dialogId=${dialogId}`);
+    }
+</script>
 
 <body>
    
@@ -82,7 +92,7 @@
                         <% if (requests[i].type === "update") { %>
                             <input type="hidden" name="target_date" value="<%= requests[i].target_date %>">
                         <% } %>
-                        <input class="right" type="submit" value="Approve">
+                        <input type="submit" name="<%= requests[i].prison_number %>" class="right" onclick="sendNotification()" value="Approve">
                     </div>
                 </form>
                 <form action="/ilp" method="POST">
@@ -94,7 +104,7 @@
                         <% if (requests[i].type === "update") { %>
                             <input type="hidden" name="targetDate" value="<%= requests[i].target_date %>">
                         <% } %>
-                        <input class="right" type="submit" value="Decline">
+                        <input type="submit" name="<%= requests[i].prison_number %>" class="right" onclick="sendNotification()" value="Decline">
                     </div>
                 </form>
                 </td>
