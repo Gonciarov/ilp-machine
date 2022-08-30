@@ -16,7 +16,6 @@
 
     function submitCompleted() {
         if (module !== null) {
-            console.log(module)
             let xml = new XMLHttpRequest();
             xml.open("POST", "/ilp", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
@@ -93,7 +92,7 @@
         hideYourCurrentHeader();
         hideYourCompletedHeader();
         displayCompletedTargetsTable();
-        displayCancelAndSaveButtons();
+        displayBackLink();
         checkIfSideBarFitsViewport();
         
     }
@@ -278,7 +277,10 @@
 
     function displayCompletedTargetsTable() {
         module = window.event.target.value;
-        document.getElementById(`completed${module}`).style.display="block"
+        document.getElementById(`completed-thumbnail-${module}`).style.display="block";
+        document.getElementById(`completed${module}`).style.display="block";
+        
+       
     }
 
     function changeTargetClasName() {
@@ -441,4 +443,8 @@ function hideRescheduleForm() {
     for (let i=0; i<forms.length; i++) {    
         forms[i].style.display = "none"
 }
+}
+
+function displayBackLink() {
+    document.getElementById("back-link").style.display = "block"
 }

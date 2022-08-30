@@ -13,7 +13,6 @@
 <script>
     function sendNotification() {
         let prisonNumber = window.event.currentTarget.name
-        console.log(prisonNumber)
         let dialogId = 'admin'
         let xml = new XMLHttpRequest();
         xml.open("POST", "/admin-notif", true);

@@ -139,7 +139,7 @@
                     <i id="ilp-not-saved" style="display:none">not saved</i>
                    
                 </div>
-               
+                <a id="back-link" style="display: none" href="/ilp">Back</a>
             </div>
        
         
@@ -166,16 +166,19 @@
         <%}%>
         </table>
         
-        <table id='completed<%= t %>' class="single-module">
-            <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
-        <tr>  
-            <% for (i in targets[t]) { %>      
-            <td class="true"><%= i %></td>
-            
-</tr>
-<%}%>
-
-</table>
+        <table id='completed-table' class="single-module">
+            <% for (t in targets) { %>
+                <table id='completed<%= t %>' class="single-module">
+                    <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
+                <tr>  
+                    <% for (i in targets[t]) { %>      
+                    <td id="<%= i %>" class="true"><%= i %></td>
+                    
+        </tr>
+        <%}%>
+        <%}%>
+        
+    </table>
       
     
           

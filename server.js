@@ -425,8 +425,7 @@ app.post("/unseen-seen", (req, res) => {
 
 app.post("/admin-notif", (req, res) => {
     let prisonNumber = req.body.prisonNumber
-    console.log(prisonNumber)
-    Promise.all([
+        Promise.all([
     pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
     ]).then(function([selected]) {
         if (!selected.rows[0].unseen) {
@@ -434,7 +433,6 @@ app.post("/admin-notif", (req, res) => {
         } 
         selected.rows[0].unseen[process.env.ADMIN_PRISON_NUMBER] = "unseen";
         pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [selected.rows[0].unseen, prisonNumber])
-        console.log(selected.rows[0].unseen)
     })
 
 })
@@ -895,9 +893,9 @@ function sendAutomatedRequestReply(prisonNumber, decline, module, type) {
     let dateTime = new Date().toLocaleString();
     let text;
     decline !== "true" ? 
-        text = `Automated message: your request to ${type} module ${module} has been accepted. Best of luck with it!`
+        text = `Automated message: your request to ${type} module ${module} has been approved. Best of luck with it!`
         :
-        text = `Automated message: your request to ${type} module ${module} has not been accepted. Please speak to your tutor about this.`
+        text = `Automated message: your request to ${type} module ${module} has not been approved. Please speak to your tutor about this.`
     pool.query(`INSERT INTO messages (id, author, message, datetime)
         VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
         }
