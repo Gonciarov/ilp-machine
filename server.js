@@ -75,6 +75,12 @@ app.post("/dashboard", async(req, res) => {
     let { text, id } = req.body;
     let date = new Date().toDateString();
     let prisonNumber = req.user.prison_number;
+    let name = req.user.name;
+    console.log(prisonNumber)
+    let currentDate = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+    let log = `User ${name} (${prisonNumber}) has created a new post on ${currentDate}`
+    pool.query(`INSERT INTO requests (prison_number, log, type, date, name) 
+    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, "post", currentDate, name])
     if (id) {
         pool.query(`UPDATE posts SET text = '${text}' WHERE id = ${id}`, (err) =>{
             if (err) {
@@ -84,6 +90,7 @@ app.post("/dashboard", async(req, res) => {
             }
         })
     } else {
+        
         pool.query(`INSERT INTO posts (text, prison_number, date)
         VALUES ($1, $2, $3)`, [text, prisonNumber, date], (err) =>{
             if (err) {
@@ -93,6 +100,7 @@ app.post("/dashboard", async(req, res) => {
             }
         });
     }
+    
 });
 
 app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {        
@@ -648,6 +656,7 @@ app.post("/delete/review", checkAdminRole, async(req, res) => {
 app.post("/delete/comment", checkAdminRole, async(req, res) => {
     let id = req.body.postId
     pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
+    pool.query(DELETE)
     })
 
 app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {

@@ -82,7 +82,7 @@
                    <p><%= requests[i].log %></p>
                    <br>
                    <p></p>
-                   
+                   <% if (requests[i].type !== "post") { %>
                    <form action="/ilp" method="POST">
                     <div>
                         <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
@@ -106,6 +106,14 @@
                         <input type="submit" name="<%= requests[i].prison_number %>" class="right" onclick="sendNotification()" value="Decline">
                     </div>
                 </form>
+                <% } else { %>
+                    <form action="/dashboard/<%= requests[i].prison_number %>" method="POST">
+                        <input type="hidden" name="name" value="<%= requests[i].name %>">
+                          <div>
+                              <input type="submit" value="View">
+                          </div>
+                      </form>
+                    <% } %>
                 </td>
             </tr>
       <%  } %>
