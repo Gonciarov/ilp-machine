@@ -24,9 +24,12 @@ td {
   width: 500px;
   margin-right: 10px;
   display: inline-block;
- 
-  
 }
+
+td[id^="td"], .message-highlight {
+  cursor: pointer;
+  margin-bottom: 2px;
+} 
 
 textarea,
 p {

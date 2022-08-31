@@ -27,6 +27,9 @@
     }
 
     function change() {
+        let targetsClicked = document.getElementById(`table${module}`).getElementsByClassName("true")
+        let targetsAll = document.getElementById(`table${module}`).lastChild.childElementCount - 1
+        
         displayStatusNotSaved();
         hideStatusSaved();
         changeTargetClasName();
@@ -253,7 +256,10 @@
     }
 
     function displaySubmitButton() {
-        document.getElementById("submit-completed").style.display = "inline-block"
+        let requested = document.getElementsByClassName(`requested-${module}`)
+       if (requested.length == 0) {
+            document.getElementById("submit-completed").style.display = "inline-block"
+       } 
     }
 
     function hideSubmitButton() {

@@ -452,8 +452,6 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
 
 
 app.post("/ilp", checkNotAuthenticated, (req, res) => {
-    console.log(req.body)
-
     if (req.user.prison_number !== process.env.ADMIN_PRISON_NUMBER) {
     let name = req.user.name;
     let {module, date} = req.body;
@@ -893,7 +891,7 @@ function sendAutomatedRequestReply(prisonNumber, decline, module, type) {
     let dateTime = new Date().toLocaleString();
     let text;
     decline !== "true" ? 
-        text = `Automated message: your request to ${type} module ${module} has been approved. Best of luck with it!`
+        text = `Automated message: your request to ${type} module ${module} has been approved.`
         :
         text = `Automated message: your request to ${type} module ${module} has not been approved. Please speak to your tutor about this.`
     pool.query(`INSERT INTO messages (id, author, message, datetime)
