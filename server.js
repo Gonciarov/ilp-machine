@@ -6,12 +6,9 @@ const session = require("express-session");
 const flash = require("express-flash");
 const passport = require("passport");
 const alert = require('alert');
-const request = require('request');
 const initializePassport = require("./passportConfig");
-const { jsPDF, AcroFormTextField } = require("jspdf");
-const genericSkills = require("./serverHelpers/genericSkills")
-
-
+const genericSkills = require("./serverHelpers/genericSkills");
+const reportGenerator = require("./serverHelpers/generateReport");
 initializePassport(passport);
 
 const PORT = process.env.PORT || 4000;
@@ -77,10 +74,10 @@ app.post("/dashboard", async(req, res) => {
     let prisonNumber = req.user.prison_number;
     let name = req.user.name;
     console.log(prisonNumber)
-    let currentDate = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+    let currentDateTime = createDateTime(); 
     let log = `User ${name} (${prisonNumber}) has created a new post on ${currentDate}`
     pool.query(`INSERT INTO requests (prison_number, log, type, date, name) 
-    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, "post", currentDate, name])
+    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, "post", currentDateTime, name])
     if (id) {
         pool.query(`UPDATE posts SET text = '${text}' WHERE id = ${id}`, (err) =>{
             if (err) {
@@ -337,9 +334,8 @@ app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
 app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let dialogId = req.params.dialogId;
     let text = req.body.message;
-    let y = req.body.y;
-    let participant2 = req.body.participant2;
-    let participant2pn = req.body.participant2pn;
+    let {participant2} = req.body;
+    let admin = req.body.admin || "notAdmin"
     let dateTime = new Date().toLocaleString();
     let msgs = [];
     let name = req.user.name;
@@ -385,9 +381,8 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                             students: students,
                             prisonNumber: prisonNumber,
                             participant2pn: recipient,
-                            notSeen: notSeen,
-                            y: y
-                       
+                            notSeen: notSeen, 
+                            admin: admin               
                         }) 
                     }})
                 }})
@@ -408,7 +403,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                 notSeen: user.rows[0].unseen,
                 prisonNumber: prisonNumber,
                 participant2pn: recipient,
-                y: y
+                admin: admin
             })  
         })  
         }              
@@ -474,7 +469,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 targets = results.rows[0];
                 req_new_date[module] = date;
                 targets.req_new_date = req_new_date;
-                targets.requested = requested
+                targets.requested = requested;
                 pool.query(`UPDATE ilp SET req_new_date = '${JSON.stringify(req_new_date)}' WHERE prison_number = $1`, [prisonNumber])
                 res.render('ilp', {
                     // students: students, 
@@ -534,9 +529,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
                     addRequestToLog(name, prisonNumber, module, 'add', date)
                     res.render('ilp', {
-                    // students: students, 
                     prisonNumber: prisonNumber,
-                    // notSeen: user.rows[0].unseen,
                     targets: targets,
                     name: name
                 }) 
@@ -563,12 +556,9 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 targets.rows[0][module][i] = data[i]     
             }
         }
-        // students = sortPosts(students.rows);
         pool.query(`UPDATE ilp SET ${module} = '${JSON.stringify(targets.rows[0][module])}' WHERE prison_number = $1`, [prisonNumber])    
         res.render('ilp', {
-            // students: students, 
             prisonNumber: prisonNumber,
-            // notSeen: user.rows[0].unseen,
             targets: targets.rows[0],
             name: name
         })
@@ -601,8 +591,6 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                     pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
                     pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
                     pool.query(`UPDATE ilp SET completed = '${JSON.stringify(targets["completed"])}' WHERE prison_number = $1`, [prisonNumber]);              
-                    } else {
-                        
                     }
                 } 
                 else if (req.body.requestFromSidebar === "update") {
@@ -656,7 +644,6 @@ app.post("/delete/review", checkAdminRole, async(req, res) => {
 app.post("/delete/comment", checkAdminRole, async(req, res) => {
     let id = req.body.postId
     pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
-    pool.query(DELETE)
     })
 
 app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
@@ -666,84 +653,16 @@ app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
     pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
     pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
 ]).then(function([posts, reviews]) {
-    posts = sortPosts(posts.rows)
-    reviews = sortPosts(reviews.rows)
-    let dateStarted = posts[0].date
-    let doc = new jsPDF('a4');
-    doc.setFontSize(30);
-    doc.text(10, 20, `${name}'s general info: \r\n`);
-    doc.setFontSize(10);
-    doc.text(10, 40, `name: ${name}\nprison number: ${prisonNumber}`);
-    doc.text(10, 60, `Started Code4000 course on ${dateStarted}\r\n
-                    ${curriculumCompleted} of curriculum completed\r\n
-                    ${softskillsCompleted} of soft skilles developed\r\n
-                    ${postsTotal} posts in total\r\n
-                    ${reviewsTotal} reviews reviewed by instructors\r\n`);
-    doc.addPage('a4', 'p');
-    doc.setFontSize(30);
-    doc.text(10, 20, `${name}'s reflections: `);
-    doc.setFontSize(10);
-    
-   let postsArray = [];
-    for (let i = 0; i < posts.length; i++) {
-        postsArray.push(' ')
-        postsArray.push(`Date: ${posts[i].date}`)
-        postsArray.push(' ')
-        postsArray.push(`text: `)
-        let postsLines = doc.splitTextToSize(posts[i].text, 150)
-        for (let n = 0; n < postsLines.length; n++ ) {
-            postsArray.push(postsLines[n])
-        }
-       postsArray.push(' ')
-        postsArray.push(`commented by instructor: `)
-        let commentLines = doc.splitTextToSize(posts[i].comment, 150)
-        for (let n = 0; n < commentLines.length; n++ ) {
-            postsArray.push(commentLines[n])
-        }
-        postsArray.push(' ')
-        postsArray.push('-'.repeat(140))
-    }
-    let y = 20;
-    let pageHeight = doc.internal.pageSize.height;
-    for ( let i = 0; i<postsArray.length; i++) {
-        y += 5;
-        if (y >= pageHeight - 20) {
-            doc.addPage('a4', 'p')
-            y = 20;
-        }
-        doc.text(10, y, postsArray[i])
-    } 
-    doc.addPage('a4', 'p')
-    doc.setFontSize(30);
-    doc.text(10, 20, `${name}'s project reviews: `);
-    doc.setFontSize(10);
-    let reviewsArray = [];
-    for (let i = 0; i < reviews.length; i++) {
-        reviewsArray.push(' ')
-        reviewsArray.push(`Date: ${reviews[i].date}`)
-        reviewsArray.push(' ')
-        reviewsArray.push(`Project title: `)
-        reviewsArray.push(reviews[i].title)
-        reviewsArray.push(' ')
-        let reviewsLines = doc.splitTextToSize(reviews[i].review, 150)
-        for (let n = 0; n < reviewsLines.length; n++ ) {
-            reviewsArray.push(reviewsLines[n])
-        }
-        reviewsArray.push(' ')
-        reviewsArray.push('-'.repeat(140))
-    }
-    let yy = 20;
-    
-    for ( let i = 0; i<reviewsArray.length; i++) {
-        yy += 5;
-        if (yy >= pageHeight - 20) {
-            doc.addPage('a4', 'p')
-            yy = 20;
-        }
-        doc.text(10, yy, reviewsArray[i])
-    } 
-        
-    doc.save(`${name + '-' + prisonNumber}.pdf`);
+    reportGenerator.generateReport(
+        posts, 
+        reviews, 
+        name, 
+        prisonNumber, 
+        curriculumCompleted, 
+        softskillsCompleted, 
+        postsTotal, 
+        reviewsTotal
+        );
     res.redirect(`/dashboard/${prisonNumber}`)
     alert("Report saved")
     })
@@ -877,7 +796,7 @@ function checkDialogAccess(req, res, next) {
 }
 
 function addRequestToLog(name, prisonNumber, module, type, targetDate=null) {
-    let currentDate = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+    let currentDate = createDateTime();
     let log;
     targetDate ? 
 
@@ -895,17 +814,25 @@ function addRequestToLog(name, prisonNumber, module, type, targetDate=null) {
 
 
 function sendAutomatedRequestReply(prisonNumber, decline, module, type) {      
-    
     let dialogId = [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
     let dateTime = new Date().toLocaleString();
-    let text;
+    let text = generateAutomatedReply(decline, type, module);
+    pool.query(`INSERT INTO messages (id, author, message, datetime)
+        VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
+        }
+
+function generateAutomatedReply(decline, type, module) {
     decline !== "true" ? 
         text = `Automated message: your request to ${type} module ${module} has been approved.`
         :
         text = `Automated message: your request to ${type} module ${module} has not been approved. Please speak to your tutor about this.`
-    pool.query(`INSERT INTO messages (id, author, message, datetime)
-        VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
-        }
+    return text
+    }
+
+function createDateTime() {
+   return new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+}
+
 
 
 app.listen(PORT, () => {
