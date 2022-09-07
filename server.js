@@ -33,7 +33,23 @@ app.get("/login", checkAuthenticated, (req, res) => {
     res.render("login");
 });
 
-app.get("/dashboard", checkNotAuthenticated, (req, res) => {
+app.get('/terms', (req, res) => {
+    let prisonNumber = req.user.prison_number;
+    res.render('terms', {prisonNumber: prisonNumber});
+})
+
+app.post('/terms', (req, res) => {
+    let {prisonNumber, terms} = req.body;
+    pool.query(`UPDATE users SET terms = $1 WHERE prison_number = $2`, [terms, prisonNumber])
+})
+
+app.get('/rules', (req, res) => {
+    let {name, prisonNumber} = req.user;
+    res.render('rules', {prisonNumber: prisonNumber, name: name});
+})
+
+app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res) => {
+    let prisonNumber = req.user.prison_number;
         Promise.all([
             pool.query(`SELECT * FROM users WHERE prison_number = $1`, [req.user.prison_number]),
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [req.user.prison_number]),
@@ -49,7 +65,8 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                         posts: posts.rows, 
                         requests: requests, 
                         students: students.rows, 
-                        prisonNumber: req.user.prison_number
+                        prisonNumber: req.user.prison_number,
+                        signed: "signed"
                     });
                 }})
             } else {
@@ -59,7 +76,8 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
                     prisonNumber: user.rows[0].prison_number, 
                     posts: posts,
                     students: sortPosts(students.rows),
-                    notSeen: user.rows[0].unseen
+                    notSeen: user.rows[0].unseen,
+                    signed: user.rows[0].signed
                     
                      
              });
@@ -68,10 +86,11 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
     });
 
 
-app.post("/dashboard", async(req, res) => {
+app.post("/dashboard",  checkTermsAndConditions, async(req, res) => {
+    let prisonNumber = req.user.prison_number;
+   
     let { text, id } = req.body;
     let date = new Date().toDateString();
-    let prisonNumber = req.user.prison_number;
     let name = req.user.name;
     console.log(prisonNumber)
     let currentDateTime = createDateTime(); 
@@ -832,6 +851,24 @@ function generateAutomatedReply(decline, type, module) {
 function createDateTime() {
    return new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 }
+
+function checkTermsAndConditions(req, res, next) {
+    let prisonNumber = req.user.prison_number;
+    pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber], (err, user) => {
+       
+        if (err) {
+            console.log(err)
+        } else {
+            if (user.rows[0].terms === "signed") {
+                next()
+            } else {
+                res.render('terms', {prisonNumber: prisonNumber})
+            } 
+        }
+    }) 
+}
+
+
 
 
 

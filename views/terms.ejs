@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
+</head>
+
+<script>
+    function agreeAndContinue() {
+        let prisonNumber = document.getElementById("prisonNumber").value
+        let count = 0;
+        let ticks = document.getElementsByClassName("tickbox")
+        
+        for (let i = 0; i < ticks.length; i++) {
+            
+            if (ticks[i].checked) {
+                count++
+            }
+        }
+        if (count < ticks.length) {
+            alert("tick all boxes")
+        } else {
+            updateSigned(prisonNumber);
+            location.replace('/dashboard')
+        }
+    }
+    
+
+    function updateSigned(prisonNumber) {
+            let xml = new XMLHttpRequest();
+            xml.open("POST", "/terms", true);
+            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            xml.send(`prisonNumber=${prisonNumber}&terms=signed`);
+    }
+</script>
+
+<body>
+    
+    <div id="terms-and-conditions">
+        <div id="rules-header">
+        <input type="hidden" id="prisonNumber" value="<%= prisonNumber %>">
+        <h1>Welcome to Code4000!</h1>
+        <h2>You are two steps from becoming a member.</h2>
+        <br/>
+        <h3>Please read and agree to our Terms and Conditions:</h3>
+        </div>
+        <br/>
+        <h3>Rule 1</h3>
+        <div class="rule-container">
+        <p class="rule-text">University of Virginia Law School professor Thomas Nachbar explains why excluding Russia from the internet is not possible because of the structure of ICANN, the Internet Corporation for Assigned Names and Numbers. He contrasts ICANN with SWIFT, the international payments network, and its ability to ban Russian banks from the system, and suggests the world’s approach to internet regulation needs to change.</p>
+        <input type="checkbox" class="tickbox">
+        </div>
+        <h3>Rule 2</h3>
+        <div class="rule-container">
+        <p class="rule-text">University of Virginia Law School professor Thomas Nachbar explains why excluding Russia from the internet is not possible because of the structure of ICANN, the Internet Corporation for Assigned Names and Numbers. He contrasts ICANN with SWIFT, the international payments network, and its ability to ban Russian banks from the system, and suggests the world’s approach to internet regulation needs to change.</p>
+        <input type="checkbox" class="tickbox">
+        </div>
+        <h3>Rule 3</h3>
+        <div class="rule-container">
+        <p class="rule-text">University of Virginia Law School professor Thomas Nachbar explains why excluding Russia from the internet is not possible because of the structure of ICANN, the Internet Corporation for Assigned Names and Numbers. He contrasts ICANN with SWIFT, the international payments network, and its ability to ban Russian banks from the system, and suggests the world’s approach to internet regulation needs to change.</p>
+        <input type="checkbox" class="tickbox">
+        </div>
+        <h3>Rule 4</h3>
+        <div class="rule-container">
+        <p class="rule-text">University of Virginia Law School professor Thomas Nachbar explains why excluding Russia from the internet is not possible because of the structure of ICANN, the Internet Corporation for Assigned Names and Numbers. He contrasts ICANN with SWIFT, the international payments network, and its ability to ban Russian banks from the system, and suggests the world’s approach to internet regulation needs to change.</p>
+        <input type="checkbox" class="tickbox">
+        <div id="rules-bottom">
+        <button onclick="agreeAndContinue()">Agree and continue</button>
+        </div>
+        </div>
+    </div>
+
+    
+</body>
+
+</html>
