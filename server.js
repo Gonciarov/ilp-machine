@@ -51,7 +51,7 @@ app.get('/rules', (req, res) => {
 app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res) => {
     let prisonNumber = req.user.prison_number;
         Promise.all([
-            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [req.user.prison_number]),
+            getUser(prisonNumber),
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [req.user.prison_number]),
             pool.query(`SELECT * FROM users`)
         ]).then(function([user, posts, students]) {
@@ -123,7 +123,7 @@ app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
         let prisonNumber = req.params.prisonNumber;
         Promise.all([
             pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
-            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+            getUser(prisonNumber),
             pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
             pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
@@ -218,7 +218,7 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     let prisonNumber = req.user.prison_number
     let name = req.user.name
     Promise.all([
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        getUser(prisonNumber),
         pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`)
             ]).then(function([user, reviews, students]) {
@@ -250,7 +250,7 @@ app.post("/view/review", checkAdminRole, (req, res) => {
 app.get("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     Promise.all([
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        getUser(prisonNumber),
         pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`)
     ]).then(function([user, results, students]) {
@@ -274,7 +274,7 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
     Promise.all([
         pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         for (i in data) {
             if (i) {  
@@ -298,7 +298,7 @@ app.get("/softskills", checkNotAuthenticated, (req, res) => {
     Promise.all([
         pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         students = sortPosts(students.rows);
                 res.render('softskills', {
@@ -318,7 +318,7 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
     Promise.all([
         pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
+        getUser(prisonNumber),
     ]).then(function([results, students, user]) {
         let softskills = results.rows[0].softskills
         students = sortPosts(students.rows)
@@ -365,7 +365,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
         Promise.all([
             pool.query(`INSERT INTO messages (id, author, message, datetime)
         VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime]),
-            pool.query(`SELECT * FROM users WHERE prison_number = $1`, [recipient]),
+        getUser(recipient),
         ]).then(function([inserted, selected]) {
                 if (!selected.rows[0].unseen) {
                     selected.rows[0].unseen = {}
@@ -408,7 +408,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
             })
         } else {
         Promise.all([
-            pool.query(`SELECT * FROM users WHERE prison_number = '${prisonNumber}'`),
+            getUser(prisonNumber),
             pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`),
             pool.query('SELECT * FROM users;')
         ]).then(function([user, results, users]) {
@@ -433,9 +433,7 @@ app.post("/unseen-seen", (req, res) => {
     let prisonNumber = req.user.prison_number
     let dialogId = req.body.dialogId
     let anotherParticipant = dialogId.replace('-', '').replace(prisonNumber, '')
-    Promise.all([
-    pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
-    ]).then(function([selected]) {
+    getUser(prisonNumber).then(function(selected) {
         if (!selected.rows[0].unseen) {
             selected.rows[0].unseen = {}
         } 
@@ -447,9 +445,7 @@ app.post("/unseen-seen", (req, res) => {
 
 app.post("/admin-notif", (req, res) => {
     let prisonNumber = req.body.prisonNumber
-        Promise.all([
-    pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber])
-    ]).then(function([selected]) {
+    getUser(prisonNumber).then(function(selected) {
         if (!selected.rows[0].unseen) {
             selected.rows[0].unseen = {}
         } 
@@ -461,7 +457,7 @@ app.post("/admin-notif", (req, res) => {
      
 app.get("/ilp", checkNotAuthenticated, (req, res) => {
     Promise.all([
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [req.user.prison_number]),
+        getUser(req.user.prison_number),
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [req.user.prison_number]),
         
     ]).then(function([user, targets]) {
@@ -568,7 +564,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
         pool.query(`SELECT * FROM users`),
-        pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]),
+        getUser(prisonNumber)
     ]).then(function([targets, students, user]) {  
         for (i in data) {
             if (i) {
@@ -732,39 +728,32 @@ app.post("/register", async(req, res) => {
     } else {
 
         let hashedPassword = await bcrypt.hash(password, 10);
-
-        pool.query(
-            `SELECT * FROM users WHERE prison_number = $1`, [prisonNumber], (err, results) => {
-                if (err) {
-                    console.log(err);
-                }
-
-                if (results.rows.length > 0) {
-                    errors.push({ message: "User already registered" });
-                    res.render("register", { errors });
-                } else {
-                    genericSkills.seed(prisonNumber)
-                    ilp.seed(prisonNumber)
-                    let date = new Date().toDateString();
-                    pool.query(`INSERT INTO posts (text, prison_number, date, comment)
-                    VALUES ($1, $2, $3, $4)`, ['INITIAL POST', prisonNumber, date, 'NOT TO BE COMMENTED']);
-                    pool.query(
-                        `INSERT INTO users (name, prison_number, password, unseen)
-                        VALUES ($1, $2, $3, $4)
-                        RETURNING id, password`, [name, prisonNumber, hashedPassword, {}],
-                        (err, results) => {
-                            if (err) {
-                                throw err;
-                            }
-
-                            req.flash("success_msg", "You are now registered please log in")
-                            genericSkills.seed(prisonNumber)
-                            res.redirect('/login')
+        getUser(prisonNumber).then(function(results) {
+            if (results.rows.length > 0) {
+                errors.push({ message: "User already registered" });
+                res.render("register", { errors });
+            } else {
+                genericSkills.seed(prisonNumber)
+                ilp.seed(prisonNumber)
+                let date = new Date().toDateString();
+                pool.query(`INSERT INTO posts (text, prison_number, date, comment)
+                VALUES ($1, $2, $3, $4)`, ['INITIAL POST', prisonNumber, date, 'NOT TO BE COMMENTED']);
+                pool.query(
+                    `INSERT INTO users (name, prison_number, password, unseen)
+                    VALUES ($1, $2, $3, $4)
+                    RETURNING id, password`, [name, prisonNumber, hashedPassword, {}],
+                    (err, results) => {
+                        if (err) {
+                            throw err;
                         }
-                    )
-                }
+
+                        req.flash("success_msg", "You are now registered please log in")
+                        genericSkills.seed(prisonNumber)
+                        res.redirect('/login')
+                    }
+                )
             }
-        )
+        })
     }
 });
 
@@ -852,23 +841,26 @@ function createDateTime() {
    return new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 }
 
+
+
+
 function checkTermsAndConditions(req, res, next) {
     let prisonNumber = req.user.prison_number;
-    pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber], (err, user) => {
-       
-        if (err) {
-            console.log(err)
-        } else {
-            if (user.rows[0].terms === "signed") {
-                next()
-            } else {
-                res.render('terms', {prisonNumber: prisonNumber})
-            } 
-        }
-    }) 
+   getUser(prisonNumber).then(function(result) {
+       if (result.rows[0].terms === "signed") {
+           next();
+       } else {
+           res.redirect('/terms')
+       }
+   })
+  
+     }
+
+function getUser(prisonNumber) {
+    return new Promise(function(res, rej) {
+        res(pool.query(`SELECT * FROM users WHERE prison_number = $1`, [prisonNumber]))
+    })
 }
-
-
 
 
 
