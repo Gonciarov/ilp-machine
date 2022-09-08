@@ -52,8 +52,8 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
     let prisonNumber = req.user.prison_number;
         Promise.all([
             getUser(prisonNumber),
-            pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [req.user.prison_number]),
-            pool.query(`SELECT * FROM users`)
+            getData(prisonNumber, 'posts'),
+            getAllUsers()
         ]).then(function([user, posts, students]) {
             if (req.user.prison_number == process.env.ADMIN_PRISON_NUMBER) {
                 pool.query(`SELECT * FROM requests`, (err, results) => {
@@ -94,7 +94,7 @@ app.post("/dashboard",  checkTermsAndConditions, async(req, res) => {
     let name = req.user.name;
     console.log(prisonNumber)
     let currentDateTime = createDateTime(); 
-    let log = `User ${name} (${prisonNumber}) has created a new post on ${currentDate}`
+    let log = `User ${name} (${prisonNumber}) has created a new post on ${date}`
     pool.query(`INSERT INTO requests (prison_number, log, type, date, name) 
     VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, "post", currentDateTime, name])
     if (id) {
@@ -122,11 +122,11 @@ app.post("/dashboard",  checkTermsAndConditions, async(req, res) => {
 app.get("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {        
         let prisonNumber = req.params.prisonNumber;
         Promise.all([
-            pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
+            getData(prisonNumber, 'posts'),
             getUser(prisonNumber),
-            pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
-            pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
-            pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
+            getData(prisonNumber, 'reviews'),
+            getData(prisonNumber, 'techskills'),
+            getData(prisonNumber, 'softskills'), 
         ]).then(function([posts, user, reviews, techSkills, softskills]) {
             let name = user.rows[0].name;
             let htmlcss = techSkills.rows[0].htmlcss;
@@ -153,10 +153,10 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
     let { name, text, comment, review, title, postId } = req.body
     let date = req.body.date || new Date().toDateString();
     Promise.all([
-        pool.query(`SELECT * FROM posts WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber])
+        getData(prisonNumber, 'posts'),
+        getData(prisonNumber, 'reviews'),
+        getData(prisonNumber, 'techskills'),
+        getData(prisonNumber, 'softskills'), 
     ]).then(function([posts, reviews, techSkills, softskills]) {
         let htmlcss = techSkills.rows[0].htmlcss;
         let jsbasics = techSkills.rows[0].jsbasics;
@@ -185,9 +185,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
             pool.query(`INSERT INTO reviews (prison_number, review, title, date)
             VALUES ($1, $2, $3, $4)`, [prisonNumber, review, title, date]), 
             ]).then(function() {
-                Promise.all([
-                pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber])
-            ]).then(function([reviews]) {
+                getData(prisonNumber, 'reviews').then(function(reviews) {
                 reviews = sortPosts(reviews.rows)
                 res.render("viewPostsAndReviews", { 
                     name: name, 
@@ -201,9 +199,7 @@ app.post("/dashboard/:prisonNumber", checkAdminRole, async(req, res) => {
             
         })
         } else {
-        Promise.all([
-            pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber])
-        ]).then(function([reviews]) {
+            getData(prisonNumber, 'reviews').then(function(reviews) {
             reviews = sortPosts(reviews.rows)     
             res.render("viewPostsAndReviews", { name: name, prisonNumber: prisonNumber, posts: posts, reviews: reviews, techSkills: [htmlcss, jsbasics, reactjs],
                 softskills: softskills  })
@@ -219,8 +215,8 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     let name = req.user.name
     Promise.all([
         getUser(prisonNumber),
-        pool.query(`SELECT * FROM reviews WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM users`)
+        getData(prisonNumber, 'reviews'),
+        getAllUsers()
             ]).then(function([user, reviews, students]) {
                         reviews = reviews.rows
                         students = sortPosts(students.rows)
@@ -251,8 +247,8 @@ app.get("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     Promise.all([
         getUser(prisonNumber),
-        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM users`)
+        getData(prisonNumber, 'techskills'),
+        getAllUsers()
     ]).then(function([user, results, students]) {
                students = sortPosts(students.rows);
                 res.render('techskills', {
@@ -272,8 +268,8 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
     let data = JSON.parse(req.body.data)
     let {column} = req.body
     Promise.all([
-        pool.query(`SELECT * FROM techskills WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM users`),
+        getData(prisonNumber, 'techskills'),
+        getAllUsers(),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         for (i in data) {
@@ -296,8 +292,8 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
 app.get("/softskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     Promise.all([
-        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM users`),
+        getData(prisonNumber, 'softskills'),
+        getAllUsers(),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         students = sortPosts(students.rows);
@@ -316,8 +312,8 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     let data = JSON.parse(req.body.data)
     Promise.all([
-        pool.query(`SELECT * FROM softskills WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM users`),
+        getData(prisonNumber, 'softskills'),
+        getAllUsers(),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {
         let softskills = results.rows[0].softskills
@@ -377,8 +373,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                         console.log(err)
                     } else {
                         msgs = results.rows;
-                    
-                    pool.query('SELECT * FROM users', (err, users) => {
+                    getAllUsers().then(function(users){
                         if (err) {
                             console.log(err)
                         } else {
@@ -392,7 +387,6 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                             }
                             }
                         }
-
                         res.render("messages", {
                             dialogId: dialogId, 
                             messages: msgs, 
@@ -403,14 +397,16 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                             notSeen: notSeen, 
                             admin: admin               
                         }) 
-                    }})
+                    }
+                    })
+          
                 }})
             })
         } else {
         Promise.all([
             getUser(prisonNumber),
             pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`),
-            pool.query('SELECT * FROM users;')
+            getAllUsers()
         ]).then(function([user, results, users]) {
             msgs = results.rows;
             let students = sortPosts(users.rows);
@@ -563,7 +559,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     let data = JSON.parse(req.body.data)
     Promise.all([
         pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
-        pool.query(`SELECT * FROM users`),
+        getAllUsers(),
         getUser(prisonNumber)
     ]).then(function([targets, students, user]) {  
         for (i in data) {
@@ -757,8 +753,6 @@ app.post("/register", async(req, res) => {
     }
 });
 
-
-
 app.post('/login', passport.authenticate('local', {
     successRedirect: "/dashboard",
     failureRedirect: "/login",
@@ -820,7 +814,6 @@ function addRequestToLog(name, prisonNumber, module, type, targetDate=null) {
     VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
 }
 
-
 function sendAutomatedRequestReply(prisonNumber, decline, module, type) {      
     let dialogId = [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
     let dateTime = new Date().toLocaleString();
@@ -841,9 +834,6 @@ function createDateTime() {
    return new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 }
 
-
-
-
 function checkTermsAndConditions(req, res, next) {
     let prisonNumber = req.user.prison_number;
    getUser(prisonNumber).then(function(result) {
@@ -862,7 +852,17 @@ function getUser(prisonNumber) {
     })
 }
 
+function getAllUsers() {
+    return new Promise(function(res, rej) {
+        res(pool.query(`SELECT * FROM users`))
+    })
+}
 
+function getData(prisonNumber, table) {
+    return new Promise(function(res, rej) {
+        res(pool.query(`SELECT * FROM ${table} WHERE prison_number = '${prisonNumber}'`))
+    })
+}
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
