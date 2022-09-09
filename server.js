@@ -92,7 +92,6 @@ app.post("/dashboard",  checkTermsAndConditions, async(req, res) => {
     let { text, id } = req.body;
     let date = new Date().toDateString();
     let name = req.user.name;
-    console.log(prisonNumber)
     let currentDateTime = createDateTime(); 
     let log = `User ${name} (${prisonNumber}) has created a new post on ${date}`
     pool.query(`INSERT INTO requests (prison_number, log, type, date, name) 

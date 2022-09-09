@@ -1,6 +1,7 @@
     let targetsUpdated = {};
     let module;
     let saved = false;
+    let requested = [];
     
   
 
@@ -27,8 +28,8 @@
     }
 
     function change() {
-        let targetsClicked = document.getElementById(`table${module}`).getElementsByClassName("true")
-        let targetsAll = document.getElementById(`table${module}`).lastChild.childElementCount - 1
+        // let targetsClicked = document.getElementById(`table${module}`).getElementsByClassName("true")
+        // let targetsAll = document.getElementById(`table${module}`).lastChild.childElementCount - 1
         
         displayStatusNotSaved();
         hideStatusSaved();
@@ -256,8 +257,10 @@
     }
 
     function displaySubmitButton() {
+        let allowed = checkIfModuleRequested();
+        console.log(allowed)
         let requested = document.getElementsByClassName(`requested-${module}`)
-       if (requested.length == 0) {
+       if (allowed && requested.length == 0) {
             document.getElementById("submit-completed").style.display = "inline-block"
        } 
     }
@@ -453,4 +456,12 @@ function hideRescheduleForm() {
 
 function displayBackLink() {
     document.getElementById("back-link").style.display = "block"
+}
+
+function checkIfModuleRequested() {
+    let a;
+    let req = document.getElementsByClassName(`requested-${module}`)
+    console.log(req.length)
+    req.length > 0 ? a = false : a = true
+    return a
 }

@@ -153,13 +153,14 @@
     
     <div id="ilp-targets" class="grid-ilp-col-1">
         <i id="ilp-select-module"><--- Select a module from sidebar</i>
+        
             <% for (t in targets) { %>
                 <% if (t != "prison_number") { %>
                 <table id='table<%= t %>' class="single-module">
                     <td><div class="col-1-header"><h2><%= targets["full_title"][t] %></h2></div></td>
                 <tr>  
                     <% for (i in targets[t]) { %>      
-                    <td id="<%= i %>" class="<%= targets[t][i] %>" onclick="change()"><%= i %></td>
+                    <td id="<%= i %>" class="<%= targets[t][i] %>" name='boobs' onclick="change()"><%= i %></td>
                     
         </tr>
         <%}%>
@@ -216,6 +217,7 @@
 <% for (t in targets["requested"]) { %>
     <input type="hidden" class="requested-<%= t %>">
 <% } %>
+
 
 </body>
 
