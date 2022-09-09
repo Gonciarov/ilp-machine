@@ -74,6 +74,7 @@
 </div>
 <div class="grid-student-col-2">
     <h2>Last requests:</h2>
+    <% if (requests.length > 0) { %>
     <table>
         <% for (let i = requests.length - 1; i >= 0; i--) { %>
             <tr>
@@ -119,6 +120,9 @@
             </tr>
       <%  } %>
     </table>
+    <%  } else { %>
+        <i>No new requests</i>
+        <%  } %>
 </div>
 </div>
   

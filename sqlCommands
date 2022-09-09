@@ -348,8 +348,14 @@ UPDATE ilp SET recommended_time = '{"m1_1":"2 weeks",
 CREATE TABLE requests (
 id serial PRIMARY KEY,
 prison_number VARCHAR (10) NOT NULL,
-date VARCHAR (20),
+date VARCHAR (300),
+type VARCHAR (300),
+name VARCHAR (300),
 log VARCHAR (300));
+
+ALTER TABLE ilp ADD COLUMN req_new_date JSON;
+
+UPDATE ilp SET req_new_date = '{}' WHERE prison_number = 'a@a';
 
 
 
