@@ -678,6 +678,10 @@ app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
     })
 })
 
+app.delete("/delete/request", (req,res) => {
+    let id = req.body.id
+    pool.query(`DELETE FROM requests WHERE id = ${id}`)
+})
 
 app.post("/create/user", (req, res) => {
     let { name, postId, comment, prisonNumber, date, text } = req.body

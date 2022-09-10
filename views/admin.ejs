@@ -19,6 +19,14 @@
         xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         xml.send(`prisonNumber=${prisonNumber}&dialogId=${dialogId}`);
     }
+
+    function removeFromRequests() {
+        let id = window.event.currentTarget.name
+        let xml = new XMLHttpRequest();
+        xml.open("DELETE", "/delete/request", true);
+        xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        xml.send(`id=${id}`);
+    }
 </script>
 
 <body>
@@ -112,7 +120,7 @@
                     <form action="/dashboard/<%= requests[i].prison_number %>" method="POST">
                         <input type="hidden" name="name" value="<%= requests[i].name %>">
                           <div>
-                              <input type="submit" value="View">
+                              <input type="submit" name="<%= requests[i].id %>" onclick="removeFromRequests()" value="View">
                           </div>
                       </form>
                     <% } %>
