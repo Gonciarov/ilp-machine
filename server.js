@@ -448,80 +448,93 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number;
     if (req.body.requestFromSidebar === "update") {
         addRequestToLog(name, prisonNumber, module, "update", date);
-        getData(prisonNumber, 'ilp').then(function(results) {
+        Promise.all([
+        pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+            ]).then(function([results]) {
                 let req_new_date = results.rows[0].req_new_date;
                 let requested = results.rows[0].requested
                 targets = results.rows[0];
                 req_new_date[module] = date;
                 targets.req_new_date = req_new_date;
                 targets.requested = requested;
-                updateIlp(prisonNumber, 'req_new_date', JSON.stringify(req_new_date));
+                pool.query(`UPDATE ilp SET req_new_date = '${JSON.stringify(req_new_date)}' WHERE prison_number = $1`, [prisonNumber])
                 res.render('ilp', {
+                    // students: students, 
                     prisonNumber: prisonNumber,
+                    // notSeen: user.rows[0].unseen,
                     targets: targets,
                     name: name
                 }) 
     })
     } 
     else if (req.body.requestFromSidebar === "delete") {
-        
-        getData(prisonNumber, 'ilp').then(function(results) {
-            targets = results.rows[0];
-            if (targets["requested"]) {
-                targets["requested"][module] = "delete"
-            } else {
-                targets["requested"] = {};
-                targets["requested"][module] = "delete"
-            }
-            addRequestToLog(name, prisonNumber, module, 'delete')
-            updateIlp(prisonNumber, 'requested', JSON.stringify(targets["requested"]));
-            res.render('ilp', {
-                prisonNumber: prisonNumber,
-                targets: targets,
-                name: name
-            }) 
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+                ]).then(function([results]) {
+                    targets = results.rows[0];
+                    if (targets["requested"]) {
+                        targets["requested"][module] = "delete"
+                    } else {
+                        targets["requested"] = {};
+                        targets["requested"][module] = "delete"
+                    }
+                    addRequestToLog(name, prisonNumber, module, 'delete')
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    res.render('ilp', {
+                        // students: students, 
+                        prisonNumber: prisonNumber,
+                        // notSeen: user.rows[0].unseen,
+                        targets: targets,
+                        name: name
+                    }) 
         })
     } else if (req.body.requestFromSidebar === "cancel-request") {
-        deleteData(prisonNumber, 'requests', module)
-        getData(prisonNumber, 'ilp').then(function(results) {
-            targets = results.rows[0];
-            if (targets["requested"][module] === "add") {
-                delete targets["current"][module]
-                updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));
-            }
-            delete targets["requested"][module]
-            updateIlp(prisonNumber, 'requested', JSON.stringify(targets["requested"]));
-            res.redirect('/ilp')
-        })
+        pool.query(`DELETE FROM requests WHERE prison_number = $1 AND module = $2`, [prisonNumber, module]);
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+                ]).then(function([results]) {
+                    targets = results.rows[0];
+                    if (targets["requested"][module] === "add") {
+                        delete targets["current"][module]
+                        pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    }
+                    delete targets["requested"][module]
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    res.redirect('/ilp')
+                })
     } else if (req.body.requestFromSidebar === "add") {
-        getData(prisonNumber, 'ilp').then(function(results) {
-            targets = results.rows[0];
-            targets["requested"][module] = "add"
-            let current = results.rows[0].current;
-            let date = req.body.date;
-            current[module] = date;
-            targets.current = current;
-            updateIlp(prisonNumber, 'requested', JSON.stringify(targets["requested"]));
-            updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));
-            addRequestToLog(name, prisonNumber, module, 'add', date)
-            res.render('ilp', {
-            prisonNumber: prisonNumber,
-            targets: targets,
-            name: name
-            }) 
-        })
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+                ]).then(function([results]) {
+                    targets = results.rows[0];
+                    targets["requested"][module] = "add"
+                    let current = results.rows[0].current;
+                    let date = req.body.date;
+                    current[module] = date;
+                    targets.current = current;
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(current)}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    addRequestToLog(name, prisonNumber, module, 'add', date)
+                    res.render('ilp', {
+                    prisonNumber: prisonNumber,
+                    targets: targets,
+                    name: name
+                }) 
+                })
     } else if (req.body.requestFromSidebar === "complete") {
-        getData(prisonNumber, 'ilp').then(function(results) {
-            targets = results.rows[0];
-            targets["requested"][module] = "complete";
-            addRequestToLog(name, prisonNumber, module, "complete", date);
-            updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));
-            })
-        res.redirect('/ilp')
+        Promise.all([
+            pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber])
+                ]).then(function([results]) {
+                    targets = results.rows[0];
+                    targets["requested"][module] = "complete";
+                    addRequestToLog(name, prisonNumber, module, "complete", date);
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                })
+                res.redirect('/ilp')
     } else {
     let data = JSON.parse(req.body.data)
     Promise.all([
-        getData(prisonNumber, 'ilp'),
+        pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber]),
         getAllUsers(),
         getUser(prisonNumber)
     ]).then(function([targets, students, user]) {  
@@ -530,7 +543,7 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
                 targets.rows[0][module][i] = data[i]     
             }
         }
-        updateIlp(prisonNumber, module, JSON.stringify(targets.rows[0][module]));
+        pool.query(`UPDATE ilp SET ${module} = '${JSON.stringify(targets.rows[0][module])}' WHERE prison_number = $1`, [prisonNumber])    
         res.render('ilp', {
             prisonNumber: prisonNumber,
             targets: targets.rows[0],
@@ -540,39 +553,49 @@ app.post("/ilp", checkNotAuthenticated, (req, res) => {
 }} else {
     let prisonNumber = req.body.prisonNumber
     let {module, decline, targetDate} = req.body
-    getData(prisonNumber, 'ilp').then(function(results) {
-        let targets = results.rows[0]
-        if (req.body.requestFromSidebar === "add") {
-            delete targets["requested"][module]
-            updateIlp(prisonNumber, 'requested', JSON.stringify(targets["requested"]));
-            if (decline) {
-                approved = false;
-                delete targets["current"][module];
-                updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));
+    pool.query(`SELECT * FROM ilp WHERE prison_number = $1`, [prisonNumber], (err, results) => {
+        
+        if (err) {
+            console.log(err)
+        } else {
+                let targets = results.rows[0]
+                if (req.body.requestFromSidebar === "add") {
+                    delete targets["requested"][module]
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    
+                    if (decline) {
+                        approved = false;
+                        delete targets["current"][module];
+                        pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    }
+                } 
+                else if (req.body.requestFromSidebar === "complete") {
+                    delete targets["requested"][module];
+                    
+                    if (!decline) {
+                    delete targets["current"][module];
+                    targets["completed"][module] = new Date().toDateString();
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET completed = '${JSON.stringify(targets["completed"])}' WHERE prison_number = $1`, [prisonNumber]);              
+                    }
+                } 
+                else if (req.body.requestFromSidebar === "update") {
+                    targets["current"][module] = targetDate;
+                    delete targets["req_new_date"][module];
+                    pool.query(`UPDATE ilp SET req_new_date = '${JSON.stringify(targets["req_new_date"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);          
                 }
-            } else if (req.body.requestFromSidebar === "complete") {
-                delete targets["requested"][module];
-                if (!decline) {
-                delete targets["current"][module];
-                targets["completed"][module] = new Date().toDateString();
-                updateIlp(prisonNumber, 'requested', JSON.stringify(targets["requested"]));
-                updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));
-                updateIlp(prisonNumber, 'completed', JSON.stringify(targets["completed"]));              
+                else if (req.body.requestFromSidebar === "delete") {
+                    delete targets["requested"][module]
+                    delete targets["current"][module]
+                    pool.query(`UPDATE ilp SET requested = '${JSON.stringify(targets["requested"])}' WHERE prison_number = $1`, [prisonNumber]);
+                    pool.query(`UPDATE ilp SET current = '${JSON.stringify(targets["current"])}' WHERE prison_number = $1`, [prisonNumber]);          
                 }
-            } else if (req.body.requestFromSidebar === "update") {
-                targets["current"][module] = targetDate;
-                delete targets["req_new_date"][module];
-                updateIlp(prisonNumber, 'req_new_date', JSON.stringify(targets["req_new_date"]));
-                updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));          
-            } else if (req.body.requestFromSidebar === "delete") {
-                delete targets["requested"][module]
-                delete targets["current"][module]
-                updateIlp(prisonNumber, 'requested', JSON.stringify(targets["requested"]));
-                updateIlp(prisonNumber, 'current', JSON.stringify(targets["current"]));          
             }
         })
         sendAutomatedRequestReply(prisonNumber, decline, module, req.body.requestFromSidebar)
-        deleteData(prisonNumber, 'requests', module)
+        pool.query(`DELETE FROM requests WHERE prison_number = $1 AND module = $2`, [prisonNumber, module])
         res.redirect('/dashboard')
     }
 })  
