@@ -335,13 +335,8 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
 
 app.get("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let dialogId = req.params.dialogId
-    pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
-        if (err) {
-            console.log(err)
-        } else {
-            results = results.rows
-        }
-        res.render("messages", {dialogId: dialogId, messages: results})
+    getMessages(dialogId).then(function(results) {
+        res.render("messages", {dialogId: dialogId, messages: results.rows})
     })
 })
 
@@ -367,15 +362,9 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                 } 
                 selected.rows[0].unseen[prisonNumber] = "unseen";
                 pool.query(`UPDATE users SET unseen = $1 WHERE prison_number = $2`, [ selected.rows[0].unseen, recipient]),
-                pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`, (err, results) => {
-                    if (err) {
-                        console.log(err)
-                    } else {
+                getMessages(dialogId).then(function(results) {
                         msgs = results.rows;
                     getAllUsers().then(function(users){
-                        if (err) {
-                            console.log(err)
-                        } else {
                         let students = sortPosts(users.rows);
                         let notSeen = []
                         for (let i=0; i < students.length; i++) {
@@ -396,22 +385,20 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
                             notSeen: notSeen, 
                             admin: admin               
                         }) 
-                    }
                     })
           
-                }})
+                })
             })
         } else {
         Promise.all([
             getUser(prisonNumber),
-            pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`),
+            getMessages(dialogId),
             getAllUsers()
-        ]).then(function([user, results, users]) {
-            msgs = results.rows;
+        ]).then(function([user, messages, users]) {
             let students = sortPosts(users.rows);
             res.render("messages", {
                 dialogId: dialogId, 
-                messages: msgs, 
+                messages: messages.rows, 
                 participant2: participant2,
                 students: students,
                 notSeen: user.rows[0].unseen,
@@ -864,6 +851,12 @@ function getAllUsers() {
 function getData(prisonNumber, table) {
     return new Promise(function(res, rej) {
         res(pool.query(`SELECT * FROM ${table} WHERE prison_number = '${prisonNumber}'`))
+    })
+}
+
+function getMessages(dialogId) {
+    return new Promise(function(res, rej) {
+    res(pool.query(`SELECT * FROM messages WHERE id = '${dialogId}'`))
     })
 }
 
