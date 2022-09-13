@@ -8,7 +8,7 @@
     function sendRequest(module, targetsUpdated) {
         if (module !== null && targetsUpdated !== {}) {
             let xml = new XMLHttpRequest();
-            xml.open("POST", "/ilp", true);
+            xml.open("POST", "/ilp/save", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
             xml.send(`module=${module}&data=${JSON.stringify(targetsUpdated)}`);
             targetsUpdated = {}
@@ -18,9 +18,9 @@
     function submitCompleted() {
         if (module !== null) {
             let xml = new XMLHttpRequest();
-            xml.open("POST", "/ilp", true);
+            xml.open("POST", "/ilp/submit", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-            xml.send(`module=${module}&requestFromSidebar=complete`);
+            xml.send(`module=${module}`);
             targetsUpdated = {};
             location.reload();
             }
@@ -43,8 +43,8 @@
         hideStatusNotSaved();
         displayStatusSaved();
         saved = true;
-        module = null;
-        targetsUpdated = {}
+        // module = null;
+        // targetsUpdated = {}
         }
         
     function cancel() {
