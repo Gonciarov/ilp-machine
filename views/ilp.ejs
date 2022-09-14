@@ -57,7 +57,7 @@
                 <p style="display: none; color: red;" class="req-remove" id='req-remove-<%= targets["current"][t] %>'>Overdue</p>
                 <p style="display: none; color: red;" class ="ilp-edit" onclick="displayRescheduleForm()">Click here to edit</p>
                 <div class="reschedule-form" style="display: none" id="reschedule-form-<%= t %>">
-                    <form action="/ilp" method="POST">
+                    <form action="/ilp-update" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
                         <input type="hidden" name="requestFromSidebar" value="update">
                         <p>Choose a new date: </p>
@@ -66,13 +66,13 @@
                         <input type="submit" onsubmit="displayCurrentModules()" value="Change">
                     </form>
                     <% if (!targets["requested"][t]) { %>
-                    <form action = "/ilp" method = "POST">
+                    <form action = "/ilp-delete" method = "POST">
                         <input type="hidden" name="module" value="<%= t %>">
                         <input type="hidden" name="requestFromSidebar" value="delete">
                         <input type="submit" value="Remove">
                     </form>
                     <% } else { %>
-                        <form action = "/ilp" method = "POST">
+                        <form action = "/ilp-cancel" method = "POST">
                             <input type="hidden" name="module" value="<%= t %>">
                             <input type="hidden" name="requestFromSidebar" value="cancel-request">
                             <input type="submit" value="Cancel request">
@@ -192,7 +192,7 @@
                 <div>
                     <p><%= targets["descriptions"][t] %></p>
                     
-                    <form action="/ilp" method="POST">
+                    <form action="/ilp-add" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
                         <input type="hidden" name="requestFromSidebar" value="add">
                         <p>When do you want to complete it?</p>

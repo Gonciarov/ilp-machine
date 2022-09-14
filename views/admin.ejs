@@ -93,7 +93,7 @@
                    <br>
                    <p></p>
                    <% if (requests[i].type !== "post") { %>
-                   <form action="/ilp" method="POST">
+                   <form action="/ilp-admin" method="POST">
                     <div>
                         <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
                         <input type="hidden" name="module" value="<%= requests[i].module %>">
@@ -104,7 +104,7 @@
                         <input type="submit" name="<%= requests[i].prison_number %>" class="right" onclick="sendNotification()" value="Approve">
                     </div>
                 </form>
-                <form action="/ilp" method="POST">
+                <form action="/ilp-admin" method="POST">
                     <div>
                         <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
                         <input type="hidden" name="module" value="<%= requests[i].module %>">

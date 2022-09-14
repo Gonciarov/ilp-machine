@@ -8,7 +8,7 @@
     function sendRequest(module, targetsUpdated) {
         if (module !== null && targetsUpdated !== {}) {
             let xml = new XMLHttpRequest();
-            xml.open("POST", "/ilp", true);
+            xml.open("POST", "/ilp-save", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
             xml.send(`module=${module}&data=${JSON.stringify(targetsUpdated)}`);
             targetsUpdated = {}
@@ -18,7 +18,7 @@
     function submitCompleted() {
         if (module !== null) {
             let xml = new XMLHttpRequest();
-            xml.open("POST", "/ilp", true);
+            xml.open("POST", "/ilp-complete", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
             xml.send(`module=${module}&requestFromSidebar=complete`);
             targetsUpdated = {};
@@ -43,7 +43,6 @@
         hideStatusNotSaved();
         displayStatusSaved();
         saved = true;
-        module = null;
         targetsUpdated = {}
         }
         
@@ -258,7 +257,6 @@
 
     function displaySubmitButton() {
         let allowed = checkIfModuleRequested();
-        console.log(allowed)
         let requested = document.getElementsByClassName(`requested-${module}`)
        if (allowed && requested.length == 0) {
             document.getElementById("submit-completed").style.display = "inline-block"
@@ -461,7 +459,6 @@ function displayBackLink() {
 function checkIfModuleRequested() {
     let a;
     let req = document.getElementsByClassName(`requested-${module}`)
-    console.log(req.length)
     req.length > 0 ? a = false : a = true
     return a
 }
