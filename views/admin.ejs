@@ -97,7 +97,7 @@
                     <div>
                         <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
                         <input type="hidden" name="module" value="<%= requests[i].module %>">
-                        <input type="hidden" name="requestFromSidebar" value="<%= requests[i].type %>">
+                        <input type="hidden" name="requestType" value="<%= requests[i].type %>">
                         <% if (requests[i].type === "update") { %>
                             <input type="hidden" name="target_date" value="<%= requests[i].target_date %>">
                         <% } %>
@@ -108,7 +108,7 @@
                     <div>
                         <input type="hidden" name="prisonNumber" value="<%= requests[i].prison_number %>">
                         <input type="hidden" name="module" value="<%= requests[i].module %>">
-                        <input type="hidden" name="requestFromSidebar" value="<%= requests[i].type %>">
+                        <input type="hidden" name="requestType" value="<%= requests[i].type %>">
                         <input type="hidden" name="decline" value="true">
                         <% if (requests[i].type === "update") { %>
                             <input type="hidden" name="targetDate" value="<%= requests[i].target_date %>">

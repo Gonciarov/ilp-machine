@@ -20,7 +20,7 @@
             let xml = new XMLHttpRequest();
             xml.open("POST", "/ilp-complete", true);
             xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-            xml.send(`module=${module}&requestFromSidebar=complete`);
+            xml.send(`module=${module}&requestType=complete`);
             targetsUpdated = {};
             location.reload();
             }

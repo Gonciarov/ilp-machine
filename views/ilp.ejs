@@ -59,7 +59,7 @@
                 <div class="reschedule-form" style="display: none" id="reschedule-form-<%= t %>">
                     <form action="/ilp-update" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
-                        <input type="hidden" name="requestFromSidebar" value="update">
+                        <input type="hidden" name="requestType" value="update">
                         <p>Choose a new date: </p>
                         <input type="date" min="<%= today %>" name="date" required>
                         <p></p>
@@ -68,13 +68,13 @@
                     <% if (!targets["requested"][t]) { %>
                     <form action = "/ilp-delete" method = "POST">
                         <input type="hidden" name="module" value="<%= t %>">
-                        <input type="hidden" name="requestFromSidebar" value="delete">
+                        <input type="hidden" name="requestType" value="delete">
                         <input type="submit" value="Remove">
                     </form>
                     <% } else { %>
                         <form action = "/ilp-cancel" method = "POST">
                             <input type="hidden" name="module" value="<%= t %>">
-                            <input type="hidden" name="requestFromSidebar" value="cancel-request">
+                            <input type="hidden" name="requestType" value="cancel-request">
                             <input type="submit" value="Cancel request">
                         </form>
                         <%}%>
@@ -194,7 +194,7 @@
                     
                     <form action="/ilp-add" method="POST">
                         <input type="hidden" name="module" value="<%= t %>">
-                        <input type="hidden" name="requestFromSidebar" value="add">
+                        <input type="hidden" name="requestType" value="add">
                         <p>When do you want to complete it?</p>
                         <input type="date" name="date" min="<%= today %>" required>
                         <p>Recommended time: <%= targets["recommended_time"][t] %></p>
