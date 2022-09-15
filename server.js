@@ -461,7 +461,7 @@ app.post("/ilp-save", checkNotAuthenticated, (req, res) => {
     })
 });
 
-app.post("/ilp-admin", (req, res) => {
+app.post("/ilp-admin", checkAdminRole, (req, res) => {
     let prisonNumber = req.body.prisonNumber
     let {module, decline, targetDate, requestType} = req.body
     getData(prisonNumber, 'ilp').then(function(results) { 
@@ -773,27 +773,15 @@ function checkDialogAccess(req, res, next) {
 
 function addRequestToLog(name, prisonNumber, module, type, targetDate=null) {
     let currentDate = createDateTime();
-    let log;
-    targetDate ? 
-
-            log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}. Target date: ${targetDate}` 
-            :
-            log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}`
-        
-    type == "update" ?
-    pool.query(`INSERT INTO requests (prison_number, log, type, module, date, target_date) 
-    VALUES ($1, $2, $3, $4, $5, $6)`, [prisonNumber, log, type, module, currentDate, targetDate]) 
-    :
-    pool.query(`INSERT INTO requests (prison_number, log, type, module, date) 
-    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
+    let log = generateRequestLog(name, prisonNumber, type, module, targetDate);
+    insertIntoRequests(prisonNumber, log, type, module, currentDate, targetDate);
 }
 
 function sendAutomatedRequestReply(prisonNumber, decline, module, type) {      
-    let dialogId = [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
+    let dialogId = generateDialogId(prisonNumber);
     let dateTime = new Date().toLocaleString();
     let text = generateAutomatedReply(decline, type, module);
-    pool.query(`INSERT INTO messages (id, author, message, datetime)
-        VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
+    insertIntoMessages(dialogId, text, dateTime)
         }
 
 function generateAutomatedReply(decline, type, module) {
@@ -803,6 +791,18 @@ function generateAutomatedReply(decline, type, module) {
         text = `Automated message: your request to ${type} module ${module} has not been approved. Please speak to your tutor about this.`
     return text
     }
+
+function generateRequestLog(name, prisonNumber, type, module, targetDate) {
+    targetDate ? 
+    log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}. Target date: ${targetDate}` 
+    :
+    log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}`
+    return log
+}
+
+function generateDialogId(prisonNumber) {
+    return [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
+}
 
 function createDateTime() {
    return new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
@@ -863,6 +863,20 @@ function deleteData(id, table, module=null) {
         :
         pool.query(`DELETE FROM ${table} WHERE id = '${id}'`)
     })
+}
+
+function insertIntoRequests(prisonNumber, log, type, module, currentDate, targetDate) {
+    type == "update" ?
+    pool.query(`INSERT INTO requests (prison_number, log, type, module, date, target_date) 
+    VALUES ($1, $2, $3, $4, $5, $6)`, [prisonNumber, log, type, module, currentDate, targetDate]) 
+    :
+    pool.query(`INSERT INTO requests (prison_number, log, type, module, date) 
+    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
+}
+
+function insertIntoMessages(dialogId, text, dateTime) {
+    pool.query(`INSERT INTO messages (id, author, message, datetime)
+    VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
 }
 
 app.listen(PORT, () => {
