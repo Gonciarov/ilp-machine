@@ -340,67 +340,64 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let {participant2} = req.body;
     let admin = req.body.admin || "notAdmin"
     let dateTime = new Date().toLocaleString();
-    let msgs = [];
     let name = req.user.name;
     let prisonNumber = req.user.prison_number;
     let recipient = dialogId.replace('-', '').replace(prisonNumber, '');
     if (text) {
         Promise.all([
-            pool.query(`INSERT INTO messages (id, author, message, datetime)
-            VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime]),
-            getUser(recipient)
-        ]).then(function([inserted, selected]) {
-                    if (!selected.rows[0].unseen) {
-                        selected.rows[0].unseen = {}
-                        } 
-                        selected.rows[0].unseen[prisonNumber] = "unseen";
-                        updateData(recipient, 'prison_number', 'users', 'unseen', JSON.stringify(selected.rows[0].unseen));
-                        getMessages(dialogId).then(function(messages) {
-                            getAllUsers().then(function(users){
-                                let students = sortPosts(users.rows);
-                                let notSeen = []
-                                for (let i=0; i < students.length; i++) {
-                                    if (students[i].prison_number === prisonNumber) {
-                                        notSeen.push(students[i].unseen);
-                                    if (students[i].prison_number === process.env.ADMIN_PRISON_NUMBER) {
-                                        participant2 = students[i]
-                                    }
-                                    }
-                                }
-                                res.render("messages", {
-                                    dialogId: dialogId, 
-                                    messages: messages.rows, 
-                                    participant2: participant2,
-                                    students: students,
-                                    prisonNumber: prisonNumber,
-                                    participant2pn: recipient,
-                                    notSeen: notSeen, 
-                                    admin: admin               
-                                }) 
-                            })
-                        })
-                    })
-                } else {
-                    Promise.all([
-                        getUser(prisonNumber),
-                        getMessages(dialogId),
-                        getAllUsers()
-                    ]).then(function([user, messages, users]) {
+        insertIntoMessages(dialogId, name, text, dateTime),
+        getUser(recipient)
+    ]).then(function([selected]) {
+            if (!selected.rows[0].unseen) {
+                selected.rows[0].unseen = {}
+                } 
+                selected.rows[0].unseen[prisonNumber] = "unseen";
+                updateData(recipient, 'prison_number', 'users', 'unseen', JSON.stringify(selected.rows[0].unseen));
+                getMessages(dialogId).then(function(messages) {
+                    getAllUsers().then(function(users){
                         let students = sortPosts(users.rows);
-                        res.render("messages", {
-                            dialogId: dialogId, 
-                            messages: messages.rows, 
-                            participant2: participant2,
-                            students: students,
-                            notSeen: user.rows[0].unseen,
-                            prisonNumber: prisonNumber,
-                            participant2pn: recipient,
-                            admin: admin
-                        })  
-                    })  
-                }              
-            })    
-
+                        let notSeen = []
+                        for (let i=0; i < students.length; i++) {
+                            if (students[i].prison_number === prisonNumber) {
+                                notSeen.push(students[i].unseen);
+                            if (students[i].prison_number === process.env.ADMIN_PRISON_NUMBER) {
+                                participant2 = students[i]
+                                }
+                            }
+                        }
+                    res.render("messages", {
+                        dialogId: dialogId, 
+                        messages: messages.rows, 
+                        participant2: participant2,
+                        students: students,
+                        prisonNumber: prisonNumber,
+                        participant2pn: recipient,
+                        notSeen: notSeen, 
+                        admin: admin               
+                    }) 
+                })
+            })
+        })
+    } else {
+        Promise.all([
+            getUser(prisonNumber),
+            getMessages(dialogId),
+            getAllUsers()
+        ]).then(function([user, messages, users]) {
+            let students = sortPosts(users.rows);
+            res.render("messages", {
+                dialogId: dialogId, 
+                messages: messages.rows, 
+                participant2: participant2,
+                students: students,
+                notSeen: user.rows[0].unseen,
+                prisonNumber: prisonNumber,
+                participant2pn: recipient,
+                admin: admin
+            })  
+        })  
+    }              
+})    
 
 app.post("/unseen-seen", (req, res) => {
     let prisonNumber = req.user.prison_number
@@ -433,12 +430,11 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
         getUser(req.user.prison_number),
         getData(req.user.prison_number, 'ilp') 
     ]).then(function([user, targets]) {
-                targets = targets.rows[0];
-                let name = req.user.name;
-                res.render("ilp", {name: name, targets: targets})  
-                           
-         })
+        targets = targets.rows[0];
+        let name = req.user.name;
+        res.render("ilp", {name: name, targets: targets})             
         })
+    })
 
 
 app.post("/ilp-save", checkNotAuthenticated, (req, res) => {
@@ -634,7 +630,7 @@ app.post("/delete/review", checkAdminRole, async(req, res) => {
 
 app.post("/delete/comment", checkAdminRole, async(req, res) => {
     let id = req.body.postId
-    pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
+    updateData(id, 'ID', 'posts', 'comment', '')
     })
 
 app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
@@ -781,7 +777,7 @@ function sendAutomatedRequestReply(prisonNumber, decline, module, type) {
     let dialogId = generateDialogId(prisonNumber);
     let dateTime = new Date().toLocaleString();
     let text = generateAutomatedReply(decline, type, module);
-    insertIntoMessages(dialogId, text, dateTime)
+    insertIntoMessages(dialogId, 'Admin', text, dateTime)
         }
 
 function generateAutomatedReply(decline, type, module) {
@@ -874,9 +870,9 @@ function insertIntoRequests(prisonNumber, log, type, module, currentDate, target
     VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
 }
 
-function insertIntoMessages(dialogId, text, dateTime) {
+function insertIntoMessages(dialogId, name, text, dateTime) {
     pool.query(`INSERT INTO messages (id, author, message, datetime)
-    VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
+    VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime])
 }
 
 app.listen(PORT, () => {
