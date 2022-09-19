@@ -54,13 +54,10 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
         Promise.all([
             getUser(prisonNumber),
             getData(prisonNumber, 'posts'),
-            getAllUsers()
+            getAllFromTable('users')
         ]).then(function([user, posts, students]) {
             if (req.user.prison_number == process.env.ADMIN_PRISON_NUMBER) {
-                pool.query(`SELECT * FROM requests`, (err, results) => {
-                if (err) {
-                    console.log(err)
-                } else {
+                getAllFromTable('requests').then(function(results) { 
                     let requests = results.rows;
                     res.render("admin", { 
                         posts: posts.rows, 
@@ -69,7 +66,7 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
                         prisonNumber: req.user.prison_number,
                         signed: "signed"
                     });
-                }})
+                })
             } else {
                 posts = sortPosts(posts.rows)
                 res.render("dashboard", { 
@@ -78,9 +75,7 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
                     posts: posts,
                     students: sortPosts(students.rows),
                     notSeen: user.rows[0].unseen,
-                    signed: user.rows[0].signed
-                    
-                     
+                    signed: user.rows[0].signed    
              });
             }
         })
@@ -208,7 +203,7 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     Promise.all([
         getUser(prisonNumber),
         getData(prisonNumber, 'reviews'),
-        getAllUsers()
+        getAllFromTable('users')
             ]).then(function([user, reviews, students]) {
                         reviews = reviews.rows
                         students = sortPosts(students.rows)
@@ -240,7 +235,7 @@ app.get("/techskills", checkNotAuthenticated, (req, res) => {
     Promise.all([
         getUser(prisonNumber),
         getData(prisonNumber, 'techskills'),
-        getAllUsers()
+        getAllFromTable('users')
     ]).then(function([user, results, students]) {
                students = sortPosts(students.rows);
                 res.render('techskills', {
@@ -261,7 +256,7 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
     let {column} = req.body
     Promise.all([
         getData(prisonNumber, 'techskills'),
-        getAllUsers(),
+        getAllFromTable('users'),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         for (i in data) {
@@ -286,7 +281,7 @@ app.get("/softskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     Promise.all([
         getData(prisonNumber, 'softskills'),
-        getAllUsers(),
+        getAllFromTable('users'),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         students = sortPosts(students.rows);
@@ -306,7 +301,7 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
     let data = JSON.parse(req.body.data)
     Promise.all([
         getData(prisonNumber, 'softskills'),
-        getAllUsers(),
+        getAllFromTable('users'),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {
         let softskills = results.rows[0].softskills
@@ -344,17 +339,15 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let prisonNumber = req.user.prison_number;
     let recipient = dialogId.replace('-', '').replace(prisonNumber, '');
     if (text) {
-        Promise.all([
-        insertIntoMessages(dialogId, name, text, dateTime),
-        getUser(recipient)
-    ]).then(function([selected]) {
+        insertIntoMessages(dialogId, name, text, dateTime);
+        getUser(recipient).then(function(selected) {
             if (!selected.rows[0].unseen) {
                 selected.rows[0].unseen = {}
                 } 
                 selected.rows[0].unseen[prisonNumber] = "unseen";
                 updateData(recipient, 'prison_number', 'users', 'unseen', JSON.stringify(selected.rows[0].unseen));
                 getMessages(dialogId).then(function(messages) {
-                    getAllUsers().then(function(users){
+                    getAllFromTable('users').then(function(users){
                         let students = sortPosts(users.rows);
                         let notSeen = []
                         for (let i=0; i < students.length; i++) {
@@ -382,7 +375,7 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
         Promise.all([
             getUser(prisonNumber),
             getMessages(dialogId),
-            getAllUsers()
+            getAllFromTable('users')
         ]).then(function([user, messages, users]) {
             let students = sortPosts(users.rows);
             res.render("messages", {
@@ -496,8 +489,8 @@ app.post("/ilp-admin", checkAdminRole, (req, res) => {
             break; 
         } 
     })
-    sendAutomatedRequestReply(prisonNumber, decline, module, requestType)
-    deleteData(prisonNumber, 'requests', module)
+    sendAutomatedRequestReply(prisonNumber, decline, module, requestType);
+    deleteData(prisonNumber, 'requests', module);
     res.redirect('/dashboard')
 })
 
@@ -822,9 +815,9 @@ function getUser(prisonNumber) {
     })
 }
 
-function getAllUsers() {
+function getAllFromTable(table) {
     return new Promise(function(res) {
-        res(pool.query(`SELECT * FROM users`))
+        res(pool.query(`SELECT * FROM ${table}`))
     })
 }
 
