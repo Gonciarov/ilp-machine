@@ -54,13 +54,10 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
         Promise.all([
             getUser(prisonNumber),
             getData(prisonNumber, 'posts'),
-            getAllUsers()
+            getAllFromTable('users')
         ]).then(function([user, posts, students]) {
             if (req.user.prison_number == process.env.ADMIN_PRISON_NUMBER) {
-                pool.query(`SELECT * FROM requests`, (err, results) => {
-                if (err) {
-                    console.log(err)
-                } else {
+                getAllFromTable('requests').then(function(results) { 
                     let requests = results.rows;
                     res.render("admin", { 
                         posts: posts.rows, 
@@ -69,7 +66,7 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
                         prisonNumber: req.user.prison_number,
                         signed: "signed"
                     });
-                }})
+                })
             } else {
                 posts = sortPosts(posts.rows)
                 res.render("dashboard", { 
@@ -78,9 +75,7 @@ app.get("/dashboard", checkNotAuthenticated, checkTermsAndConditions, (req, res)
                     posts: posts,
                     students: sortPosts(students.rows),
                     notSeen: user.rows[0].unseen,
-                    signed: user.rows[0].signed
-                    
-                     
+                    signed: user.rows[0].signed    
              });
             }
         })
@@ -208,7 +203,7 @@ app.get("/reviews", checkNotAuthenticated, async(req,res) => {
     Promise.all([
         getUser(prisonNumber),
         getData(prisonNumber, 'reviews'),
-        getAllUsers()
+        getAllFromTable('users')
             ]).then(function([user, reviews, students]) {
                         reviews = reviews.rows
                         students = sortPosts(students.rows)
@@ -240,7 +235,7 @@ app.get("/techskills", checkNotAuthenticated, (req, res) => {
     Promise.all([
         getUser(prisonNumber),
         getData(prisonNumber, 'techskills'),
-        getAllUsers()
+        getAllFromTable('users')
     ]).then(function([user, results, students]) {
                students = sortPosts(students.rows);
                 res.render('techskills', {
@@ -261,7 +256,7 @@ app.post("/techskills", checkNotAuthenticated, (req, res) => {
     let {column} = req.body
     Promise.all([
         getData(prisonNumber, 'techskills'),
-        getAllUsers(),
+        getAllFromTable('users'),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         for (i in data) {
@@ -286,7 +281,7 @@ app.get("/softskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
     Promise.all([
         getData(prisonNumber, 'softskills'),
-        getAllUsers(),
+        getAllFromTable('users'),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {  
         students = sortPosts(students.rows);
@@ -306,7 +301,7 @@ app.post("/softskills", checkNotAuthenticated, (req, res) => {
     let data = JSON.parse(req.body.data)
     Promise.all([
         getData(prisonNumber, 'softskills'),
-        getAllUsers(),
+        getAllFromTable('users'),
         getUser(prisonNumber),
     ]).then(function([results, students, user]) {
         let softskills = results.rows[0].softskills
@@ -340,67 +335,62 @@ app.post("/messages/:dialogId", checkDialogAccess, (req, res) => {
     let {participant2} = req.body;
     let admin = req.body.admin || "notAdmin"
     let dateTime = new Date().toLocaleString();
-    let msgs = [];
     let name = req.user.name;
     let prisonNumber = req.user.prison_number;
     let recipient = dialogId.replace('-', '').replace(prisonNumber, '');
     if (text) {
-        Promise.all([
-            pool.query(`INSERT INTO messages (id, author, message, datetime)
-            VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime]),
-            getUser(recipient)
-        ]).then(function([inserted, selected]) {
-                    if (!selected.rows[0].unseen) {
-                        selected.rows[0].unseen = {}
-                        } 
-                        selected.rows[0].unseen[prisonNumber] = "unseen";
-                        updateData(recipient, 'prison_number', 'users', 'unseen', JSON.stringify(selected.rows[0].unseen));
-                        getMessages(dialogId).then(function(messages) {
-                            getAllUsers().then(function(users){
-                                let students = sortPosts(users.rows);
-                                let notSeen = []
-                                for (let i=0; i < students.length; i++) {
-                                    if (students[i].prison_number === prisonNumber) {
-                                        notSeen.push(students[i].unseen);
-                                    if (students[i].prison_number === process.env.ADMIN_PRISON_NUMBER) {
-                                        participant2 = students[i]
-                                    }
-                                    }
-                                }
-                                res.render("messages", {
-                                    dialogId: dialogId, 
-                                    messages: messages.rows, 
-                                    participant2: participant2,
-                                    students: students,
-                                    prisonNumber: prisonNumber,
-                                    participant2pn: recipient,
-                                    notSeen: notSeen, 
-                                    admin: admin               
-                                }) 
-                            })
-                        })
-                    })
-                } else {
-                    Promise.all([
-                        getUser(prisonNumber),
-                        getMessages(dialogId),
-                        getAllUsers()
-                    ]).then(function([user, messages, users]) {
+        insertIntoMessages(dialogId, name, text, dateTime);
+        getUser(recipient).then(function(selected) {
+            if (!selected.rows[0].unseen) {
+                selected.rows[0].unseen = {}
+                } 
+                selected.rows[0].unseen[prisonNumber] = "unseen";
+                updateData(recipient, 'prison_number', 'users', 'unseen', JSON.stringify(selected.rows[0].unseen));
+                getMessages(dialogId).then(function(messages) {
+                    getAllFromTable('users').then(function(users){
                         let students = sortPosts(users.rows);
-                        res.render("messages", {
-                            dialogId: dialogId, 
-                            messages: messages.rows, 
-                            participant2: participant2,
-                            students: students,
-                            notSeen: user.rows[0].unseen,
-                            prisonNumber: prisonNumber,
-                            participant2pn: recipient,
-                            admin: admin
-                        })  
-                    })  
-                }              
-            })    
-
+                        let notSeen = []
+                        for (let i=0; i < students.length; i++) {
+                            if (students[i].prison_number === prisonNumber) {
+                                notSeen.push(students[i].unseen);
+                            if (students[i].prison_number === process.env.ADMIN_PRISON_NUMBER) {
+                                participant2 = students[i]
+                                }
+                            }
+                        }
+                    res.render("messages", {
+                        dialogId: dialogId, 
+                        messages: messages.rows, 
+                        participant2: participant2,
+                        students: students,
+                        prisonNumber: prisonNumber,
+                        participant2pn: recipient,
+                        notSeen: notSeen, 
+                        admin: admin               
+                    }) 
+                })
+            })
+        })
+    } else {
+        Promise.all([
+            getUser(prisonNumber),
+            getMessages(dialogId),
+            getAllFromTable('users')
+        ]).then(function([user, messages, users]) {
+            let students = sortPosts(users.rows);
+            res.render("messages", {
+                dialogId: dialogId, 
+                messages: messages.rows, 
+                participant2: participant2,
+                students: students,
+                notSeen: user.rows[0].unseen,
+                prisonNumber: prisonNumber,
+                participant2pn: recipient,
+                admin: admin
+            })  
+        })  
+    }              
+})    
 
 app.post("/unseen-seen", (req, res) => {
     let prisonNumber = req.user.prison_number
@@ -433,12 +423,11 @@ app.get("/ilp", checkNotAuthenticated, (req, res) => {
         getUser(req.user.prison_number),
         getData(req.user.prison_number, 'ilp') 
     ]).then(function([user, targets]) {
-                targets = targets.rows[0];
-                let name = req.user.name;
-                res.render("ilp", {name: name, targets: targets})  
-                           
-         })
+        targets = targets.rows[0];
+        let name = req.user.name;
+        res.render("ilp", {name: name, targets: targets})             
         })
+    })
 
 
 app.post("/ilp-save", checkNotAuthenticated, (req, res) => {
@@ -461,7 +450,7 @@ app.post("/ilp-save", checkNotAuthenticated, (req, res) => {
     })
 });
 
-app.post("/ilp-admin", (req, res) => {
+app.post("/ilp-admin", checkAdminRole, (req, res) => {
     let prisonNumber = req.body.prisonNumber
     let {module, decline, targetDate, requestType} = req.body
     getData(prisonNumber, 'ilp').then(function(results) { 
@@ -500,8 +489,8 @@ app.post("/ilp-admin", (req, res) => {
             break; 
         } 
     })
-    sendAutomatedRequestReply(prisonNumber, decline, module, requestType)
-    deleteData(prisonNumber, 'requests', module)
+    sendAutomatedRequestReply(prisonNumber, decline, module, requestType);
+    deleteData(prisonNumber, 'requests', module);
     res.redirect('/dashboard')
 })
 
@@ -773,27 +762,15 @@ function checkDialogAccess(req, res, next) {
 
 function addRequestToLog(name, prisonNumber, module, type, targetDate=null) {
     let currentDate = createDateTime();
-    let log;
-    targetDate ? 
-
-            log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}. Target date: ${targetDate}` 
-            :
-            log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}`
-        
-    type == "update" ?
-    pool.query(`INSERT INTO requests (prison_number, log, type, module, date, target_date) 
-    VALUES ($1, $2, $3, $4, $5, $6)`, [prisonNumber, log, type, module, currentDate, targetDate]) 
-    :
-    pool.query(`INSERT INTO requests (prison_number, log, type, module, date) 
-    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
+    let log = generateRequestLog(name, prisonNumber, type, module, targetDate);
+    insertIntoRequests(prisonNumber, log, type, module, currentDate, targetDate);
 }
 
 function sendAutomatedRequestReply(prisonNumber, decline, module, type) {      
-    let dialogId = [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
+    let dialogId = generateDialogId(prisonNumber);
     let dateTime = new Date().toLocaleString();
     let text = generateAutomatedReply(decline, type, module);
-    pool.query(`INSERT INTO messages (id, author, message, datetime)
-        VALUES ($1, $2, $3, $4)`, [dialogId, "Admin", text, dateTime])
+    insertIntoMessages(dialogId, 'Admin', text, dateTime)
         }
 
 function generateAutomatedReply(decline, type, module) {
@@ -803,6 +780,18 @@ function generateAutomatedReply(decline, type, module) {
         text = `Automated message: your request to ${type} module ${module} has not been approved. Please speak to your tutor about this.`
     return text
     }
+
+function generateRequestLog(name, prisonNumber, type, module, targetDate) {
+    targetDate ? 
+    log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}. Target date: ${targetDate}` 
+    :
+    log = `User ${name} (${prisonNumber}) requested to ${type} module ${module}`
+    return log
+}
+
+function generateDialogId(prisonNumber) {
+    return [prisonNumber, process.env.ADMIN_PRISON_NUMBER].sort().join("-").toString();
+}
 
 function createDateTime() {
    return new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
@@ -826,9 +815,9 @@ function getUser(prisonNumber) {
     })
 }
 
-function getAllUsers() {
+function getAllFromTable(table) {
     return new Promise(function(res) {
-        res(pool.query(`SELECT * FROM users`))
+        res(pool.query(`SELECT * FROM ${table}`))
     })
 }
 
@@ -863,6 +852,20 @@ function deleteData(id, table, module=null) {
         :
         pool.query(`DELETE FROM ${table} WHERE id = '${id}'`)
     })
+}
+
+function insertIntoRequests(prisonNumber, log, type, module, currentDate, targetDate) {
+    type == "update" ?
+    pool.query(`INSERT INTO requests (prison_number, log, type, module, date, target_date) 
+    VALUES ($1, $2, $3, $4, $5, $6)`, [prisonNumber, log, type, module, currentDate, targetDate]) 
+    :
+    pool.query(`INSERT INTO requests (prison_number, log, type, module, date) 
+    VALUES ($1, $2, $3, $4, $5)`, [prisonNumber, log, type, module, currentDate]) 
+}
+
+function insertIntoMessages(dialogId, name, text, dateTime) {
+    pool.query(`INSERT INTO messages (id, author, message, datetime)
+    VALUES ($1, $2, $3, $4)`, [dialogId, name, text, dateTime])
 }
 
 app.listen(PORT, () => {
