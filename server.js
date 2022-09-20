@@ -634,7 +634,7 @@ app.post("/delete/review", checkAdminRole, async(req, res) => {
 
 app.post("/delete/comment", checkAdminRole, async(req, res) => {
     let id = req.body.postId
-    pool.query(`UPDATE posts SET comment='' WHERE ID = ${id}`)
+    updateData(id, 'ID', 'posts', 'comment', '')
     })
 
 app.post("/report/:prisonNumber", checkAdminRole, (req, res) => {
