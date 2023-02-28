@@ -32,7 +32,12 @@ app.get("/", (req, res) => {
 
 app.get("/test", (req, res) => {
     let prisonNumber = "a@a"
-    res.sendFile()
+    res.json({"prisonNumber": [prisonNumber]})
+})
+
+app.post("/test", (req, res) => {
+    let name = JSON.parse(req.body.name)
+    console.log(name)
 })
 
 app.get("/login", checkAuthenticated, (req, res) => {
@@ -257,7 +262,7 @@ app.get("/techskills", checkNotAuthenticated, (req, res) => {
 
 app.post("/techskills", checkNotAuthenticated, (req, res) => {
     let prisonNumber = req.user.prison_number
-    let data = JSON.parse(req.body.data)
+    let data = arse(req.body.data)
     let {column} = req.body
     Promise.all([
         getData(prisonNumber, 'techskills'),
